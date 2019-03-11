@@ -44,5 +44,9 @@ public class DatabaseHandler {
 		this.listComputers.add(computer);
 	}
 	
+	public void removeComputer(Computer computer) {
+		this.listComputers.remove(computer);
+	}
+	
 	
 }
