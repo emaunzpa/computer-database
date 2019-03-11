@@ -5,30 +5,30 @@ public class Computer {
 	private String name;
 	private String introducedDate;
 	private String discontinuedDate;
-	private Manufacturer manufacturer;
+	private String manufacturer;
 	
 	public Computer(String name) {
 		this.name = name;
 		this.introducedDate = new String();
 		this.discontinuedDate = new String();
-		this.manufacturer = new Manufacturer();
+		this.manufacturer = new String();
 	}
 	
 	public Computer(String name, String introducedDate) {
 		this.name = name;
 		this.introducedDate = introducedDate;
 		this.discontinuedDate = new String();
-		this.manufacturer = new Manufacturer();
+		this.manufacturer = new String();
 	}
 	
 	public Computer(String name, String introducedDate, String discontinuedDate) {
 		this.name = name;
 		this.introducedDate = introducedDate;
 		this.discontinuedDate = discontinuedDate;
-		this.manufacturer = new Manufacturer();
+		this.manufacturer = new String();
 	}
 	
-	public Computer(String name, String introducedDate, String discontinuedDate, Manufacturer manufacturer) {
+	public Computer(String name, String introducedDate, String discontinuedDate, String manufacturer) {
 		this.name = name;
 		this.introducedDate = introducedDate;
 		this.discontinuedDate = discontinuedDate;
@@ -59,13 +59,12 @@ public class Computer {
 		this.discontinuedDate = discontinuedDate;
 	}
 
-	public Manufacturer getManufacturer() {
+	public String getManufacturer() {
 		return manufacturer;
 	}
 
-	public void setManufacturer(Manufacturer manufacturer) {
+	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
-	
 	
 }
