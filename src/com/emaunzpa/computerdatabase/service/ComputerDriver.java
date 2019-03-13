@@ -1,8 +1,11 @@
 package com.emaunzpa.computerdatabase.service;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
@@ -12,7 +15,9 @@ public class ComputerDriver implements ComputerDAO {
 	
 	private Statement statement;
     private ResultSet resultat;
+    private PreparedStatement prepareStatement;
     private Integer statut;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public ComputerDriver() {
 
@@ -34,16 +39,26 @@ public class ComputerDriver implements ComputerDAO {
 	        if(resultat.first()) {
 	        	int idComputer = resultat.getInt( "id" );
 	        	String nameComputer = resultat.getString( "name" );
-	            String introduced = resultat.getString( "introduced" );
-	            String discontinued = resultat.getString( "discontinued" );
+	            String introducedStr = resultat.getString( "introduced" );
+	            String discontinuedStr = resultat.getString( "discontinued" );
+	            java.sql.Date introducedDate = null;
+	            java.sql.Date discontinuedDate = null;
+	            if (introducedStr != null) {
+	            	java.util.Date introducedUtilDate = sdf.parse(introducedStr);
+	            	introducedDate = new java.sql.Date(introducedUtilDate.getTime());
+	            }
+	            if (discontinuedStr != null) {
+	            	java.util.Date discontinuedUtilDate = sdf.parse(discontinuedStr);
+	            	discontinuedDate = new java.sql.Date(discontinuedUtilDate.getTime());
+	            }
 	            Integer manufacturerId = resultat.getInt( "company_id" );
 	            computer.setId(idComputer);
 		        computer.setName(nameComputer);
-		        computer.setIntroducedDate(introduced);
-		        computer.setDiscontinuedDate(discontinued);
+		        computer.setIntroducedDate(introducedDate);
+		        computer.setDiscontinuedDate(discontinuedDate);
 		        computer.setmanufacturerId(manufacturerId);
 	        }
-	    } catch ( SQLException e ) {
+	    } catch ( SQLException | ParseException e ) {
 	        System.out.println( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	    } finally {
@@ -75,10 +90,15 @@ public class ComputerDriver implements ComputerDAO {
 		connectionDriver.initializeConnection();
 		
 		try {
-	        statement = connectionDriver.getConnection().createStatement();
+			String request = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	        System.out.println( "Objet requête créé !" );
-	        String request = "insert into computer (name, introduced, discontinued, company_id) values (" + computer.getName() + ", " + computer.getIntroducedDate() + ", " + computer.getDiscontinuedDate() + ", " + computer.getmanufacturerId() + ")";
-	        statut = statement.executeUpdate( request );
+			prepareStatement = connectionDriver.getConnection().prepareStatement( request );
+	        prepareStatement.setString(1, computer.getName());
+	        prepareStatement.setDate(2, computer.getIntroducedDate());
+	        prepareStatement.setDate(3, computer.getDiscontinuedDate());
+	        System.out.println("Manu ID --> " + computer.getmanufacturerId());
+	        prepareStatement.setObject(4, computer.getmanufacturerId());
+	        prepareStatement.executeUpdate();
 	        System.out.println( "Requête -- " + request + " -- effectuée !" );
 	    } catch ( SQLException e ) {
 	        System.out.println( "Erreur lors de la connexion : "
@@ -118,12 +138,22 @@ public class ComputerDriver implements ComputerDAO {
 	        while ( resultat.next() ) {
 	            int idComputer = resultat.getInt( "id" );
 	            String nameComputer = resultat.getString( "name" );
-	            String introduced = resultat.getString( "introduced" );
-	            String discontinued = resultat.getString( "discontinued" );
+	            String introducedStr = resultat.getString( "introduced" );
+	            String discontinuedStr = resultat.getString( "discontinued" );
+	            java.sql.Date introducedDate = null;
+	            java.sql.Date discontinuedDate = null;
+	            if (introducedStr != null) {
+	            	java.util.Date introducedUtilDate = sdf.parse(introducedStr);
+	            	introducedDate = new java.sql.Date(introducedUtilDate.getTime());
+	            }
+	            if (discontinuedStr != null) {
+	            	java.util.Date discontinuedUtilDate = sdf.parse(discontinuedStr);
+	            	discontinuedDate = new java.sql.Date(discontinuedUtilDate.getTime());
+	            }
 	            Integer idCompany = resultat.getInt( "company_id" );
-	            computers.add(new Computer(idComputer, nameComputer, introduced, discontinued, idCompany));
+	            computers.add(new Computer(idComputer, nameComputer, introducedDate, discontinuedDate, idCompany));
 	        }
-	    } catch ( SQLException e ) {
+	    } catch ( SQLException | ParseException e ) {
 	        System.out.println( "Erreur lors de la connexion : <br/>"
 	                + e.getMessage() );
 	    } finally {
@@ -183,16 +213,21 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public void updateComputer(int id, String newName, String newIntroduced, String newDiscontinued, Integer newManufacturerId) {
+	public void updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) {
 		
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
 		
 		try {
-	        statement = connectionDriver.getConnection().createStatement();
+	        String request = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
 	        System.out.println( "Objet requête créé !" );
-	        String request = "update computer set name = " + newName + ", introduced = " + newIntroduced + ", discontinued = " + newDiscontinued + ", company_id = " + newManufacturerId + " where id = " + id;
-	        statut = statement.executeUpdate( request );
+	        prepareStatement = connectionDriver.getConnection().prepareStatement( request );
+	        prepareStatement.setString(1, newName);
+	        prepareStatement.setDate(2, newIntroduced);
+	        prepareStatement.setDate(3, newDiscontinued);
+	        prepareStatement.setObject(4, newManufacturerId);
+	        prepareStatement.setInt(5, id); 
+	        prepareStatement.executeUpdate();
 	        System.out.println( "Requête -- " + request + " -- effectuée !" );
 	    } catch ( SQLException e ) {
 	        System.out.println( "Erreur lors de la connexion : "

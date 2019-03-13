@@ -4,8 +4,8 @@ public class Computer {
 
 	private int id;
 	private String name;
-	private String introducedDate;
-	private String discontinuedDate;
+	private java.sql.Date introducedDate;
+	private java.sql.Date discontinuedDate;
 	private Integer manufacturerId;
 	
 	public Computer() {
@@ -22,28 +22,28 @@ public class Computer {
 		this.manufacturerId = null;
 	}
 	
-	public Computer(String name, String introducedDate) {
+	public Computer(String name, java.sql.Date introducedDate) {
 		this.name = name;
 		this.introducedDate = introducedDate;
 		this.discontinuedDate = null;
 		this.manufacturerId = null;
 	}
 	
-	public Computer(String name, String introducedDate, String discontinuedDate) {
+	public Computer(String name, java.sql.Date introducedDate, java.sql.Date discontinuedDate) {
 		this.name = name;
 		this.introducedDate = introducedDate;
 		this.discontinuedDate = discontinuedDate;
 		this.manufacturerId = null;
 	}
 	
-	public Computer(String name, String introducedDate, String discontinuedDate, Integer manufacturerId) {
+	public Computer(String name, java.sql.Date introducedDate, java.sql.Date discontinuedDate, Integer manufacturerId) {
 		this.name = name;
 		this.introducedDate = introducedDate;
 		this.discontinuedDate = discontinuedDate;
 		this.manufacturerId = manufacturerId;
 	}
 	
-	public Computer(int id, String name, String introducedDate, String discontinuedDate, Integer manufacturerId) {
+	public Computer(int id, String name, java.sql.Date introducedDate, java.sql.Date discontinuedDate, Integer manufacturerId) {
 		this.id = id;
 		this.name = name;
 		this.introducedDate = introducedDate;
@@ -76,19 +76,19 @@ public class Computer {
 		this.name = name;
 	}
 
-	public String getIntroducedDate() {
+	public java.sql.Date getIntroducedDate() {
 		return introducedDate;
 	}
 
-	public void setIntroducedDate(String introducedDate) {
+	public void setIntroducedDate(java.sql.Date introducedDate) {
 		this.introducedDate = introducedDate;
 	}
 
-	public String getDiscontinuedDate() {
+	public java.sql.Date getDiscontinuedDate() {
 		return discontinuedDate;
 	}
 
-	public void setDiscontinuedDate(String discontinuedDate) {
+	public void setDiscontinuedDate(java.sql.Date discontinuedDate) {
 		this.discontinuedDate = discontinuedDate;
 	}
 	

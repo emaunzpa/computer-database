@@ -14,6 +14,6 @@ public interface ComputerDAO {
 	
 	public void removeComputer(int id);
 	
-	public void updateComputer(int id, String newName, String newIntroduced, String newDiscontinued, Integer newManufacturerId);
+	public void updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId);
 	
 }
