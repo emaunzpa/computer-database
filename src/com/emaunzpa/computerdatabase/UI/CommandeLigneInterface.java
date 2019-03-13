@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
-import com.emaunzpa.computerdatabase.service.ComputerDriver;
-import com.emaunzpa.computerdatabase.service.ManufacturerDriver;
+import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
+import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 
 public class CommandeLigneInterface {
 
@@ -29,16 +29,55 @@ public class CommandeLigneInterface {
 		this.actionResult = "Following is the result of your request : ";
 		this.welcome = "-------- Welcome in computer-database ! --------";
 		this.goodBye = "-------- Thank you for visiting us and see you next time ! --------";
-		this.actionsHeader = "Which action would you like to realize ? (ENTER the corresponding number)";
+		this.actionsHeader = "Which action would you like to realize ? (ENTER the corresponding number)\n";
 		this.availableActions = new ArrayList<String>( Arrays.asList("1) List all computers", "2) List all companies", "3) Show computer details", "4) Create a new computer", "5) Update a computer", "6) Delete a computer", "7) Leave computer-database"));
 	}
 	
 	public void showAllComputer() {
 		System.out.println(actionResult + "\n");
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
-		for(Computer computer : computers) {
-			String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
-			System.out.println(computerDetails);
+		String displayChoice = "";
+		int startIndex = 0;
+		int endIndex = 11;
+		while(!displayChoice.equals("q")) {
+			String actualDisplay = (startIndex + 1) + " to " + endIndex;
+			System.out.println();
+			System.out.println("                   --------- Type q to exit display ---------");
+			System.out.println();
+			for(int i= startIndex; i < endIndex; i++) {
+				Computer computer = computers.get(i);
+				String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
+				System.out.println(computerDetails);
+			}
+			System.out.println();
+			System.out.println("              previous (p) <--------- " + actualDisplay + " ---------> next (n)");
+			displayChoice = scIn.next();
+			System.out.println(displayChoice);
+			if (displayChoice.equals("p")) {
+				if (startIndex > 10) {
+					startIndex -= 10;
+					endIndex -= 10;
+				}
+				else {
+					while(startIndex > 0) {
+						startIndex--;
+						endIndex--;
+					}
+				}
+			}
+			else if (displayChoice.equals("n")) {
+				if (endIndex + 10 < computers.size()) {
+					endIndex += 10;
+					startIndex += 10;
+				}
+				else {
+					while(endIndex <= computers.size() - 1) {
+						endIndex++;
+						startIndex++;
+					}
+				}
+			}
+			scIn.nextLine();
 		}
 		System.out.println();
 	}
@@ -46,19 +85,60 @@ public class CommandeLigneInterface {
 	public void showAllCompanies() {
 		System.out.println(actionResult + "\n");
 		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
-		for(Manufacturer manufacturer : manufacturers) {
-			String manufacturerDetails = "Id : " + manufacturer.getId() + " | Name : " + manufacturer.getName();
-			System.out.println(manufacturerDetails);
+		String displayChoice = "";
+		int startIndex = 0;
+		int endIndex = 11;
+		while(!displayChoice.equals("q")) {
+			String actualDisplay = (startIndex + 1) + " to " + endIndex;
+			System.out.println();
+			System.out.println("    --------- Type q to exit display ---------");
+			System.out.println();
+			for(int i= startIndex; i < endIndex; i++) {
+				Manufacturer manufacturer = manufacturers.get(i);
+				String manufacturerDetails = "Id : " + manufacturer.getId() + " | Name : " + manufacturer.getName();
+				System.out.println(manufacturerDetails);
+			}
+			System.out.println();
+			System.out.println(" previous (p) <--------- " + actualDisplay + " ---------> next (n)");
+			displayChoice = scIn.next();
+			System.out.println(displayChoice);
+			if (displayChoice.equals("p")) {
+				if (startIndex > 10) {
+					startIndex -= 10;
+					endIndex -= 10;
+				}
+				else {
+					while(startIndex > 0) {
+						startIndex--;
+						endIndex--;
+					}
+				}
+			}
+			else if (displayChoice.equals("n")) {
+				if (endIndex + 10 < manufacturers.size()) {
+					endIndex += 10;
+					startIndex += 10;
+				}
+				else {
+					while(endIndex <= manufacturers.size() - 1) {
+						endIndex++;
+						startIndex++;
+					}
+				}
+			}
+			scIn.nextLine();
 		}
 		System.out.println();
 	}
 	
 	public Computer showComputerDetails() {
+		System.out.println();
 		System.out.println("ENTER a computer id...");
 		int computerId = scIn.nextInt();
 		scIn.nextLine();
 		Computer computer = computerDriver.getComputer(computerId);
-		System.out.println("This is the details of the selected computer \n");
+		System.out.println();
+		System.out.println("Following are the details of the selected computer \n");
 		String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
 		System.out.println(computerDetails);
 		System.out.println();
@@ -68,8 +148,7 @@ public class CommandeLigneInterface {
 	public Computer newComputerForm() throws ParseException {
 		System.out.println("You just chose to create a new Computer");
 		System.out.println("Please ENTER a name for the new computer ...");
-		String computerName = scIn.next();
-		scIn.nextLine();
+		String computerName = scIn.nextLine();
 		System.out.println("Do you want to add an introduced date ? (y/n)");
 		String answer = scIn.next();
 		scIn.nextLine();
@@ -184,12 +263,13 @@ public class CommandeLigneInterface {
 		System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
 		String answer = scIn.next();
 		scIn.nextLine();
+		System.out.println();
 		switch(answer) {
 			case "y" :
-				computerDriver.removeComputer(computerToRemove.getId());
+				computerDriver.removeComputer(computerToRemove.getId());	
 				System.out.println("The computer was well removed from database !");
 				break;
-			case "n" :
+			case "n" :	
 				System.out.println("Remove request canceled");
 				break;
 		}
@@ -218,7 +298,7 @@ public class CommandeLigneInterface {
 				case 4 :
 					Computer newComputer = newComputerForm();
 					computerDriver.addComputer(newComputer);
-					System.out.println("The new computer was well added to the computer-database !");
+					System.out.println("The new computer was well added to the computer-database !\n");
 					break;
 				case 5 :
 					updateComputer();
