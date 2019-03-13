@@ -1,4 +1,4 @@
-package com.emaunzpa.computerdatabase.service;
+package com.emaunzpa.computerdatabase.bdd;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.emaunzpa.computerdatabase.service;
+package com.emaunzpa.computerdatabase.bdd;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
