@@ -10,6 +10,8 @@ import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
+import com.emaunzpa.computerdatabase.util.CasesCLI;
+import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 public class CommandeLigneInterface {
 
@@ -23,7 +25,11 @@ public class CommandeLigneInterface {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver();
 	private ComputerDriver computerDriver = new ComputerDriver();
+	private DatesHandler datesHandler = new DatesHandler();
 	
+	/**
+	 * Creator to initialize various messages print by the controller
+	 */
 	public CommandeLigneInterface() {
 		this.actualActionId = 0;
 		this.actionResult = "Following is the result of your request : ";
@@ -33,6 +39,9 @@ public class CommandeLigneInterface {
 		this.availableActions = new ArrayList<String>( Arrays.asList("1) List all computers", "2) List all companies", "3) Show computer details", "4) Create a new computer", "5) Update a computer", "6) Delete a computer", "7) Leave computer-database"));
 	}
 	
+	/**
+	 * Show the list of all computers
+	 */
 	public void showAllComputer() {
 		System.out.println(actionResult + "\n");
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
@@ -82,6 +91,9 @@ public class CommandeLigneInterface {
 		System.out.println();
 	}
 	
+	/**
+	 * Show the list of all companies
+	 */
 	public void showAllCompanies() {
 		System.out.println(actionResult + "\n");
 		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
@@ -131,6 +143,10 @@ public class CommandeLigneInterface {
 		System.out.println();
 	}
 	
+	/**
+	 * Show the details of a computer after listening to user entered id 
+	 * @return computer
+	 */
 	public Computer showComputerDetails() {
 		System.out.println();
 		System.out.println("ENTER a computer id...");
@@ -145,6 +161,11 @@ public class CommandeLigneInterface {
 		return computer;
 	}
 	
+	/**
+	 * Create a new computer with the parameters entered by the user
+	 * @return newComputer
+	 * @throws ParseException
+	 */
 	public Computer newComputerForm() throws ParseException {
 		System.out.println("You just chose to create a new Computer");
 		System.out.println("Please ENTER a name for the new computer ...");
@@ -157,8 +178,7 @@ public class CommandeLigneInterface {
 			case "y" :
 				System.out.println("Please ENTER an introduced date ... (format : 'YYYY-MM-DD)");
 				String introducedDateStr = scIn.nextLine() + " 00:00:00'";
-				java.util.Date introducedUtilDate = sdf.parse(introducedDateStr);
-            	introducedDate = new java.sql.Date(introducedUtilDate.getTime());
+				introducedDate = datesHandler.convertStringDateToSqlDate(introducedDateStr);
 				break;
 			case "n" :
 				break;
@@ -171,8 +191,7 @@ public class CommandeLigneInterface {
 			case "y" :
 				System.out.println("Please ENTER an discontinued date ... (format : 'YYYY-MM-DD)");
 				String discontinuedDateStr = scIn.nextLine() + " 00:00:00'";
-				java.util.Date discontinuedUtilDate = sdf.parse(discontinuedDateStr);
-            	introducedDate = new java.sql.Date(discontinuedUtilDate.getTime());
+				discontinuedDate = datesHandler.convertStringDateToSqlDate(discontinuedDateStr);
 				break;
 			case "n" :
 				break;
@@ -197,6 +216,10 @@ public class CommandeLigneInterface {
 		return newComputer;
 	}
 	
+	/**
+	 * Update the computer selected by the user with user's entered parameters
+	 * @throws ParseException
+	 */
 	public void updateComputer() throws ParseException {
 		Computer computer = showComputerDetails();
 		System.out.println("Do you want to update the computer name ? (y/n)");
@@ -219,8 +242,7 @@ public class CommandeLigneInterface {
 			case "y" :
 				System.out.println("Please ENTER a new introduced date for your computer (format : YYYY-MM-DD)");
 				String newIntroducedDateStr = scIn.nextLine() + " 00:00:00";
-				java.util.Date newIntroducedUtilDate = sdf.parse(newIntroducedDateStr);
-            	newIntroducedDate = new java.sql.Date(newIntroducedUtilDate.getTime());
+            	newIntroducedDate = datesHandler.convertStringDateToSqlDate(newIntroducedDateStr);
 				break;
 			case "n" :
 				break;
@@ -233,8 +255,7 @@ public class CommandeLigneInterface {
 			case "y" :
 				System.out.println("Please ENTER a new discontinued date for your computer (format : YYYY-MM-DD)");
 				String newDiscontinuedDateStr = scIn.nextLine() + " 00:00:00";
-				java.util.Date newDiscontinuedUtilDate = sdf.parse(newDiscontinuedDateStr);
-            	newDiscontinuedDate = new java.sql.Date(newDiscontinuedUtilDate.getTime());
+				newDiscontinuedDate = datesHandler.convertStringDateToSqlDate(newDiscontinuedDateStr);
 				break;
 			case "n" :
 				break;
@@ -258,6 +279,9 @@ public class CommandeLigneInterface {
 		System.out.println();
 	}
 	
+	/**
+	 * Remove the computer with the id selected by the user
+	 */
 	public void removeComputer() {
 		Computer computerToRemove = showComputerDetails();
 		System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
@@ -285,28 +309,34 @@ public class CommandeLigneInterface {
 			}
 			actualActionId = scIn.nextInt();
 			scIn.nextLine();
-			switch(actualActionId) {
-				case 1 :
+			CasesCLI casesCLI = null;
+			for (CasesCLI loopCase : CasesCLI.values()) {
+				if (loopCase.getChoice() == actualActionId) {
+					casesCLI = loopCase;
+				}
+			}
+			switch(casesCLI) {
+				case LIST_COMPUTERS :
 					showAllComputer();
 					break;
-				case 2 :
+				case LIST_COMPANIES :
 					showAllCompanies();
 					break;
-				case 3 :
+				case SHOW_COMPUTER_DETAILS :
 					showComputerDetails();
 					break;
-				case 4 :
+				case CREATE_COMPUTER :
 					Computer newComputer = newComputerForm();
 					computerDriver.addComputer(newComputer);
 					System.out.println("The new computer was well added to the computer-database !\n");
 					break;
-				case 5 :
+				case UPDATE_COMPUTER :
 					updateComputer();
 					break;
-				case 6 :
+				case DELETE_COMPUTER :
 					removeComputer();
 					break;
-				case 7 : 
+				case EXIT : 
 					System.out.println(goodBye);
 					break;
 				default :
