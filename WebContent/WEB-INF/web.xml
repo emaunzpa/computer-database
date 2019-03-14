@@ -8,5 +8,15 @@
 			<include-prelude>/views/taglibs.jsp</include-prelude>
 		</jsp-property-group>
 	</jsp-config>
+	
+	<servlet>
+		<servlet-name>ListComputers</servlet-name>
+		<servlet-class>com.emaunzpa.computerdatabase.servlet.ListComputers</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ListComputers</servlet-name>
+		<url-pattern>/views/listComputers</url-pattern>
+	</servlet-mapping>
 
 </web-app>
