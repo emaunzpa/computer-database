@@ -15,7 +15,7 @@ public class TestManufacturer {
 	private ManufacturerDriver manufacturerDriver;
 	
 	@Before
-	public void createComputerDriver() {
+	public void createManufacturerDriver() {
 		manufacturerDriver = new ManufacturerDriver();
 	}
 	
@@ -27,6 +27,8 @@ public class TestManufacturer {
 	@Test
 	public void getManufacturer() {
 		assertEquals("Apple Inc.", manufacturerDriver.getManufacturer(1).getName());
+		assertEquals(0, manufacturerDriver.getManufacturer(0).getId());
+		assertNull(manufacturerDriver.getManufacturer(0).getName());
 	}
 
 }

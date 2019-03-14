@@ -89,6 +89,11 @@ public class ComputerDriver implements ComputerDAO {
 	@Override
 	public boolean addComputer(Computer computer) {
 		
+		// Impossible to create a computer without a name
+		if(computer.getName() == null) {
+			return false;
+		}
+		
 		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
@@ -225,6 +230,11 @@ public class ComputerDriver implements ComputerDAO {
 		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
+		
+		// Cannot update a unexisting computer
+		if (getComputer(id).getName() == null) {
+			return false;
+		}
 		
 		try {
 	        String request = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
