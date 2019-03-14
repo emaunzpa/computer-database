@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.emaunzpa.computerdatabase.UI.CommandeLigneInterface;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
+import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 public class TestJDBC {
 

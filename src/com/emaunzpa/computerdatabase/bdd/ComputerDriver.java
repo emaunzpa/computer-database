@@ -87,8 +87,9 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public void addComputer(Computer computer) {
+	public boolean addComputer(Computer computer) {
 		
+		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
 		
@@ -103,6 +104,7 @@ public class ComputerDriver implements ComputerDAO {
 	        prepareStatement.setObject(4, computer.getmanufacturerId());
 	        prepareStatement.executeUpdate();
 	        System.out.println( "Requête -- " + request + " -- effectuée !" );
+	        result = true;
 	    } catch ( SQLException e ) {
 	        System.out.println( "Erreur lors de la connexion : "
 	                + e.getMessage() );
@@ -122,7 +124,7 @@ public class ComputerDriver implements ComputerDAO {
 	    }
 		
 		connectionDriver.finalizeConnection();
-		
+		return result;
 	}
 
 	@Override
@@ -182,8 +184,9 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public void removeComputer(int id) {
+	public boolean removeComputer(int id) {
 		
+		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
 		
@@ -193,6 +196,7 @@ public class ComputerDriver implements ComputerDAO {
 	        String request = "delete from computer where id = " + id;
 	        statut = statement.executeUpdate( request );
 	        System.out.println( "Requête -- delete from computer where id = " + id + " -- effectuée !" );
+	        result = true;
 	    } catch ( SQLException e ) {
 	        System.out.println( "Erreur lors de la connexion : "
 	                + e.getMessage() );
@@ -212,12 +216,13 @@ public class ComputerDriver implements ComputerDAO {
 	    }
 		
 		connectionDriver.finalizeConnection();
-		
+		return result;
 	}
 
 	@Override
-	public void updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) {
+	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) {
 		
+		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
 		
@@ -232,6 +237,7 @@ public class ComputerDriver implements ComputerDAO {
 	        prepareStatement.setInt(5, id); 
 	        prepareStatement.executeUpdate();
 	        System.out.println( "Requête -- " + request + " -- effectuée !" );
+	        result = true;
 	    } catch ( SQLException e ) {
 	        System.out.println( "Erreur lors de la connexion : "
 	                + e.getMessage() );
@@ -251,7 +257,7 @@ public class ComputerDriver implements ComputerDAO {
 	    }
 		
 		connectionDriver.finalizeConnection();
-		
+		return result;
 	}
 	
 }

@@ -17,7 +17,7 @@ public interface ComputerDAO {
 	 * Add a computer to the database
 	 * @param computer
 	 */
-	public void addComputer(Computer computer);
+	public boolean addComputer(Computer computer);
 	
 	/**
 	 * List all computer from the database
@@ -29,7 +29,7 @@ public interface ComputerDAO {
 	 * Remove computer with the given id from the database 
 	 * @param id
 	 */
-	public void removeComputer(int id);
+	public boolean removeComputer(int id);
 	
 	/**
 	 * Update the computer with the given id with the new attributes
@@ -39,6 +39,6 @@ public interface ComputerDAO {
 	 * @param newDiscontinued
 	 * @param newManufacturerId
 	 */
-	public void updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId);
+	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId);
 	
 }
