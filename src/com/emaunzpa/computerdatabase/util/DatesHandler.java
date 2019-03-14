@@ -31,4 +31,8 @@ public class DatesHandler {
     	return sqlDate;
 	}
 	
+	public String convertSqlDateToString(java.sql.Date sqlDate) {
+		return (sqlDate.toString() + " 00:00:00");
+	}
+	
 }
