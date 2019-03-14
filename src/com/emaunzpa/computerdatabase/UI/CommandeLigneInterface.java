@@ -309,13 +309,8 @@ public class CommandeLigneInterface {
 			}
 			actualActionId = scIn.nextInt();
 			scIn.nextLine();
-			CasesCLI casesCLI = null;
-			for (CasesCLI loopCase : CasesCLI.values()) {
-				if (loopCase.getChoice() == actualActionId) {
-					casesCLI = loopCase;
-				}
-			}
-			switch(casesCLI) {
+			
+			switch(CasesCLI.values()[actualActionId - 1]) {
 				case LIST_COMPUTERS :
 					showAllComputer();
 					break;
