@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.model.*;
 
@@ -18,6 +20,7 @@ public class ComputerDriver implements ComputerDAO {
     private PreparedStatement prepareStatement;
     private Integer statut;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+	private static Logger log = Logger.getLogger(ComputerDriver.class);
 	
     /**
      * Empty creator without params
@@ -62,35 +65,39 @@ public class ComputerDriver implements ComputerDAO {
 		        computer.setmanufacturerId(manufacturerId);
 	        }
 	    } catch ( SQLException | ParseException e ) {
-	        System.out.println( "Erreur lors de la connexion : "
+	        log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	    } finally {
-	    	System.out.println( "Fermeture de l'objet ResultSet." );
+	    	log.info( "Fermeture de l'objet ResultSet." );
 	        if ( resultat != null ) {
 	            try {
 	                resultat.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn( "La fermeture de l'objet ResultSet a généré une exception" );
 	            }
 	        }
-	        System.out.println( "Fermeture de l'objet Statement." );
+	        log.info( "Fermeture de l'objet Statement." );
 	        if ( statement != null ) {
 	            try {
 	                statement.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn( "La fermeture de l'objet Statement a généré une exception" );
 	            }
 	        }
 	       	        
 	    }
 		
 		connectionDriver.finalizeConnection();
+		log.info("Fin de la connexion");
 		return computer; 
 	}
 
 	@Override
 	public boolean addComputer(Computer computer) {
 		
-		// Impossible to create a computer without a name
+		// Impossible to add a computer without a name
 		if(computer.getName() == null) {
+			log.error("Impossible to add a computer without any name to the database. Request cancelled.");
 			return false;
 		}
 		
@@ -100,35 +107,36 @@ public class ComputerDriver implements ComputerDAO {
 		
 		try {
 			String request = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
-	        System.out.println( "Objet requête créé !" );
+	        log.info( "Objet requête créé !" );
 			prepareStatement = connectionDriver.getConnection().prepareStatement( request );
 	        prepareStatement.setString(1, computer.getName());
 	        prepareStatement.setDate(2, computer.getIntroducedDate());
 	        prepareStatement.setDate(3, computer.getDiscontinuedDate());
-	        System.out.println("Manu ID --> " + computer.getmanufacturerId());
 	        prepareStatement.setObject(4, computer.getmanufacturerId());
 	        prepareStatement.executeUpdate();
-	        System.out.println( "Requête -- " + request + " -- effectuée !" );
+	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        result = true;
 	    } catch ( SQLException e ) {
-	        System.out.println( "Erreur lors de la connexion : "
+	        log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	    } finally {
-	    	System.out.println( "Réinitialisation du statut" );
+	    	log.info( "Réinitialisation du statut." );
 	        if ( statut != null ) {
 	            statut = null;
 	        }
-	        System.out.println( "Fermeture de l'objet Statement." );
+	        log.info( "Fermeture de l'objet Statement." );
 	        if ( statement != null ) {
 	            try {
 	                statement.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn("La fermeture du Statement a généré une exception.");
 	            }
 	        }
 	       	        
 	    }
 		
 		connectionDriver.finalizeConnection();
+		log.info("Fin de la connexion");
 		return result;
 	}
 
@@ -141,10 +149,10 @@ public class ComputerDriver implements ComputerDAO {
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
-	        System.out.println( "Objet requête créé !" );
+	        log.info( "Objet requête créé !" );
 	        String request = "select * from computer";
 	        resultat = statement.executeQuery( request );
-	        System.out.println( "Requête -- " + request + " -- effectuée !" );
+	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        while ( resultat.next() ) {
 	            int idComputer = resultat.getInt( "id" );
 	            String nameComputer = resultat.getString( "name" );
@@ -164,27 +172,30 @@ public class ComputerDriver implements ComputerDAO {
 	            computers.add(new Computer.ComputerBuilder().withId(idComputer).withName(nameComputer).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(idCompany).build());
 	        }
 	    } catch ( SQLException | ParseException e ) {
-	        System.out.println( "Erreur lors de la connexion : <br/>"
+	        log.error( "Erreur lors de la connexion : <br/>"
 	                + e.getMessage() );
 	    } finally {
-	    	System.out.println( "Fermeture de l'objet ResultSet." );
+	    	log.info( "Fermeture de l'objet ResultSet." );
 	        if ( resultat != null ) {
 	            try {
 	                resultat.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn("La fermeture de l'objet Resultset a provoqué une exception.");
 	            }
 	        }
-	        System.out.println( "Fermeture de l'objet Statement." );
+	        log.info( "Fermeture de l'objet Statement." );
 	        if ( statement != null ) {
 	            try {
 	                statement.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn("La fermeture de l'objet Statement a provoqué une exception.");
 	            }
 	        }
 	       	        
 	    }
 		
 		connectionDriver.finalizeConnection();
+		log.info("Fin de la connexion.");
 		return computers;
 	}
 
@@ -197,30 +208,32 @@ public class ComputerDriver implements ComputerDAO {
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
-	        System.out.println( "Objet requête créé !" );
+	        log.info( "Objet requête créé !" );
 	        String request = "delete from computer where id = " + id;
 	        statut = statement.executeUpdate( request );
-	        System.out.println( "Requête -- delete from computer where id = " + id + " -- effectuée !" );
+	        log.info( "Requête -- delete from computer where id = " + id + " -- effectuée !" );
 	        result = true;
 	    } catch ( SQLException e ) {
-	        System.out.println( "Erreur lors de la connexion : "
+	        log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	    } finally {
-	    	System.out.println( "Réinitialisation du statut" );
+	    	log.info( "Réinitialisation du statut" );
 	        if ( statut != null ) {
 	           statut = null;
 	        }
-	        System.out.println( "Fermeture de l'objet Statement." );
+	        log.info( "Fermeture de l'objet Statement." );
 	        if ( statement != null ) {
 	            try {
 	                statement.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn("La fermeture de l'objet Statement a provoqué une exception.");
 	            }
 	        }
 	       	        
 	    }
 		
 		connectionDriver.finalizeConnection();
+		log.info("Fin de la connexion.");
 		return result;
 	}
 
@@ -233,12 +246,13 @@ public class ComputerDriver implements ComputerDAO {
 		
 		// Cannot update a unexisting computer
 		if (getComputer(id).getName() == null) {
+			log.error("Impossible to update a unexisting computer. Request cancelled.");
 			return false;
 		}
 		
 		try {
 	        String request = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
-	        System.out.println( "Objet requête créé !" );
+	        log.info( "Objet requête créé !" );
 	        prepareStatement = connectionDriver.getConnection().prepareStatement( request );
 	        prepareStatement.setString(1, newName);
 	        prepareStatement.setDate(2, newIntroduced);
@@ -246,27 +260,29 @@ public class ComputerDriver implements ComputerDAO {
 	        prepareStatement.setObject(4, newManufacturerId);
 	        prepareStatement.setInt(5, id); 
 	        prepareStatement.executeUpdate();
-	        System.out.println( "Requête -- " + request + " -- effectuée !" );
+	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        result = true;
 	    } catch ( SQLException e ) {
-	        System.out.println( "Erreur lors de la connexion : "
+	        log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	    } finally {
-	    	System.out.println( "Réinitialisation du statut" );
+	    	log.info( "Réinitialisation du statut" );
 	        if ( statut != null ) {
 	            statut = null;
 	        }
-	        System.out.println( "Fermeture de l'objet Statement." );
+	        log.info( "Fermeture de l'objet Statement." );
 	        if ( statement != null ) {
 	            try {
 	                statement.close();
 	            } catch ( SQLException ignore ) {
+	            	log.warn("La fermeture de l'objet Statement a provoqué une exception.");
 	            }
 	        }
 	       	        
 	    }
 		
 		connectionDriver.finalizeConnection();
+		log.info("Fin de connexion.");
 		return result;
 	}
 	

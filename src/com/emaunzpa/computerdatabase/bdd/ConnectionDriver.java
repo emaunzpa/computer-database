@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 public class ConnectionDriver {
 
 	private static Properties prop = new Properties();
@@ -16,6 +18,7 @@ public class ConnectionDriver {
 	private static String _URL_;
     private static String _USER_;
     private static String _MDP_;
+    private static Logger log = Logger.getLogger(ConnectionDriver.class.getName());
     
     private Connection connection;
     
@@ -29,9 +32,9 @@ public class ConnectionDriver {
 			ConnectionDriver.dbInput = new FileInputStream("resources/database.properties");
 			ConnectionDriver.prop.load(dbInput);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());
 		}
     	ConnectionDriver._URL_= prop.getProperty("url");
     	ConnectionDriver._USER_= prop.getProperty("user");
@@ -40,22 +43,22 @@ public class ConnectionDriver {
     
     public void initializeConnection() {
     	try {
-	    	System.out.println( "Chargement du driver..." );
+	    	log.info( "Chargement du driver..." );
 	        Class.forName( "com.mysql.jdbc.Driver" );
-	        System.out.println( "Driver chargé !" );
+	        log.info( "Driver chargé !" );
 	    } catch ( ClassNotFoundException e ) {
-	    	System.out.println( "Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! "
+	    	log.error( "Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! "
 	                + e.getMessage() );
 	    }
 	    
 	    try {
-	    	System.out.println( "Connexion à la base de données..." );
+	    	log.info( "Connexion à la base de données..." );
 	        connection = DriverManager.getConnection( _URL_, _USER_, _MDP_ );
-	        System.out.println( "Connexion réussie !" );
+	        log.info( "Connexion réussie !" );
 
 	        
 	    } catch ( SQLException e ) {
-	    	System.out.println( "Erreur lors de la connexion : "
+	    	log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	   	}
     }
