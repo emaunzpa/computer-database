@@ -41,7 +41,7 @@ public class TestComputer {
 	@Test
 	public void getAllComputers() {
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
-		assertNotNull(computers);
+		assertTrue(computers.size() >= 0);
 	}
 	
 	@Test
