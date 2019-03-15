@@ -209,7 +209,7 @@ public class CommandeLigneInterface {
 			case "n" :
 				break;
 		}
-		Computer newComputer = new Computer(computerName, introducedDate, discontinuedDate, companyId);
+		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
 		String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + newComputer.getmanufacturerId();
 		System.out.println(newComputerDetails);
 		System.out.println();

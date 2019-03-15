@@ -47,10 +47,10 @@ public class TestComputer {
 	@Test
 	public void createComputer() {
 		
-		Computer computer1 = new Computer("Computer1", datesHandler.convertStringDateToSqlDate("2019-03-14 00:00:00"));
-		Computer computer2 = new Computer("Computer2", datesHandler.convertStringDateToSqlDate("2019-03-14 00:00:00"), null, 5);
-		Computer computerWithNullName = new Computer();
-		Computer computerWithUnexistingCompanyId = new Computer("Computer4", null, null, 1000);
+		Computer computer1 = new Computer.ComputerBuilder().withName("Computer1").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14 00:00:00")).build();
+		Computer computer2 = new Computer.ComputerBuilder().withName("Computer2").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14 00:00:00")).withDiscontinuedDate(null).withManufacturerId(5).build();
+		Computer computerWithNullName = new Computer.ComputerBuilder().build();
+		Computer computerWithUnexistingCompanyId = new Computer.ComputerBuilder().withName("Computer4").withIntroducedDate(null).withDiscontinuedDate(null).withManufacturerId(1000).build();
 		
 		assertTrue(computerDriver.addComputer(computer1));
 		assertTrue(computerDriver.addComputer(computer2));

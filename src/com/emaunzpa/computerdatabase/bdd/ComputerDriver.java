@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
-import com.emaunzpa.computerdatabase.model.Computer;
+import com.emaunzpa.computerdatabase.model.*;
 
 public class ComputerDriver implements ComputerDAO {
 	
@@ -31,7 +31,7 @@ public class ComputerDriver implements ComputerDAO {
 		
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
-		Computer computer = new Computer();
+		Computer computer = new Computer.ComputerBuilder().build();
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
@@ -161,7 +161,7 @@ public class ComputerDriver implements ComputerDAO {
 	            	discontinuedDate = new java.sql.Date(discontinuedUtilDate.getTime());
 	            }
 	            Integer idCompany = resultat.getInt( "company_id" );
-	            computers.add(new Computer(idComputer, nameComputer, introducedDate, discontinuedDate, idCompany));
+	            computers.add(new Computer.ComputerBuilder().withId(idComputer).withName(nameComputer).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(idCompany).build());
 	        }
 	    } catch ( SQLException | ParseException e ) {
 	        System.out.println( "Erreur lors de la connexion : <br/>"
