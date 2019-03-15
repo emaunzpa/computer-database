@@ -21,7 +21,7 @@ public class TestManufacturer {
 	
 	@Test
 	public void getAllManufacturers() {
-		assertNotNull(manufacturerDriver.getAllManufacturers());
+		assertTrue(manufacturerDriver.getAllManufacturers().size() >= 0);
 	}
 	
 	@Test
