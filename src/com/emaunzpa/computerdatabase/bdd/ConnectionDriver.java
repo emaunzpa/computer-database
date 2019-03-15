@@ -1,19 +1,41 @@
 package com.emaunzpa.computerdatabase.bdd;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class ConnectionDriver {
 
-	private static String _URL_ = "jdbc:mysql://localhost:3306/computer-database-db";
-    private static String _USER_ = "admincdb";
-    private static String _MDP_ = "qwerty1234";
+	private static Properties prop = new Properties();
+	private static InputStream dbInput;
+	private static String _URL_;
+    private static String _USER_;
+    private static String _MDP_;
     
     private Connection connection;
     
     public ConnectionDriver() {
     	this.connection = null;
+    	try {
+    		/**
+    		 * The file database.properties has to be added to the /root/resources/ path with 
+    		 * parameters url, user and password for accessing the database.
+    		 */
+			ConnectionDriver.dbInput = new FileInputStream("resources/database.properties");
+			ConnectionDriver.prop.load(dbInput);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	ConnectionDriver._URL_= prop.getProperty("url");
+    	ConnectionDriver._USER_= prop.getProperty("user");
+    	ConnectionDriver._MDP_= prop.getProperty("pwd");
     }
     
     public void initializeConnection() {
