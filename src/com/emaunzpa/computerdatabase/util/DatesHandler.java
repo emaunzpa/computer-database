@@ -21,13 +21,15 @@ public class DatesHandler {
 	 */
 	public java.sql.Date convertStringDateToSqlDate(String stringDate){
 		java.util.Date stringDateParsed = null;
+		java.sql.Date sqlDate = null;
 		try {
 			stringDateParsed = sdf.parse(stringDate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	java.sql.Date sqlDate = new java.sql.Date(stringDateParsed.getTime());
+		if (stringDateParsed != null) {
+			sqlDate = new java.sql.Date(stringDateParsed.getTime());
+		}
     	return sqlDate;
 	}
 	

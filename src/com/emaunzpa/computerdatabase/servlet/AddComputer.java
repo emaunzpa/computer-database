@@ -13,6 +13,7 @@ import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
+import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 public class AddComputer extends HttpServlet {
 
@@ -31,6 +32,16 @@ public class AddComputer extends HttpServlet {
 	
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) {
 		
+		String computerName = request.getParameter("computerName");
+		String introducedDateStr = request.getParameter("introducedDate");
+		String discontinuedDateStr = request.getParameter("discontinuedDate");
+		DatesHandler dh = new DatesHandler();
+		java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedDateStr);
+		java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedDateStr);
+		Integer companyId = Integer.valueOf(request.getParameter("companyId"));
+		ComputerDriver computerDriver = new ComputerDriver();
+		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
+		computerDriver.addComputer(newComputer);
 		
 	}
 	
