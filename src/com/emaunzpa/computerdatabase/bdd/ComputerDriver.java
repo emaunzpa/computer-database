@@ -51,10 +51,10 @@ public class ComputerDriver implements ComputerDAO {
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
-	        System.out.println( "Objet requête créé !" );
+	        log.info( "Objet requête créé !" );
 	        String request = "select * from computer where id = " + id;
 	        resultat = statement.executeQuery( request );
-	        System.out.println( "Requête -- " + request + " -- effectuée !" );
+	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        if(resultat.first()) {
 	        	int idComputer = resultat.getInt( "id" );
 	        	String nameComputer = resultat.getString( "name" );
@@ -161,7 +161,6 @@ public class ComputerDriver implements ComputerDAO {
 		connectionDriver.initializeConnection();
 		
 		try {
-			System.out.println(connectionDriver.toString());
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = "select * from computer";

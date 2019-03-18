@@ -15,18 +15,18 @@ public class Pagination {
 	
 	public Pagination(){
 		this.startIndex = 0;
-		this.endIndex = 11;
+		this.endIndex = 10;
 	}
 	
 	public List<Computer> showRestrictedComputerList(ArrayList<Computer> computers){
 		
-		return computers.subList(this.startIndex, this.endIndex);
+		return computers.subList(startIndex, endIndex);
 		
 	}
 	
 	public List<Manufacturer> showRestrictedManufacturerList(ArrayList<Manufacturer> manufacturers){
 		
-		return manufacturers.subList(this.startIndex, this.endIndex);
+		return manufacturers.subList(startIndex, endIndex);
 		
 	}
 	

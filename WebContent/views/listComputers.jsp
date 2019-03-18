@@ -15,7 +15,7 @@
 	
 	    <section id="main">
 	        <div class="container">
-	            <h1 id="homeTitle">${computers.size()} Computers found</h1>
+	            <h1 id="homeTitle">${computers.size()} Computers found (${printedComputers.size()} printed)</h1>
 	            <div id="actions" class="form-horizontal">
 	                <div class="pull-left">
 	                    <form id="searchForm" action="#" method="GET" class="form-inline">
@@ -26,7 +26,7 @@
 	                    </form>
 	                </div>
 	                <div class="pull-right">
-	                    <a class="btn btn-success" id="addComputer" href="addComputer.html">Add Computer</a> 
+	                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
 	                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
 	                </div>
 	            </div>
@@ -49,12 +49,12 @@
 	                        <!-- Table header for Discontinued Date -->
 	                        <th>Discontinued date</th>
 	                        <!-- Table header for Company -->
-	                        <th>Company</th>
+	                        <th>Company ID</th>
 	                    </tr>
 	                </thead>
 	                <!-- Browse attribute computers -->
 	                <tbody id="results">
-	                	<c:forEach items="${computers}" var="computer">
+	                	<c:forEach items="${printedComputers}" var="computer">
 	                    <tr>
 	                        <td class="editMode">
 	                            <input type="checkbox" name="cb" class="cb" value="0">
@@ -64,7 +64,7 @@
 	                        </td>
 	                        <td>${computer.introducedDate}</td>
 	                        <td>${computer.discontinuedDate}</td>
-	                        <td></td>
+	                        <td>${computer.manufacturerId}</td>
 	                    </tr>
 	                    </c:forEach>
 	                </tbody>
@@ -76,28 +76,24 @@
 	        <div class="container text-center">
 	            <ul class="pagination">
 	                <li>
-	                    <a href="#" aria-label="Previous">
-	                      <span aria-hidden="true">&laquo;</span>
-	                  </a>
-	              </li>
-	              <li><a href="#">1</a></li>
-	              <li><a href="#">2</a></li>
-	              <li><a href="#">3</a></li>
-	              <li><a href="#">4</a></li>
-	              <li><a href="#">5</a></li>
-	              <li>
-	                <a href="#" aria-label="Next">
-	                    <span aria-hidden="true">&raquo;</span>
-	                </a>
-	            </li>
-	        </ul>
-	
-	        <div class="btn-group btn-group-sm pull-right" role="group" >
-	            <button type="button" class="btn btn-default">10</button>
-	            <button type="button" class="btn btn-default">50</button>
-	            <button type="button" class="btn btn-default">100</button>
-	        </div>
-	
+	                	<c:choose>
+	                		<c:when test="${pagination.startIndex >= 10}">
+	                			<a href="?startIndex=${pagination.startIndex - 10}&endIndex=${pagination.endIndex - 10}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+	                		</c:when>
+	                		<c:otherwise>
+	                			<a href="?startIndex=0&endIndex=10" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+	                		</c:otherwise>
+	                	</c:choose>
+						<c:choose>
+	                		<c:when test="${pagination.endIndex + 10 <= computers.size()}">
+	                			<a href="?startIndex=${pagination.startIndex + 10}&endIndex=${pagination.endIndex + 10}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+	                		</c:when>
+	                		<c:otherwise>
+	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+	                		</c:otherwise>
+	                	</c:choose>
+	            	</li>
+	       		</ul>
 	    </footer>
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
