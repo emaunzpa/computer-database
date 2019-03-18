@@ -1,11 +1,14 @@
 package com.emaunzpa.computerdatabase.bdd;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.RollingFileAppender;
 
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
@@ -15,9 +18,19 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	private Statement statement;
     private ResultSet resultat;
     private static Logger log = Logger.getLogger(ManufacturerDriver.class.getName());
+    private static HTMLLayout htmlLayout = new HTMLLayout();
     
 	public ManufacturerDriver() {
 
+		RollingFileAppender rollingfileAppender = null;
+		try {
+			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ManufacturerDriverLogger.html");
+			log.addAppender(rollingfileAppender);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 	
 	@Override

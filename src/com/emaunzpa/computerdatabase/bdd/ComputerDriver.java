@@ -1,5 +1,6 @@
 package com.emaunzpa.computerdatabase.bdd;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +9,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.RollingFileAppender;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.model.*;
@@ -21,12 +24,22 @@ public class ComputerDriver implements ComputerDAO {
     private Integer statut;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 	private static Logger log = Logger.getLogger(ComputerDriver.class);
+	private static HTMLLayout htmlLayout = new HTMLLayout();
 	
     /**
      * Empty creator without params
      */
 	public ComputerDriver() {
 
+		RollingFileAppender rollingfileAppender = null;
+		try {
+			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ComputerDriverLogger.html");
+			log.addAppender(rollingfileAppender);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 
 	@Override

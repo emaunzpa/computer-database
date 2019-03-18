@@ -9,7 +9,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.RollingFileAppender;
 
 public class ConnectionDriver {
 
@@ -19,11 +21,21 @@ public class ConnectionDriver {
     private static String _USER_;
     private static String _MDP_;
     private static Logger log = Logger.getLogger(ConnectionDriver.class.getName());
+    private static HTMLLayout htmlLayout = new HTMLLayout();	  
     
     private Connection connection;
     
     public ConnectionDriver() {
     	this.connection = null;
+    	RollingFileAppender rollingfileAppender = null;
+		try {
+			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ConnectionLogger.html");
+			log.addAppender(rollingfileAppender);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
     	try {
     		/**
     		 * The file database.properties has to be added to the /root/resources/ path with 
