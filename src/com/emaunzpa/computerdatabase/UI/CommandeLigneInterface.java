@@ -12,6 +12,7 @@ import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 import com.emaunzpa.computerdatabase.util.CasesCLI;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
+import com.emaunzpa.computerdatabase.util.Pagination;
 
 public class CommandeLigneInterface {
 
@@ -26,6 +27,7 @@ public class CommandeLigneInterface {
 	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver();
 	private ComputerDriver computerDriver = new ComputerDriver();
 	private DatesHandler datesHandler = new DatesHandler();
+	private Pagination pagination = new Pagination();
 	
 	/**
 	 * Creator to initialize various messages print by the controller
@@ -45,49 +47,7 @@ public class CommandeLigneInterface {
 	public void showAllComputer() {
 		System.out.println(actionResult + "\n");
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
-		String displayChoice = "";
-		int startIndex = 0;
-		int endIndex = 11;
-		while(!displayChoice.equals("q")) {
-			String actualDisplay = (startIndex + 1) + " to " + endIndex;
-			System.out.println();
-			System.out.println("                   --------- Type q to exit display ---------");
-			System.out.println();
-			for(int i= startIndex; i < endIndex; i++) {
-				Computer computer = computers.get(i);
-				String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
-				System.out.println(computerDetails);
-			}
-			System.out.println();
-			System.out.println("              previous (p) <--------- " + actualDisplay + " ---------> next (n)");
-			displayChoice = scIn.next();
-			System.out.println(displayChoice);
-			if (displayChoice.equals("p")) {
-				if (startIndex > 10) {
-					startIndex -= 10;
-					endIndex -= 10;
-				}
-				else {
-					while(startIndex > 0) {
-						startIndex--;
-						endIndex--;
-					}
-				}
-			}
-			else if (displayChoice.equals("n")) {
-				if (endIndex + 10 < computers.size()) {
-					endIndex += 10;
-					startIndex += 10;
-				}
-				else {
-					while(endIndex <= computers.size() - 1) {
-						endIndex++;
-						startIndex++;
-					}
-				}
-			}
-			scIn.nextLine();
-		}
+		pagination.displayComputers(computers);
 		System.out.println();
 	}
 	
@@ -97,49 +57,7 @@ public class CommandeLigneInterface {
 	public void showAllCompanies() {
 		System.out.println(actionResult + "\n");
 		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
-		String displayChoice = "";
-		int startIndex = 0;
-		int endIndex = 11;
-		while(!displayChoice.equals("q")) {
-			String actualDisplay = (startIndex + 1) + " to " + endIndex;
-			System.out.println();
-			System.out.println("    --------- Type q to exit display ---------");
-			System.out.println();
-			for(int i= startIndex; i < endIndex; i++) {
-				Manufacturer manufacturer = manufacturers.get(i);
-				String manufacturerDetails = "Id : " + manufacturer.getId() + " | Name : " + manufacturer.getName();
-				System.out.println(manufacturerDetails);
-			}
-			System.out.println();
-			System.out.println(" previous (p) <--------- " + actualDisplay + " ---------> next (n)");
-			displayChoice = scIn.next();
-			System.out.println(displayChoice);
-			if (displayChoice.equals("p")) {
-				if (startIndex > 10) {
-					startIndex -= 10;
-					endIndex -= 10;
-				}
-				else {
-					while(startIndex > 0) {
-						startIndex--;
-						endIndex--;
-					}
-				}
-			}
-			else if (displayChoice.equals("n")) {
-				if (endIndex + 10 < manufacturers.size()) {
-					endIndex += 10;
-					startIndex += 10;
-				}
-				else {
-					while(endIndex <= manufacturers.size() - 1) {
-						endIndex++;
-						startIndex++;
-					}
-				}
-			}
-			scIn.nextLine();
-		}
+		pagination.displayManufacturers(manufacturers);
 		System.out.println();
 	}
 	
