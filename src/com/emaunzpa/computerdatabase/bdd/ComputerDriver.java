@@ -161,6 +161,7 @@ public class ComputerDriver implements ComputerDAO {
 		connectionDriver.initializeConnection();
 		
 		try {
+			System.out.println(connectionDriver.toString());
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = "select * from computer";

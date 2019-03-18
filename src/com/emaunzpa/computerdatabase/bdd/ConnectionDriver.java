@@ -32,7 +32,6 @@ public class ConnectionDriver {
 			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ConnectionLogger.html");
 			log.addAppender(rollingfileAppender);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
     	
@@ -42,15 +41,21 @@ public class ConnectionDriver {
     		 * parameters url, user and password for accessing the database.
     		 */
 			ConnectionDriver.dbInput = new FileInputStream("resources/database.properties");
+			System.out.println(dbInput.toString());
 			ConnectionDriver.prop.load(dbInput);
+			System.out.println(prop.toString());
 		} catch (FileNotFoundException e) {
 			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());
+			System.out.println("Erreur lors du chargement de fichier");
 		} catch (IOException e) {
 			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());
+			System.out.println("Erreur lors du chargement de fichier");
 		}
     	ConnectionDriver._URL_= prop.getProperty("url");
     	ConnectionDriver._USER_= prop.getProperty("user");
     	ConnectionDriver._MDP_= prop.getProperty("pwd");
+    	System.out.println(prop.getProperty("url"));
+    	System.out.println("Connection properties ok !");
     }
     
     public void initializeConnection() {
@@ -58,6 +63,7 @@ public class ConnectionDriver {
 	    	log.info( "Chargement du driver..." );
 	        Class.forName( "com.mysql.jdbc.Driver" );
 	        log.info( "Driver chargé !" );
+	        System.out.println("Driver chargé !");
 	    } catch ( ClassNotFoundException e ) {
 	    	log.error( "Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! "
 	                + e.getMessage() );
@@ -65,9 +71,12 @@ public class ConnectionDriver {
 	    
 	    try {
 	    	log.info( "Connexion à la base de données..." );
+	    	System.out.println(_URL_);
+	    	System.out.println(_MDP_);
+	    	System.out.println(_USER_);
 	        connection = DriverManager.getConnection( _URL_, _USER_, _MDP_ );
 	        log.info( "Connexion réussie !" );
-
+	        System.out.println("Connexion réussie !");
 	        
 	    } catch ( SQLException e ) {
 	    	log.error( "Erreur lors de la connexion : "
