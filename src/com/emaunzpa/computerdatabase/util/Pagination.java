@@ -39,7 +39,7 @@ public class Pagination {
 			System.out.println("                   --------- Type q to exit display ---------");
 			System.out.println();
 			for (Computer computer : showRestrictedComputerList(computers)) {
-				String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
+				String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_name : " + computer.getManufacturerName();
 				System.out.println(computerDetails);
 			}
 			System.out.println();

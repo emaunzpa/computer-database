@@ -163,7 +163,7 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request = "select * from computer";
+	        String request = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
 	        resultat = statement.executeQuery( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        while ( resultat.next() ) {
@@ -171,6 +171,7 @@ public class ComputerDriver implements ComputerDAO {
 	            String nameComputer = resultat.getString( "name" );
 	            String introducedStr = resultat.getString( "introduced" );
 	            String discontinuedStr = resultat.getString( "discontinued" );
+	            String manufacturerName = resultat.getString( "company_name" );
 	            java.sql.Date introducedDate = null;
 	            java.sql.Date discontinuedDate = null;
 	            if (introducedStr != null) {
@@ -182,7 +183,7 @@ public class ComputerDriver implements ComputerDAO {
 	            	discontinuedDate = new java.sql.Date(discontinuedUtilDate.getTime());
 	            }
 	            Integer idCompany = resultat.getInt( "company_id" );
-	            computers.add(new Computer.ComputerBuilder().withId(idComputer).withName(nameComputer).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(idCompany).build());
+	            computers.add(new Computer.ComputerBuilder().withId(idComputer).withName(nameComputer).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(idCompany).withManufacturerName(manufacturerName).build());
 	        }
 	    } catch ( SQLException | ParseException e ) {
 	        log.error( "Erreur lors de la connexion : <br/>"

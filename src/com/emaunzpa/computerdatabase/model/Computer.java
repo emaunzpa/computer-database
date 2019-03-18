@@ -7,6 +7,7 @@ public class Computer {
 	private java.sql.Date introducedDate;
 	private java.sql.Date discontinuedDate;
 	private Integer manufacturerId;
+	private String manufacturerName;
 	
 	public static class ComputerBuilder {
 		
@@ -15,6 +16,7 @@ public class Computer {
 		private java.sql.Date introducedDate;
 		private java.sql.Date discontinuedDate;
 		private Integer manufacturerId;
+		private String manufacturerName;
 		
 		public ComputerBuilder() {
 
@@ -45,6 +47,11 @@ public class Computer {
 			return this;
 		}
 		
+		public ComputerBuilder withManufacturerName(String manufacturerName) {
+			this.manufacturerName = manufacturerName;
+			return this;
+		}
+		
 		public Computer build() {
 			Computer computer = new Computer(this);
 			computer.setId(this.id);
@@ -52,6 +59,7 @@ public class Computer {
 			computer.setIntroducedDate(this.introducedDate);
 			computer.setDiscontinuedDate(this.discontinuedDate);
 			computer.setmanufacturerId(this.manufacturerId);	
+			computer.setManufacturerName(this.manufacturerName);
 			return computer;
 		}
 	}
@@ -62,6 +70,7 @@ public class Computer {
 		this.introducedDate = builder.introducedDate;
 		this.discontinuedDate = builder.discontinuedDate;
 		this.manufacturerId = builder.manufacturerId;
+		this.manufacturerName = builder.manufacturerName;
 	}
 	
 	public int getId() {
@@ -102,6 +111,14 @@ public class Computer {
 
 	public void setDiscontinuedDate(java.sql.Date discontinuedDate) {
 		this.discontinuedDate = discontinuedDate;
+	}
+
+	public String getManufacturerName() {
+		return manufacturerName;
+	}
+
+	public void setManufacturerName(String manufacturerName) {
+		this.manufacturerName = manufacturerName;
 	}
 	
 }

@@ -49,7 +49,7 @@
 	                        <!-- Table header for Discontinued Date -->
 	                        <th>Discontinued date</th>
 	                        <!-- Table header for Company -->
-	                        <th>Company ID</th>
+	                        <th>Company name</th>
 	                    </tr>
 	                </thead>
 	                <!-- Browse attribute computers -->
@@ -64,7 +64,7 @@
 	                        </td>
 	                        <td>${computer.introducedDate}</td>
 	                        <td>${computer.discontinuedDate}</td>
-	                        <td>${computer.manufacturerId}</td>
+	                        <td>${computer.manufacturerName}</td>
 	                    </tr>
 	                    </c:forEach>
 	                </tbody>
