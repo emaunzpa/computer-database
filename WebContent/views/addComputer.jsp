@@ -34,13 +34,18 @@
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" >
                                     <option value="0">--</option>
+                                    <c:set var="count" value="1"></c:set>
+                                    <c:forEach items="${manufacturers}" var="manufacturer">
+                                    	<option value="${count}">${manufacturer.name}</option>
+                                    	 <c:set var="count" value="${count + 1}"></c:set>
+                                    </c:forEach>
                                 </select>
                             </div>                  
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary">
                             or
-                            <a href="dashboard.html" class="btn btn-default">Cancel</a>
+                            <a href="listComputers" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

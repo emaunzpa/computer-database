@@ -14,9 +14,19 @@
 		<servlet-class>com.emaunzpa.computerdatabase.servlet.ListComputers</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<servlet-name>AddComputer</servlet-name>
+		<servlet-class>com.emaunzpa.computerdatabase.servlet.AddComputer</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>ListComputers</servlet-name>
 		<url-pattern>/views/listComputers</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AddComputer</servlet-name>
+		<url-pattern>/views/addComputer</url-pattern>
 	</servlet-mapping>
 
 </web-app>
