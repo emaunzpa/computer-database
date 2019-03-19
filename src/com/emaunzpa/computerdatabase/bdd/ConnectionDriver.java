@@ -39,6 +39,7 @@ public class ConnectionDriver {
     		/**
     		 * The file database.properties has to be added to the /root/resources/ path with 
     		 * parameters url, user and password for accessing the database.
+    		 * TODO Change path to relative path
     		 */
 			ConnectionDriver.dbInput = new FileInputStream("/home/emaunzpa/excilys/computer-database/resources/database.properties");
 			ConnectionDriver.prop.load(dbInput);

@@ -20,18 +20,23 @@ public class DatesHandler {
 	 * @return sqlDate
 	 */
 	public java.sql.Date convertStringDateToSqlDate(String stringDate){
-		if (stringDate.equals("")) {
+		if (stringDate == null) {
 			return null;
 		}
-		java.util.Date stringDateParsed = null;
-		java.sql.Date sqlDate = null;
-		try {
-			stringDateParsed = sdf.parse(stringDate);
-			sqlDate = new java.sql.Date(stringDateParsed.getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
+		else if (stringDate.equals("")) {
+			return null;
 		}
-    	return sqlDate;
+		else {
+			java.util.Date stringDateParsed = null;
+			java.sql.Date sqlDate = null;
+			try {
+				stringDateParsed = sdf.parse(stringDate);
+				sqlDate = new java.sql.Date(stringDateParsed.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+	    	return sqlDate;
+		}
 	}
 	
 	public String convertSqlDateToString(java.sql.Date sqlDate) {

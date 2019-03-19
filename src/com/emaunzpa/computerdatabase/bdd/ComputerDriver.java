@@ -15,6 +15,7 @@ import org.apache.log4j.RollingFileAppender;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.model.*;
+import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 public class ComputerDriver implements ComputerDAO {
 	
@@ -23,6 +24,7 @@ public class ComputerDriver implements ComputerDAO {
     private PreparedStatement prepareStatement;
     private Integer statut;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+    private DatesHandler dh = new DatesHandler(); 
 	private static Logger log = Logger.getLogger(ComputerDriver.class);
 	private static HTMLLayout htmlLayout = new HTMLLayout();
 	
@@ -36,7 +38,6 @@ public class ComputerDriver implements ComputerDAO {
 			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ComputerDriverLogger.html");
 			log.addAppender(rollingfileAppender);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -60,16 +61,8 @@ public class ComputerDriver implements ComputerDAO {
 	        	String nameComputer = resultat.getString( "name" );
 	            String introducedStr = resultat.getString( "introduced" );
 	            String discontinuedStr = resultat.getString( "discontinued" );
-	            java.sql.Date introducedDate = null;
-	            java.sql.Date discontinuedDate = null;
-	            if (introducedStr != null) {
-	            	java.util.Date introducedUtilDate = sdf.parse(introducedStr);
-	            	introducedDate = new java.sql.Date(introducedUtilDate.getTime());
-	            }
-	            if (discontinuedStr != null) {
-	            	java.util.Date discontinuedUtilDate = sdf.parse(discontinuedStr);
-	            	discontinuedDate = new java.sql.Date(discontinuedUtilDate.getTime());
-	            }
+	            java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedStr);
+	            java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedStr);
 	            Integer manufacturerId = resultat.getInt( "company_id" );
 	            computer.setId(idComputer);
 		        computer.setName(nameComputer);
@@ -77,7 +70,7 @@ public class ComputerDriver implements ComputerDAO {
 		        computer.setDiscontinuedDate(discontinuedDate);
 		        computer.setmanufacturerId(manufacturerId);
 	        }
-	    } catch ( SQLException | ParseException e ) {
+	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
 	    } finally {
@@ -172,20 +165,12 @@ public class ComputerDriver implements ComputerDAO {
 	            String introducedStr = resultat.getString( "introduced" );
 	            String discontinuedStr = resultat.getString( "discontinued" );
 	            String manufacturerName = resultat.getString( "company_name" );
-	            java.sql.Date introducedDate = null;
-	            java.sql.Date discontinuedDate = null;
-	            if (introducedStr != null) {
-	            	java.util.Date introducedUtilDate = sdf.parse(introducedStr);
-	            	introducedDate = new java.sql.Date(introducedUtilDate.getTime());
-	            }
-	            if (discontinuedStr != null) {
-	            	java.util.Date discontinuedUtilDate = sdf.parse(discontinuedStr);
-	            	discontinuedDate = new java.sql.Date(discontinuedUtilDate.getTime());
-	            }
+	            java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedStr);
+	            java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedStr);
 	            Integer idCompany = resultat.getInt( "company_id" );
 	            computers.add(new Computer.ComputerBuilder().withId(idComputer).withName(nameComputer).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(idCompany).withManufacturerName(manufacturerName).build());
 	        }
-	    } catch ( SQLException | ParseException e ) {
+	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : <br/>"
 	                + e.getMessage() );
 	    } finally {

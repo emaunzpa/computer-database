@@ -18,7 +18,9 @@ import com.emaunzpa.computerdatabase.util.DatesHandler;
 public class AddComputer extends HttpServlet {
 
 	public static final String VUE_FORM_NEW_COMPUTER = "/views/addComputer.jsp";
+	public String vueComputerDetails;
 	public static final String ATT_LIST_MANUFACTURERS = "manufacturers";
+	public static final String ATT_FORM = "form";
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
@@ -30,7 +32,7 @@ public class AddComputer extends HttpServlet {
 		this.getServletContext().getRequestDispatcher(VUE_FORM_NEW_COMPUTER).forward(request, response);
 	}
 	
-	public void doPost( HttpServletRequest request, HttpServletResponse response ) {
+	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
 		String computerName = request.getParameter("computerName");
 		String introducedDateStr = request.getParameter("introducedDate");
@@ -45,6 +47,10 @@ public class AddComputer extends HttpServlet {
 		ComputerDriver computerDriver = new ComputerDriver();
 		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
 		computerDriver.addComputer(newComputer);
+		int newComputerId = computerDriver.getAllComputers().get(computerDriver.getAllComputers().size()-1).getId();
+		
+		this.vueComputerDetails = "/views/computer" + newComputerId + ".jsp";
+		this.getServletContext().getRequestDispatcher(vueComputerDetails).forward(request, response);
 	}
 	
 }
