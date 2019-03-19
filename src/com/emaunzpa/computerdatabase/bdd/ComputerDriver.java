@@ -107,6 +107,12 @@ public class ComputerDriver implements ComputerDAO {
 			return false;
 		}
 		
+		// Discontinued date must be after introduced date
+		if (computer.getIntroducedDate() != null && computer.getDiscontinuedDate() != null && computer.getIntroducedDate().after(computer.getDiscontinuedDate())){
+			log.info("Discontinued date must be after introduced date. Request cancelled.");
+			return false;
+		}
+		
 		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver();
 		connectionDriver.initializeConnection();
@@ -246,6 +252,12 @@ public class ComputerDriver implements ComputerDAO {
 		// Cannot update a unexisting computer
 		if (getComputer(id).getName() == null) {
 			log.error("Impossible to update a unexisting computer. Request cancelled.");
+			return false;
+		}
+		
+		// Discontinued date must be after introduced date
+		if (newIntroduced != null && newDiscontinued != null && newIntroduced.after(newDiscontinued)){
+			log.info("Discontinued date must be after introduced date. Request cancelled.");
 			return false;
 		}
 		

@@ -51,10 +51,11 @@ public class TestComputer {
 		Computer computer2 = new Computer.ComputerBuilder().withName("Computer2").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).withDiscontinuedDate(null).withManufacturerId(5).build();
 		Computer computerWithNullName = new Computer.ComputerBuilder().build();
 		Computer computerWithUnexistingCompanyId = new Computer.ComputerBuilder().withName("Computer4").withIntroducedDate(null).withDiscontinuedDate(null).withManufacturerId(1000).build();
-		
+		Computer computerWithUncompatibleDates = new Computer.ComputerBuilder().withName("Computer5").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).withDiscontinuedDate(datesHandler.convertStringDateToSqlDate("2019-03-13")).withManufacturerId(1).build();
 		assertTrue(computerDriver.addComputer(computer1));
 		assertTrue(computerDriver.addComputer(computer2));
 		assertFalse(computerDriver.addComputer(computerWithNullName));
+		assertFalse(computerDriver.addComputer(computerWithUncompatibleDates));
 		assertFalse(computerDriver.addComputer(computerWithUnexistingCompanyId));
 	}
 
@@ -65,5 +66,6 @@ public class TestComputer {
 		assertTrue(computerDriver.updateComputer(12, "Apple III", datesHandler.convertStringDateToSqlDate("1980-05-01"), datesHandler.convertStringDateToSqlDate("1984-04-01"), 1));
 		assertTrue(computerDriver.updateComputer(575, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, 5));
 		assertFalse(computerDriver.updateComputer(100000, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, 5));
+		assertFalse(computerDriver.updateComputer(575, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), datesHandler.convertStringDateToSqlDate("2019-02-14"), 5));
 	}
 }
