@@ -76,6 +76,7 @@
 	        <div class="container text-center">
 	            <ul class="pagination">
 	                <li>
+	                	<a href="?startIndex=0&endIndex=10">Start</a>
 	                	<c:choose>
 	                		<c:when test="${pagination.startIndex >= 10}">
 	                			<a href="?startIndex=${pagination.startIndex - 10}&endIndex=${pagination.endIndex - 10}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
@@ -92,6 +93,7 @@
 	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
 	                		</c:otherwise>
 	                	</c:choose>
+	                	<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}">End</a>
 	            	</li>
 	       		</ul>
 	    </footer>
