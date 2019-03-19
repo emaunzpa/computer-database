@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
-                    <form action="addComputer" method="POST">
+                    <form id="addComputerForm" action="addComputer" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
@@ -52,5 +52,39 @@
             </div>
         </div>
     </section>
+    
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/jquery.validate.min.js"></script>
+    
+    <!-- Javascript to validate introduced and discontinued dates with Jquery-->
+    <script type="text/javascript">
+    	jQuery.validator.addMethod(
+    		"greaterThan", 
+    		function(value, element, params) {
+    			
+    			console.log(new Date($(params).val()));
+    			console.log(new Date(value));
+    			if (/Invalid/.test(new Date(value))){
+    				return true;
+    			}
+    			if (/Invalid/.test(new Date($(params).val())) && !/Invalid/.test(new Date(value))){
+    				return false;
+    			}
+    			if (!/Invalid/.test(new Date(value)) && !/Invalid/.test(new Date($(params).val()))){
+    				return new Date(value) > new Date($(params).val());
+    			}			
+    		},
+    		'Must be greater than Introduced Date or both null'
+    	);
+    	     	    
+    	$("#addComputerForm").validate({
+    		rules : {
+    			discontinuedDate : {
+    				greaterThan: "#introduced"
+    			}
+    		}
+    	});
+    </script>
+    
 </body>
 </html>

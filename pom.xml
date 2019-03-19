@@ -32,21 +32,37 @@
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.2.1</version>
-        <configuration>
-          <warSourceDirectory>WebContent</warSourceDirectory>
-        </configuration>
-      </plugin>
+    	
+    	<!-- Maven compiler plugin -->
+		<plugin>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.8.0</version>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+			</configuration>
+			</plugin>
+	
+		<!-- Maven war plugin -->
+		<plugin>
+			<artifactId>maven-war-plugin</artifactId>
+			<version>3.2.1</version>
+			<configuration>
+				<warSourceDirectory>WebContent</warSourceDirectory>
+			</configuration>
+		</plugin>
+
+		<!-- Maven checkstyle plugin -->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+			<version>3.0.0</version>
+			<configuration>
+				<configLocation>resources/checkstyle.xml</configLocation>
+				<configLocation>resources/suppression.xml</configLocation>
+			</configuration>
+		</plugin>
+	      
     </plugins>
   </build>
 </project>

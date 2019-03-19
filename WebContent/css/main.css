@@ -4,6 +4,10 @@ body {
     padding-bottom: 70px;
 }
 
+.error {
+      color: red;
+}
+
 footer {
     position:fixed;
     bottom:0;
