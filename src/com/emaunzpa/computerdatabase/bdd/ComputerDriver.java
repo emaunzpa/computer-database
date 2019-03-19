@@ -22,7 +22,7 @@ public class ComputerDriver implements ComputerDAO {
     private ResultSet resultat;
     private PreparedStatement prepareStatement;
     private Integer statut;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
 	private static Logger log = Logger.getLogger(ComputerDriver.class);
 	private static HTMLLayout htmlLayout = new HTMLLayout();
 	

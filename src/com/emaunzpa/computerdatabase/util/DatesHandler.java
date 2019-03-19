@@ -11,7 +11,7 @@ public class DatesHandler {
 	 * Creator without parameter
 	 */
 	public DatesHandler() {
-		this.sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.sdf = new SimpleDateFormat("yyyy-MM-dd");
 	}
 	
 	/**
@@ -20,21 +20,22 @@ public class DatesHandler {
 	 * @return sqlDate
 	 */
 	public java.sql.Date convertStringDateToSqlDate(String stringDate){
+		if (stringDate.equals("")) {
+			return null;
+		}
 		java.util.Date stringDateParsed = null;
 		java.sql.Date sqlDate = null;
 		try {
 			stringDateParsed = sdf.parse(stringDate);
+			sqlDate = new java.sql.Date(stringDateParsed.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
-		if (stringDateParsed != null) {
-			sqlDate = new java.sql.Date(stringDateParsed.getTime());
 		}
     	return sqlDate;
 	}
 	
 	public String convertSqlDateToString(java.sql.Date sqlDate) {
-		return (sqlDate.toString() + " 00:00:00");
+		return (sqlDate.toString());
 	}
 	
 }

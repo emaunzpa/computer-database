@@ -39,10 +39,12 @@ public class AddComputer extends HttpServlet {
 		java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedDateStr);
 		java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedDateStr);
 		Integer companyId = Integer.valueOf(request.getParameter("companyId"));
+		if (companyId == 0) {
+			companyId = null;
+		}
 		ComputerDriver computerDriver = new ComputerDriver();
 		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
 		computerDriver.addComputer(newComputer);
-		
 	}
 	
 }

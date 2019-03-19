@@ -43,6 +43,6 @@ public class ListComputers extends HttpServlet {
 		request.setAttribute(ATT_PAGINATION, pagination);
 		
 		this.getServletContext().getRequestDispatcher(VUE_LIST_COMPUTERS).forward(request, response);
-
+		
     }
 }
