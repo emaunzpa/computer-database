@@ -27,12 +27,13 @@ public class ComputerDriver implements ComputerDAO {
     private DatesHandler dh = new DatesHandler(); 
 	private static Logger log = Logger.getLogger(ComputerDriver.class);
 	private static HTMLLayout htmlLayout = new HTMLLayout();
+	private static String databaseName;
 	
     /**
      * Empty creator without params
      */
-	public ComputerDriver() {
-
+	public ComputerDriver(String databaseName) {
+		this.databaseName = databaseName;
 		RollingFileAppender rollingfileAppender = null;
 		try {
 			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ComputerDriverLogger.html");
@@ -46,7 +47,7 @@ public class ComputerDriver implements ComputerDAO {
 	@Override
 	public Computer getComputer(int id) {
 		
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		Computer computer = new Computer.ComputerBuilder().build();
 		
@@ -114,7 +115,7 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		boolean result = false;
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		
 		try {
@@ -156,7 +157,7 @@ public class ComputerDriver implements ComputerDAO {
 	public ArrayList<Computer> getAllComputers() {
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		
 		try {
@@ -208,7 +209,7 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean removeComputer(int id) {
 		
 		boolean result = false;
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		
 		try {
@@ -246,7 +247,7 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) {
 		
 		boolean result = false;
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		
 		// Cannot update a unexisting computer

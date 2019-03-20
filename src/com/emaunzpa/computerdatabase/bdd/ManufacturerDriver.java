@@ -19,9 +19,11 @@ public class ManufacturerDriver implements ManufacturerDAO{
     private ResultSet resultat;
     private static Logger log = Logger.getLogger(ManufacturerDriver.class.getName());
     private static HTMLLayout htmlLayout = new HTMLLayout();
+    private static String databaseName;
     
-	public ManufacturerDriver() {
+	public ManufacturerDriver(String databaseName) {
 
+		this.databaseName = databaseName;
 		RollingFileAppender rollingfileAppender = null;
 		try {
 			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ManufacturerDriverLogger.html");
@@ -36,7 +38,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	@Override
 	public Manufacturer getManufacturer(int id) {
 		
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		Manufacturer manufacturer = new Manufacturer();
 		
@@ -82,7 +84,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public ArrayList<Manufacturer> getAllManufacturers() {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		ConnectionDriver connectionDriver = new ConnectionDriver();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		
 		try {

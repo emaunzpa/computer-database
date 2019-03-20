@@ -24,7 +24,7 @@ public class AddComputer extends HttpServlet {
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		ManufacturerDriver manufacturerDriver = new ManufacturerDriver();
+		ManufacturerDriver manufacturerDriver = new ManufacturerDriver("computer-database-db");
 		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
@@ -44,7 +44,7 @@ public class AddComputer extends HttpServlet {
 		if (companyId == 0) {
 			companyId = null;
 		}
-		ComputerDriver computerDriver = new ComputerDriver();
+		ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
 		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
 		computerDriver.addComputer(newComputer);
 		int newComputerId = computerDriver.getAllComputers().get(computerDriver.getAllComputers().size()-1).getId();

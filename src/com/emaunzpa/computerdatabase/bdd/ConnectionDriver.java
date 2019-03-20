@@ -25,7 +25,7 @@ public class ConnectionDriver {
     
     private Connection connection;
     
-    public ConnectionDriver() {
+    public ConnectionDriver(String databaseName) {
     	this.connection = null;
     	RollingFileAppender rollingfileAppender = null;
 		try {
@@ -41,7 +41,7 @@ public class ConnectionDriver {
     		 * parameters url, user and password for accessing the database.
     		 * TODO Change path to relative path
     		 */
-			ConnectionDriver.dbInput = new FileInputStream("/home/emaunzpa/excilys/computer-database/resources/database.properties");
+			ConnectionDriver.dbInput = new FileInputStream("/home/emaunzpa/excilys/computer-database/resources/"+databaseName+".properties");
 			ConnectionDriver.prop.load(dbInput);
 		} catch (FileNotFoundException e) {
 			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());

@@ -24,8 +24,8 @@ public class CommandeLigneInterface {
 	private String actionResult;
 	private Scanner scIn = new Scanner(System.in);
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver();
-	private ComputerDriver computerDriver = new ComputerDriver();
+	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver("computer-database-db");
+	private ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
 	private DatesHandler datesHandler = new DatesHandler();
 	private Pagination pagination = new Pagination();
 	

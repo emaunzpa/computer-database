@@ -34,7 +34,7 @@ public class ListComputers extends HttpServlet {
 			pagination.setEndIndex(Integer.valueOf(request.getParameter("endIndex")));
 		}
 
-		ComputerDriver computerDriver = new ComputerDriver();
+		ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
 		List<Computer> restrictedListComputers = pagination.showRestrictedComputerList(computers);
 		

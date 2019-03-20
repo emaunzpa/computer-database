@@ -24,7 +24,7 @@ public class TestComputer {
 
 	@Before
 	public void createComputerDriver() {
-		computerDriver = new ComputerDriver();
+		computerDriver = new ComputerDriver("computer-database-db-test");
 		datesHandler = new DatesHandler();
 	}
 	
@@ -69,7 +69,7 @@ public class TestComputer {
 		
 		assertTrue(computerDriver.updateComputer(1, "MacBook Pro 15.4 inch", null, null, 1));
 		assertTrue(computerDriver.updateComputer(12, "Apple III", datesHandler.convertStringDateToSqlDate("1980-05-01"), datesHandler.convertStringDateToSqlDate("1984-04-01"), 1));
-		assertTrue(computerDriver.updateComputer(575, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, 5));
+		assertTrue(computerDriver.updateComputer(574, "iphoe 4S", datesHandler.convertStringDateToSqlDate("2011-10-14"), null, 1));
 		assertFalse(computerDriver.updateComputer(100000, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, 5));
 		assertFalse(computerDriver.updateComputer(575, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), datesHandler.convertStringDateToSqlDate("2019-02-14"), 5));
 	}
