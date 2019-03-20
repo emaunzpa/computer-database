@@ -54,18 +54,20 @@
 	                </thead>
 	                <!-- Browse attribute computers -->
 	                <tbody id="results">
+	                	<c:set var="countComputer" value="1"></c:set>
 	                	<c:forEach items="${printedComputers}" var="computer">
-	                    <tr>
+	                    <tr class="computer-ligne">
 	                        <td class="editMode">
 	                            <input type="checkbox" name="cb" class="cb" value="0">
 	                        </td>
 	                        <td>
-	                            <a href="" onclick="">${computer.name}</a>
+	                            <a href="" onclick="" id="computerName${countComputer}">${computer.name}</a>
 	                        </td>
 	                        <td>${computer.introducedDate}</td>
 	                        <td>${computer.discontinuedDate}</td>
 	                        <td>${computer.manufacturerName}</td>
 	                    </tr>
+	                    <c:set var="countComputer" value="${countComputer + 1}"></c:set>
 	                    </c:forEach>
 	                </tbody>
 	            </table>
@@ -76,24 +78,24 @@
 	        <div class="container text-center">
 	            <ul class="pagination">
 	                <li>
-	                	<a href="?startIndex=0&endIndex=10">Start</a>
+	                	<a href="?startIndex=0&endIndex=10" id="startPaginationButton">Start</a>
 	                	<c:choose>
 	                		<c:when test="${pagination.startIndex >= 10}">
-	                			<a href="?startIndex=${pagination.startIndex - 10}&endIndex=${pagination.endIndex - 10}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+	                			<a href="?startIndex=${pagination.startIndex - 10}&endIndex=${pagination.endIndex - 10}" aria-label="Previous" id="previousPaginationButton"><span aria-hidden="true">&laquo;</span></a>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<a href="?startIndex=0&endIndex=10" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+	                			<a href="?startIndex=0&endIndex=10" aria-label="Previous" id="previousPaginationButton"><span aria-hidden="true">&laquo;</span></a>
 	                		</c:otherwise>
 	                	</c:choose>
 						<c:choose>
 	                		<c:when test="${pagination.endIndex + 10 <= computers.size()}">
-	                			<a href="?startIndex=${pagination.startIndex + 10}&endIndex=${pagination.endIndex + 10}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+	                			<a href="?startIndex=${pagination.startIndex + 10}&endIndex=${pagination.endIndex + 10}" aria-label="Next" id="nextPaginationButton"><span aria-hidden="true">&raquo;</span></a>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next" id="nextPaginationButton"><span aria-hidden="true">&raquo;</span></a>
 	                		</c:otherwise>
 	                	</c:choose>
-	                	<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}">End</a>
+	                	<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" id="endPaginationButton">End</a>
 	            	</li>
 	       		</ul>
 	    </footer>
