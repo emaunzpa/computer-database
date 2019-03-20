@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,8 +22,8 @@ public class TestWebUI {
 
 	private static WebDriver driver;
 	
-	@Before
-	public void createComputerDriver() {
+	@BeforeClass
+	public static void setUp() {
 		// Geckodriver.exe has to be added to resource folder
 		System.setProperty("webdriver.gecko.driver", "resources/geckodriver");
 		driver = new FirefoxDriver();
@@ -44,7 +45,6 @@ public class TestWebUI {
 		assertTrue(computer1.getText().equals("MacBook Pro 15.4 inch"));
 		Thread.sleep(1000);
 		
-		driver.quit();
 	}
 	
 	/**
@@ -85,8 +85,6 @@ public class TestWebUI {
 		addComputerButton.click();
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/addComputer"));
-
-		driver.quit();
 		
 	}
 	
@@ -97,8 +95,52 @@ public class TestWebUI {
 	@Test
 	public void addComputerValidation() throws InterruptedException {
 		
-		//Connect to add computer url
 		driver.get("http://localhost:8080/computer-database/views/addComputer");
+		Thread.sleep(1000);
+		
+		WebElement addButton = driver.findElement(By.id("addButton"));
+		addButton.click();
+		Thread.sleep(1000);
+		
+		WebElement computerNameError = driver.findElement(By.id("computerName-error"));
+		assertTrue(computerNameError.getText().equals("This field is required."));
+		
+		WebElement computerName = driver.findElement(By.id("computerName"));
+		computerName.sendKeys("ComputerName generated with selenium");
+		Thread.sleep(1000);
+		
+		WebElement introducedDate = driver.findElement(By.id("introduced"));
+		introducedDate.sendKeys("2019-03-21");
+		System.out.println(introducedDate.getText());
+		Thread.sleep(1000);
+		
+		WebElement discontinuedDate = driver.findElement(By.id("discontinued"));
+		discontinuedDate.sendKeys("2019-03-19");
+		System.out.println(discontinuedDate.getText());
+		Thread.sleep(1000);
+		
+		addButton.click();
+		WebElement discontinuedError = driver.findElement(By.id("discontinued-error"));
+		assertTrue(discontinuedError.getText().equals("Must be greater than Introduced Date or both null"));
+		Thread.sleep(1000);
+		
+		WebElement companyIdSelect = driver.findElement(By.id("companyId"));
+		Thread.sleep(1000);
+		
+		List<WebElement> companyIdOptions = driver.findElements(By.className("companyId-option"));
+		assertTrue(companyIdOptions.size() == 42);
+		Thread.sleep(1000);
+		
+		companyIdSelect.click();
+		Thread.sleep(1000);
+		companyIdOptions.get(4).click();
+		Thread.sleep(1000);
+		assertTrue(companyIdOptions.get(4).getText().equals("Tandy Corporation"));
+		Thread.sleep(1000);
+		
+		WebElement cancelButton = driver.findElement(By.id("cancelButton"));
+		cancelButton.click();
+		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers"));
 		Thread.sleep(1000);
 		
 		driver.quit();
