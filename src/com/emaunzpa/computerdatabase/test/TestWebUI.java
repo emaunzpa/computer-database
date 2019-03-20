@@ -4,11 +4,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
+import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
+import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 /*
  * Tests of the various Web-UI actions with Selenium
@@ -17,12 +21,21 @@ public class TestWebUI {
 
 	private static WebDriver driver;
 	
-	@Test
-	public void dashboardalidation() throws InterruptedException {
-		
-		// Launch selenium firefox driver and connect to dashboard url
+	@Before
+	public void createComputerDriver() {
+		// Geckodriver.exe has to be added to resource folder
 		System.setProperty("webdriver.gecko.driver", "resources/geckodriver");
 		driver = new FirefoxDriver();
+	}
+	
+	/**
+	 * Test dashboard display and elements
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void dashboardvalidation() throws InterruptedException {
+		
+		// Connect to dashboard url
 		driver.get("http://localhost:8080/computer-database/views/listComputers");
 		Thread.sleep(1000);
 		
@@ -31,7 +44,18 @@ public class TestWebUI {
 		assertTrue(computer1.getText().equals("MacBook Pro 15.4 inch"));
 		Thread.sleep(1000);
 		
-		// Test various buttons of pagination
+		driver.quit();
+	}
+	
+	/**
+	 *  Test various buttons of pagination
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void dashboardNavigation() throws InterruptedException {
+		
+		driver.get("http://localhost:8080/computer-database/views/listComputers");
+		Thread.sleep(1000);
 		
 		// End Button
 		WebElement endButton = driver.findElement(By.id("endPaginationButton"));
@@ -62,9 +86,22 @@ public class TestWebUI {
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/addComputer"));
 
-		// Quit driver
 		driver.quit();
 		
+	}
+	
+	/**
+	 * Validation for the adding computer Web-UI
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void addComputerValidation() throws InterruptedException {
+		
+		//Connect to add computer url
+		driver.get("http://localhost:8080/computer-database/views/addComputer");
+		Thread.sleep(1000);
+		
+		driver.quit();
 	}
 	
 }
