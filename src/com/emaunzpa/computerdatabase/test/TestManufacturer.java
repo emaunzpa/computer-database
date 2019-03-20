@@ -10,6 +10,9 @@ import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 
+/**
+ * Tests for the backend methods of ManufacturerDAO
+ */
 public class TestManufacturer {
 
 	private ManufacturerDriver manufacturerDriver;

@@ -7,11 +7,16 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 
+/**
+ * Tests for the backend methods of ComputerDAO
+ */	
 public class TestComputer {
 	
 	private ComputerDriver computerDriver;
@@ -68,4 +73,5 @@ public class TestComputer {
 		assertFalse(computerDriver.updateComputer(100000, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, 5));
 		assertFalse(computerDriver.updateComputer(575, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), datesHandler.convertStringDateToSqlDate("2019-02-14"), 5));
 	}
+	
 }
