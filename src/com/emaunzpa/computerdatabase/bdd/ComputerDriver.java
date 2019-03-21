@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
@@ -50,11 +51,11 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public Computer getComputer(int id) {
+	public Optional<Computer> getComputer(int id) {
 		
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
-		Computer computer = new Computer.ComputerBuilder().build();
+		Optional<Computer> computer = Optional.of(new Computer.ComputerBuilder().build());
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
@@ -70,11 +71,11 @@ public class ComputerDriver implements ComputerDAO {
 	            java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedStr);
 	            java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedStr);
 	            Integer manufacturerId = resultat.getInt( "company_id" );
-	            computer.setId(idComputer);
-		        computer.setName(nameComputer);
-		        computer.setIntroducedDate(introducedDate);
-		        computer.setDiscontinuedDate(discontinuedDate);
-		        computer.setmanufacturerId(manufacturerId);
+	            computer.get().setId(idComputer);
+		        computer.get().setName(nameComputer);
+		        computer.get().setIntroducedDate(introducedDate);
+		        computer.get().setDiscontinuedDate(discontinuedDate);
+		        computer.get().setmanufacturerId(manufacturerId);
 	        }
 	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : "
@@ -256,7 +257,7 @@ public class ComputerDriver implements ComputerDAO {
 		connectionDriver.initializeConnection();
 		
 		// Cannot update a unexisting computer
-		if (getComputer(id).getName() == null) {
+		if (getComputer(id).get().getName() == null) {
 			log.error("Impossible to update a unexisting computer. Request cancelled.");
 			return false;
 		}

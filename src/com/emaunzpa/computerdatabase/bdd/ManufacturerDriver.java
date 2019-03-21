@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
@@ -38,11 +39,11 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	}
 	
 	@Override
-	public Manufacturer getManufacturer(int id) {
+	public Optional<Manufacturer> getManufacturer(int id) {
 		
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
-		Manufacturer manufacturer = new Manufacturer();
+		Optional<Manufacturer> manufacturer = Optional.of(new Manufacturer());
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
@@ -53,8 +54,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	        if(resultat.first()) {
 	            int idManufacturer = resultat.getInt( "id" );
 	            String nameManufacturer = resultat.getString( "name" );
-	            manufacturer.setId(idManufacturer);
-	            manufacturer.setName(nameManufacturer);
+	            manufacturer.get().setId(idManufacturer);
+	            manufacturer.get().setName(nameManufacturer);
 	        }
 	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : "

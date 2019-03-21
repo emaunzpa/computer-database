@@ -70,7 +70,7 @@ public class CommandeLigneInterface {
 		System.out.println("ENTER a computer id...");
 		int computerId = scIn.nextInt();
 		scIn.nextLine();
-		Computer computer = computerDriver.getComputer(computerId);
+		Computer computer = computerDriver.getComputer(computerId).get();
 		System.out.println();
 		System.out.println("Following are the details of the selected computer \n");
 		String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();

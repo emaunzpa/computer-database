@@ -1,6 +1,7 @@
 package com.emaunzpa.computerdatabase.DAO;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.emaunzpa.computerdatabase.model.Computer;
 
@@ -11,7 +12,7 @@ public interface ComputerDAO {
 	 * @param id
 	 * @return
 	 */
-	public Computer getComputer(int id);
+	public Optional<Computer> getComputer(int id);
 	
 	/**
 	 * Add a computer to the database

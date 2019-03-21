@@ -1,6 +1,7 @@
 package com.emaunzpa.computerdatabase.DAO;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 
@@ -11,7 +12,7 @@ public interface ManufacturerDAO {
 	 * @param id
 	 * @return
 	 */
-	public Manufacturer getManufacturer(int id);
+	public Optional<Manufacturer> getManufacturer(int id);
 	
 	/**
 	 * List all companies from the databaseeeeeeee

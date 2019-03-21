@@ -30,12 +30,12 @@ public class TestComputer {
 	
 	@Test
 	public void getComputer() {
-		Computer testedComputer = computerDriver.getComputer(5);
+		Computer testedComputer = computerDriver.getComputer(5).get();
 		assertEquals("CM-5", testedComputer.getName());
 		assertEquals("1991-01-01", datesHandler.convertSqlDateToString(testedComputer.getIntroducedDate()));
 		assertNull(testedComputer.getDiscontinuedDate());
 		assertEquals(2, (int) testedComputer.getmanufacturerId());
-		Computer testedComputerNull = computerDriver.getComputer(0);
+		Computer testedComputerNull = computerDriver.getComputer(0).get();
 		assertEquals(0, testedComputerNull.getId());
 		assertNull(testedComputerNull.getName());
 		assertNull(testedComputerNull.getIntroducedDate());
