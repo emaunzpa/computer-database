@@ -20,6 +20,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
     private static Logger log = Logger.getLogger(ManufacturerDriver.class.getName());
     private static HTMLLayout htmlLayout = new HTMLLayout();
     private static String databaseName;
+    private static String _GET_COMPANY_ = "select id, name from company where id = ";
+    private static String _GET_ALL_COMPANIES = "select id, name from company";
     
 	public ManufacturerDriver(String databaseName) {
 
@@ -45,7 +47,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request = "select * from company where id = " + id;
+	        String request =  _GET_COMPANY_ + id;
 	        resultat = statement.executeQuery( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        if(resultat.first()) {
@@ -90,7 +92,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request = "select * from company";
+	        String request = _GET_ALL_COMPANIES;
 	        resultat = statement.executeQuery( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        while ( resultat.next() ) {

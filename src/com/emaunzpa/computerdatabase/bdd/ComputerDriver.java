@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -24,16 +23,22 @@ public class ComputerDriver implements ComputerDAO {
     private PreparedStatement prepareStatement;
     private Integer statut;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
-    private DatesHandler dh = new DatesHandler(); 
+    private DatesHandler dh = new DatesHandler();
+    
 	private static Logger log = Logger.getLogger(ComputerDriver.class);
 	private static HTMLLayout htmlLayout = new HTMLLayout();
 	private static String databaseName;
+	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
+	private static String _GET_ALL_COMPUTERS_ = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
+	private static String _GET_COMPUTER_ = "select id, name, introduced, discontinued, company_id from computer where id = ";
+	private static String _UPDATE_COMPUTER_ = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
+	private static String _DELETE_COMPUTER_ = "delete from computer where id = ";
 	
     /**
      * Empty creator without params
      */
 	public ComputerDriver(String databaseName) {
-		this.databaseName = databaseName;
+		ComputerDriver.databaseName = databaseName;
 		RollingFileAppender rollingfileAppender = null;
 		try {
 			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ComputerDriverLogger.html");
@@ -54,7 +59,7 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request = "select * from computer where id = " + id;
+	        String request = _GET_COMPUTER_ + id;
 	        resultat = statement.executeQuery( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        if(resultat.first()) {
@@ -119,7 +124,7 @@ public class ComputerDriver implements ComputerDAO {
 		connectionDriver.initializeConnection();
 		
 		try {
-			String request = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
+			String request = _ADD_COMPUTER_;
 	        log.info( "Objet requête créé !" );
 			prepareStatement = connectionDriver.getConnection().prepareStatement( request );
 	        prepareStatement.setString(1, computer.getName());
@@ -163,7 +168,7 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
+	        String request = _GET_ALL_COMPUTERS_;
 	        resultat = statement.executeQuery( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        while ( resultat.next() ) {
@@ -215,9 +220,9 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request = "delete from computer where id = " + id;
+	        String request =  _DELETE_COMPUTER_ + id;
 	        statut = statement.executeUpdate( request );
-	        log.info( "Requête -- delete from computer where id = " + id + " -- effectuée !" );
+	        log.info( "Requête -- "+ request + " -- effectuée !" );
 	        result = true;
 	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : "
@@ -263,7 +268,7 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		try {
-	        String request = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
+	        String request = _UPDATE_COMPUTER_ ;
 	        log.info( "Objet requête créé !" );
 	        prepareStatement = connectionDriver.getConnection().prepareStatement( request );
 	        prepareStatement.setString(1, newName);
