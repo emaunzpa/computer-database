@@ -40,7 +40,12 @@ public class DatesHandler {
 	}
 	
 	public String convertSqlDateToString(java.sql.Date sqlDate) {
-		return (sqlDate.toString());
+		if (sqlDate == null) {
+			return null;
+		}
+		else {
+			return (sqlDate.toString());
+		}
 	}
 	
 }

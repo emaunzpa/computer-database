@@ -4,16 +4,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
-import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
-import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 /*
  * Tests of the various Web-UI actions with Selenium

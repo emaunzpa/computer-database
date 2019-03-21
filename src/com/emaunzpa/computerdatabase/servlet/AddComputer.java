@@ -1,31 +1,28 @@
 package com.emaunzpa.computerdatabase.servlet;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
-import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
-import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
-import com.emaunzpa.computerdatabase.util.DatesHandler;
+import com.emaunzpa.computerdatabase.service.ComputerService;
+import com.emaunzpa.computerdatabase.service.ManufacturerService;
 
 public class AddComputer extends HttpServlet {
 
 	public static final String VUE_FORM_NEW_COMPUTER = "/views/addComputer.jsp";
+	public static final String VUE_LIST_COMPUTERS = "listComputers";
 	public String vueComputerDetails;
 	public static final String ATT_LIST_MANUFACTURERS = "manufacturers";
 	public static final String ATT_FORM = "form";
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		ManufacturerDriver manufacturerDriver = new ManufacturerDriver("computer-database-db");
-		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
+		ManufacturerService manufacturerService = new ManufacturerService();
+		ArrayList<Manufacturer> manufacturers = manufacturerService.getAllManufacturers();
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
 		
@@ -34,23 +31,10 @@ public class AddComputer extends HttpServlet {
 	
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		String computerName = request.getParameter("computerName");
-		String introducedDateStr = request.getParameter("introducedDate");
-		String discontinuedDateStr = request.getParameter("discontinuedDate");
-		DatesHandler dh = new DatesHandler();
-		java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedDateStr);
-		java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedDateStr);
-		Integer companyId = Integer.valueOf(request.getParameter("companyId"));
-		if (companyId == 0) {
-			companyId = null;
-		}
-		ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
-		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
-		computerDriver.addComputer(newComputer);
-		int newComputerId = computerDriver.getAllComputers().get(computerDriver.getAllComputers().size()-1).getId();
+		ComputerService computerService = new ComputerService();
+		computerService.addComputer(request);
 		
-		this.vueComputerDetails = "/views/computer" + newComputerId + ".jsp";
-		this.getServletContext().getRequestDispatcher(vueComputerDetails).forward(request, response);
+		response.sendRedirect(VUE_LIST_COMPUTERS);
 	}
 	
 }

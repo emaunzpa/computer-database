@@ -2,6 +2,7 @@ package com.emaunzpa.computerdatabase.launch;
 
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.RollingFileAppender;
 
 import java.io.IOException;
@@ -13,9 +14,6 @@ public class TestLog4j {
 	   
 	   public static void main(String[] args)throws IOException,SQLException{
 		   
-		  HTMLLayout htmlLayout = new HTMLLayout();
-		  RollingFileAppender rollingfileAppender = new RollingFileAppender(htmlLayout, "log4j/test.html");
-		  log.addAppender(rollingfileAppender);
 	      log.debug("Hello this is a debug message");
 	      log.info("Hello this is an info message");	
 	   }

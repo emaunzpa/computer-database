@@ -1,18 +1,17 @@
 package com.emaunzpa.computerdatabase.bdd;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
-import org.apache.log4j.RollingFileAppender;
-
+import org.apache.log4j.PropertyConfigurator;
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
@@ -23,11 +22,9 @@ public class ComputerDriver implements ComputerDAO {
     private ResultSet resultat;
     private PreparedStatement prepareStatement;
     private Integer statut;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
     private DatesHandler dh = new DatesHandler();
     
-	private static Logger log = Logger.getLogger(ComputerDriver.class);
-	private static HTMLLayout htmlLayout = new HTMLLayout();
+	private static Logger log;
 	private static String databaseName;
 	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	private static String _GET_ALL_COMPUTERS_ = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
@@ -37,17 +34,11 @@ public class ComputerDriver implements ComputerDAO {
 	
     /**
      * Empty creator without params
+     * @throws IOException 
      */
 	public ComputerDriver(String databaseName) {
 		ComputerDriver.databaseName = databaseName;
-		RollingFileAppender rollingfileAppender = null;
-		try {
-			rollingfileAppender = new RollingFileAppender(htmlLayout, "logging/log4j/ComputerDriverLogger.html");
-			log.addAppender(rollingfileAppender);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
+		log = Logger.getLogger(ComputerDriver.class);
 	}
 
 	@Override

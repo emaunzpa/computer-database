@@ -68,10 +68,12 @@
 			<version>3.0.0</version>
 			<configuration>
 				<configLocation>resources/checkstyle.xml</configLocation>
-				<configLocation>resources/suppression.xml</configLocation>
+				<suppressionsLocation>resources/suppressions.xml</suppressionsLocation>
 			</configuration>
 		</plugin>
 	      
     </plugins>
+    
+    <testSourceDirectory>tests/</testSourceDirectory>
   </build>
 </project>

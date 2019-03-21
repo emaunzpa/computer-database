@@ -5,10 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
-import com.emaunzpa.computerdatabase.model.Manufacturer;
-import com.emaunzpa.computerdatabase.util.DatesHandler;
+
 
 /**
  * Tests for the backend methods of ManufacturerDAO
