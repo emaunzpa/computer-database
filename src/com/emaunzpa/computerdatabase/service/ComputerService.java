@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.model.Computer;
-import com.emaunzpa.computerdatabase.model.ComputerDTO;
+import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 import com.emaunzpa.computerdatabase.util.Pagination;
 

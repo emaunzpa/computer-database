@@ -1,4 +1,4 @@
-package com.emaunzpa.computerdatabase.model;
+package com.emaunzpa.computerdatabase.DTO;
 
 public class ComputerDTO {
 
