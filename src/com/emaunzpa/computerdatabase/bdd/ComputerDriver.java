@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.model.*;
+import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 public class ComputerDriver implements ComputerDAO {
@@ -23,6 +24,7 @@ public class ComputerDriver implements ComputerDAO {
     private PreparedStatement prepareStatement;
     private Integer statut;
     private DatesHandler dh = new DatesHandler();
+    private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
     
 	private static Logger log;
 	private static String databaseName;
@@ -46,7 +48,13 @@ public class ComputerDriver implements ComputerDAO {
 		
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
-		Optional<Computer> computer = Optional.of(new Computer.ComputerBuilder().build());
+		Optional<Computer> computer = Optional.empty();
+		
+		Integer searchId = Integer.valueOf(id);
+		// Test if computer exists
+		if(!computerFormValidator.computerFound(getAllComputers(), searchId)) {
+			return computer;
+		}
 		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
@@ -62,6 +70,7 @@ public class ComputerDriver implements ComputerDAO {
 	            java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedStr);
 	            java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedStr);
 	            Integer manufacturerId = resultat.getInt( "company_id" );
+	            computer = Optional.of(new Computer.ComputerBuilder().build());
 	            computer.get().setId(idComputer);
 		        computer.get().setName(nameComputer);
 		        computer.get().setIntroducedDate(introducedDate);
@@ -100,14 +109,12 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean addComputer(Computer computer) {
 		
 		// Impossible to add a computer without a name
-		if(computer.getName() == null) {
-			log.error("Impossible to add a computer without any name to the database. Request cancelled.");
+		if (!computerFormValidator.newComputerHasName(computer)) {
 			return false;
 		}
 		
 		// Discontinued date must be after introduced date
-		if (computer.getIntroducedDate() != null && computer.getDiscontinuedDate() != null && computer.getIntroducedDate().after(computer.getDiscontinuedDate())){
-			log.info("Discontinued date must be after introduced date. Request cancelled.");
+		if (!computerFormValidator.introducedBeforeDiscontinued(computer)) {
 			return false;
 		}
 		
@@ -209,6 +216,11 @@ public class ComputerDriver implements ComputerDAO {
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
 		
+		Integer searchId = Integer.valueOf(id);
+		if (!computerFormValidator.computerFound(getAllComputers(), searchId)) {
+			return false;
+		}
+		
 		try {
 	        statement = connectionDriver.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
@@ -246,16 +258,19 @@ public class ComputerDriver implements ComputerDAO {
 		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
+		Optional<Computer> computer;
 		
 		// Cannot update a unexisting computer
-		if (getComputer(id).get().getName() == null) {
+		if (getComputer(id) == null) {
 			log.error("Impossible to update a unexisting computer. Request cancelled.");
 			return false;
 		}
+		else {
+			computer = getComputer(id);
+		}
 		
 		// Discontinued date must be after introduced date
-		if (newIntroduced != null && newDiscontinued != null && newIntroduced.after(newDiscontinued)){
-			log.info("Discontinued date must be after introduced date. Request cancelled.");
+		if (!computerFormValidator.introducedBeforeDiscontinued(computer.get())){
 			return false;
 		}
 		

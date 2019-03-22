@@ -70,12 +70,20 @@ public class CommandeLigneInterface {
 		System.out.println("ENTER a computer id...");
 		int computerId = scIn.nextInt();
 		scIn.nextLine();
-		Computer computer = computerDriver.getComputer(computerId).get();
-		System.out.println();
-		System.out.println("Following are the details of the selected computer \n");
-		String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
-		System.out.println(computerDetails);
-		System.out.println();
+		Computer computer;
+		if (computerDriver.getComputer(computerId).isPresent()) {
+			computer = computerDriver.getComputer(computerId).get();
+			System.out.println();
+			System.out.println("Following are the details of the selected computer \n");
+			String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
+			System.out.println(computerDetails);
+			System.out.println();
+		}
+		else {
+			computer = new Computer.ComputerBuilder().build();
+			System.out.println("Computer not found with this id : " + computerId);
+		}
+		
 		return computer;
 	}
 	
