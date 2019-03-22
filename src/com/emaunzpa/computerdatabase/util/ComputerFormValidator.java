@@ -32,6 +32,7 @@ public class ComputerFormValidator {
 		
 		if(computer.getName() == null || computer.getName().equals("")) {
 			log.error("Impossible to add a computer without any name to the database. Request cancelled.");
+			log.info("Impossible to add a computer without any name to the database. Request cancelled.");
 			return false;
 		}
 		else {
@@ -43,6 +44,7 @@ public class ComputerFormValidator {
 		
 		if (computer.getIntroducedDate() != null && computer.getDiscontinuedDate() != null && computer.getIntroducedDate().after(computer.getDiscontinuedDate())){
 			log.info("Discontinued date must be after introduced date. Request cancelled.");
+			log.error("Discontinued date must be after introduced date. Request cancelled.");
 			return false;
 		}
 		else {

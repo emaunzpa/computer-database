@@ -11,6 +11,7 @@ import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 import com.emaunzpa.computerdatabase.util.CasesCLI;
+import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 import com.emaunzpa.computerdatabase.util.Pagination;
 
@@ -28,6 +29,7 @@ public class CommandeLigneInterface {
 	private ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
 	private DatesHandler datesHandler = new DatesHandler();
 	private Pagination pagination = new Pagination();
+	private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
 	
 	/**
 	 * Creator to initialize various messages print by the controller
@@ -81,7 +83,9 @@ public class CommandeLigneInterface {
 		}
 		else {
 			computer = new Computer.ComputerBuilder().build();
+			System.out.println();
 			System.out.println("Computer not found with this id : " + computerId);
+			System.out.println();
 		}
 		
 		return computer;
@@ -101,44 +105,42 @@ public class CommandeLigneInterface {
 		scIn.nextLine();
 		java.sql.Date introducedDate = null;
 		switch(answer) {
-			case "y" :
-				System.out.println("Please ENTER an introduced date ... (format : 'YYYY-MM-DD)");
-				String introducedDateStr = scIn.nextLine() + " 00:00:00'";
-				introducedDate = datesHandler.convertStringDateToSqlDate(introducedDateStr);
-				break;
-			case "n" :
-				break;
+		case "y" :
+			System.out.println("Please ENTER an introduced date ... (format : 'YYYY-MM-DD)");
+			String introducedDateStr = scIn.nextLine() + " 00:00:00'";
+			introducedDate = datesHandler.convertStringDateToSqlDate(introducedDateStr);
+			break;
+		case "n" :
+			break;
 		}
 		System.out.println("Do you want to add an discontinued date ? (y/n)");
 		answer = scIn.next();
 		scIn.nextLine();
 		java.sql.Date discontinuedDate = null;
 		switch(answer) {
-			case "y" :
-				System.out.println("Please ENTER an discontinued date ... (format : 'YYYY-MM-DD)");
-				String discontinuedDateStr = scIn.nextLine() + " 00:00:00'";
-				discontinuedDate = datesHandler.convertStringDateToSqlDate(discontinuedDateStr);
-				break;
-			case "n" :
-				break;
+		case "y" :
+			System.out.println("Please ENTER an discontinued date ... (format : 'YYYY-MM-DD)");
+			String discontinuedDateStr = scIn.nextLine() + " 00:00:00'";
+			discontinuedDate = datesHandler.convertStringDateToSqlDate(discontinuedDateStr);
+			break;
+		case "n" :
+			break;
 		}
 		System.out.println("Do you want to add a company ID ? (y/n)");
 		answer = scIn.next();
 		scIn.nextLine();
 		Integer companyId = null;
 		switch(answer) {
-			case "y" :
-				System.out.println("Please ENTER a company ID ...");
-				companyId = scIn.nextInt();
-				scIn.nextLine();
-				break;
-			case "n" :
-				break;
+		case "y" :
+			System.out.println("Please ENTER a company ID ...");
+			companyId = scIn.nextInt();
+			scIn.nextLine();
+			break;
+		case "n" :
+			break;
 		}
 		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
-		String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + newComputer.getmanufacturerId();
-		System.out.println(newComputerDetails);
-		System.out.println();
+		
 		return newComputer;
 	}
 	
@@ -199,10 +201,21 @@ public class CommandeLigneInterface {
 			case "n" :
 				break;
 		}
-		computerDriver.updateComputer(computer.getId(), newName, newIntroducedDate, newDiscontinuedDate, newManufacturerId);
-		String updateDetails = "Name : " + newName + " | Introduced : " + newIntroducedDate + " | Discontinued : " + newDiscontinuedDate + " | Company_id : " + newManufacturerId;
-		System.out.println("The computer was update with the following parameters :\n " + updateDetails);
-		System.out.println();
+		if (!computerFormValidator.newComputerHasName(computer)) {
+			System.out.println("The computer name is mandatory, please try again");
+			System.out.println();
+		}
+		if (!computerFormValidator.introducedBeforeDiscontinued(computer)) {
+			System.out.println("Introduced date must be before discontinued date");
+			System.out.println();
+		}
+		else {
+			computerDriver.updateComputer(computer.getId(), newName, newIntroducedDate, newDiscontinuedDate, newManufacturerId);
+			String updateDetails = "Name : " + newName + " | Introduced : " + newIntroducedDate + " | Discontinued : " + newDiscontinuedDate + " | Company_id : " + newManufacturerId;
+			System.out.println("The computer was update with the following parameters :\n " + updateDetails);
+			System.out.println();
+		}
+		
 	}
 	
 	/**
@@ -210,19 +223,21 @@ public class CommandeLigneInterface {
 	 */
 	public void removeComputer() {
 		Computer computerToRemove = showComputerDetails();
-		System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
-		String answer = scIn.next();
-		scIn.nextLine();
-		System.out.println();
-		switch(answer) {
-			case "y" :
-				computerDriver.removeComputer(computerToRemove.getId());	
-				System.out.println("The computer was well removed from database !");
-				break;
-			case "n" :	
-				System.out.println("Remove request canceled");
-				break;
+		if (computerToRemove.getName() != null && !computerToRemove.getName().equals("")) {
+			System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
+			String answer = scIn.next();
+			scIn.nextLine();
+			System.out.println();
+			switch(answer) {
+				case "y" :
+						System.out.println("The computer was well removed from database !");
+					break;
+				case "n" :	
+					System.out.println("Remove request canceled");
+					break;
+			}
 		}
+		
 		System.out.println();
 	}
 	
@@ -248,8 +263,21 @@ public class CommandeLigneInterface {
 					break;
 				case CREATE_COMPUTER :
 					Computer newComputer = newComputerForm();
-					computerDriver.addComputer(newComputer);
-					System.out.println("The new computer was well added to the computer-database !\n");
+					if (!computerFormValidator.newComputerHasName(newComputer)) {
+						System.out.println("The computer name is mandatory, please try again");
+						System.out.println();
+					}
+					else if (!computerFormValidator.introducedBeforeDiscontinued(newComputer)) {
+						System.out.println("Introduced date must be before discontinued date");
+						System.out.println();
+					}
+					else {
+						String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + newComputer.getmanufacturerId();
+						System.out.println(newComputerDetails);
+						System.out.println();
+						computerDriver.addComputer(newComputer);
+						System.out.println("The new computer was well added to the computer-database !\n");
+					}
 					break;
 				case UPDATE_COMPUTER :
 					updateComputer();
