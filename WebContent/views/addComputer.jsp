@@ -74,7 +74,7 @@
     				return new Date(value) > new Date($(params).val());
     			}			
     		},
-    		'Must be greater than Introduced Date or both null'
+    		'Must be coherent with introduced date'
     	);
     	     	    
     	$("#addComputerForm").validate({
