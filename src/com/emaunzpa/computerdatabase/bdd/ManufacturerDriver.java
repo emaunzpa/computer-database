@@ -31,12 +31,15 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	@Override
 	public Optional<Manufacturer> getManufacturer(int id) {
 		
-		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-		connectionDriver.initializeConnection();
+//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+//		connectionDriver.initializeConnection();
+		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		hikariConnection.initializeConnection();
 		Optional<Manufacturer> manufacturer = Optional.of(new Manufacturer());
 		
 		try {
-	        statement = connectionDriver.getConnection().createStatement();
+//	        statement = connectionDriver.getConnection().createStatement();
+			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request =  _GET_COMPANY_ + id;
 	        resultat = statement.executeQuery( request );
@@ -68,7 +71,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		connectionDriver.finalizeConnection();
+//		connectionDriver.finalizeConnection();
+		hikariConnection.finalizeConnection();
 		log.info("Fin de connexion.");
 		return manufacturer;
 	}
@@ -77,11 +81,14 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public ArrayList<Manufacturer> getAllManufacturers() {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-		connectionDriver.initializeConnection();
+//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+//		connectionDriver.initializeConnection();
+		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		hikariConnection.initializeConnection();
 		
 		try {
-	        statement = connectionDriver.getConnection().createStatement();
+//	        statement = connectionDriver.getConnection().createStatement();
+	        statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_ALL_COMPANIES;
 	        resultat = statement.executeQuery( request );
@@ -112,7 +119,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		connectionDriver.finalizeConnection();
+//		connectionDriver.finalizeConnection();
+		hikariConnection.finalizeConnection();
 		log.info("Fin de connexion.");
 		return manufacturers;
 	}
