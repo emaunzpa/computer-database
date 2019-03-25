@@ -46,10 +46,10 @@ public class ComputerDriver implements ComputerDAO {
 	@Override
 	public Optional<Computer> getComputer(int id) {
 		
-//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-//		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
-		hikariConnection.initializeConnection();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+		connectionDriver.initializeConnection();
+//		HikariConnection hikariConnection = new HikariConnection(databaseName);
+//		hikariConnection.initializeConnection();
 		Optional<Computer> computer = Optional.empty();
 		
 		Integer searchId = Integer.valueOf(id);
@@ -59,8 +59,8 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		try {
-//	        statement = connectionDriver.getConnection().createStatement();
-			statement = hikariConnection.getConnection().createStatement();
+	        statement = connectionDriver.getConnection().createStatement();
+//			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_COMPUTER_ + id;
 	        resultat = statement.executeQuery( request );
@@ -103,8 +103,8 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-//		connectionDriver.finalizeConnection();
-		hikariConnection.finalizeConnection();
+		connectionDriver.finalizeConnection();
+//		hikariConnection.finalizeConnection();
 		log.info("Fin de la connexion");
 		return computer; 
 	}
@@ -123,16 +123,16 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		boolean result = false;
-//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-//		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
-		hikariConnection.initializeConnection();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+		connectionDriver.initializeConnection();
+//		HikariConnection hikariConnection = new HikariConnection(databaseName);
+//		hikariConnection.initializeConnection();
 		
 		try {
 			String request = _ADD_COMPUTER_;
 	        log.info( "Objet requête créé !" );
-//			prepareStatement = connectionDriver.getConnection().prepareStatement( request );
-	        prepareStatement = hikariConnection.getConnection().prepareStatement(request);
+			prepareStatement = connectionDriver.getConnection().prepareStatement( request );
+//	        prepareStatement = hikariConnection.getConnection().prepareStatement(request);
 	        prepareStatement.setString(1, computer.getName());
 	        prepareStatement.setDate(2, computer.getIntroducedDate());
 	        prepareStatement.setDate(3, computer.getDiscontinuedDate());
@@ -159,8 +159,8 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-//		connectionDriver.finalizeConnection();
-		hikariConnection.finalizeConnection();
+		connectionDriver.finalizeConnection();
+//		hikariConnection.finalizeConnection();
 		log.info("Fin de la connexion");
 		return result;
 	}
@@ -169,14 +169,14 @@ public class ComputerDriver implements ComputerDAO {
 	public ArrayList<Computer> getAllComputers() {
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-//		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
-		hikariConnection.initializeConnection();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+		connectionDriver.initializeConnection();
+//		HikariConnection hikariConnection = new HikariConnection(databaseName);
+//		hikariConnection.initializeConnection();
 		
 		try {
-//	        statement = connectionDriver.getConnection().createStatement();
-			statement = hikariConnection.getConnection().createStatement();
+	        statement = connectionDriver.getConnection().createStatement();
+//			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_ALL_COMPUTERS_;
 	        resultat = statement.executeQuery( request );
@@ -214,8 +214,8 @@ public class ComputerDriver implements ComputerDAO {
 	        }
 	       	        
 	    }
-		hikariConnection.finalizeConnection();
-//		connectionDriver.finalizeConnection();
+//		hikariConnection.finalizeConnection();
+		connectionDriver.finalizeConnection();
 		log.info("Fin de la connexion.");
 		return computers;
 	}
@@ -224,10 +224,10 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean removeComputer(int id) {
 		
 		boolean result = false;
-//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-//		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
-		hikariConnection.initializeConnection();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+		connectionDriver.initializeConnection();
+//		HikariConnection hikariConnection = new HikariConnection(databaseName);
+//		hikariConnection.initializeConnection();
 		
 		Integer searchId = Integer.valueOf(id);
 		if (!computerFormValidator.computerFound(getAllComputers(), searchId)) {
@@ -235,8 +235,8 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		try {
-//	        statement = connectionDriver.getConnection().createStatement();
-			statement = hikariConnection.getConnection().createStatement();
+	        statement = connectionDriver.getConnection().createStatement();
+//			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request =  _DELETE_COMPUTER_ + id;
 	        statut = statement.executeUpdate( request );
@@ -261,8 +261,8 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-//		connectionDriver.finalizeConnection();
-		hikariConnection.finalizeConnection();
+		connectionDriver.finalizeConnection();
+//		hikariConnection.finalizeConnection();
 		log.info("Fin de la connexion.");
 		return result;
 	}
@@ -271,10 +271,10 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) {
 		
 		boolean result = false;
-//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-//		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
-		hikariConnection.initializeConnection();
+		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+		connectionDriver.initializeConnection();
+//		HikariConnection hikariConnection = new HikariConnection(databaseName);
+//		hikariConnection.initializeConnection();
 		Optional<Computer> computer;
 		
 		// Cannot update a unexisting computer
@@ -294,8 +294,8 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 	        String request = _UPDATE_COMPUTER_ ;
 	        log.info( "Objet requête créé !" );
-//	        prepareStatement = connectionDriver.getConnection().prepareStatement( request );
-	        prepareStatement = hikariConnection.getConnection().prepareStatement(request);
+	        prepareStatement = connectionDriver.getConnection().prepareStatement( request );
+//	        prepareStatement = hikariConnection.getConnection().prepareStatement(request);
 	        prepareStatement.setString(1, newName);
 	        prepareStatement.setDate(2, newIntroduced);
 	        prepareStatement.setDate(3, newDiscontinued);
@@ -323,8 +323,8 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-//		connectionDriver.finalizeConnection();
-		hikariConnection.finalizeConnection();
+		connectionDriver.finalizeConnection();
+//		hikariConnection.finalizeConnection();
 		log.info("Fin de connexion.");
 		return result;
 	}
