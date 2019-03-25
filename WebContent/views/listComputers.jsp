@@ -15,7 +15,7 @@
 	
 	    <section id="main">
 	        <div class="container">
-	            <h1 id="homeTitle">${computers.size()} Computers found (${printedComputers.size()} printed)</h1>
+	            <h1 id="homeTitle">${computers.size()} Computers found (${pagination.startIndex} to ${pagination.endIndex} printed)</h1>
 	            <div id="actions" class="form-horizontal">
 	                <div class="pull-left">
 	                    <form id="searchForm" action="#" method="GET" class="form-inline">
@@ -79,20 +79,40 @@
 	            <ul class="pagination">
 	                <li>
 	                	<a href="?startIndex=0&endIndex=10" id="startPaginationButton">Start</a>
+	                	<!-- Previous 50 computers if possible -->
 	                	<c:choose>
-	                		<c:when test="${pagination.startIndex >= 10}">
-	                			<a href="?startIndex=${pagination.startIndex - 10}&endIndex=${pagination.endIndex - 10}" aria-label="Previous" id="previousPaginationButton"><span aria-hidden="true">&laquo;</span></a>
+	                		<c:when test="${pagination.startIndex >= 50}">
+	                			<a href="?startIndex=${pagination.startIndex - 50}&endIndex=${pagination.endIndex - 50}" aria-label="Previous" id="previous50PaginationButton"><span aria-hidden="true">- 50</span></a>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<a href="?startIndex=0&endIndex=10" aria-label="Previous" id="previousPaginationButton"><span aria-hidden="true">&laquo;</span></a>
+	                			<a href="?startIndex=0&endIndex=10" aria-label="Previous" id="previous50PaginationButton"><span aria-hidden="true">- 50</span></a>
 	                		</c:otherwise>
 	                	</c:choose>
-						<c:choose>
-	                		<c:when test="${pagination.endIndex + 10 <= computers.size()}">
-	                			<a href="?startIndex=${pagination.startIndex + 10}&endIndex=${pagination.endIndex + 10}" aria-label="Next" id="nextPaginationButton"><span aria-hidden="true">&raquo;</span></a>
+	                	<!-- Previous 10 computers if possible -->
+	                	<c:choose>
+	                		<c:when test="${pagination.startIndex >= 10}">
+	                			<a href="?startIndex=${pagination.startIndex - 10}&endIndex=${pagination.endIndex - 10}" aria-label="Previous" id="previous10PaginationButton"><span aria-hidden="true">&laquo;</span></a>
 	                		</c:when>
 	                		<c:otherwise>
-	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next" id="nextPaginationButton"><span aria-hidden="true">&raquo;</span></a>
+	                			<a href="?startIndex=0&endIndex=10" aria-label="Previous" id="previous10PaginationButton"><span aria-hidden="true">&laquo;</span></a>
+	                		</c:otherwise>
+	                	</c:choose>
+	                	<!-- Next 10 computers if possible -->
+						<c:choose>
+	                		<c:when test="${pagination.endIndex + 10 <= computers.size()}">
+	                			<a href="?startIndex=${pagination.startIndex + 10}&endIndex=${pagination.endIndex + 10}" aria-label="Next" id="next10PaginationButton"><span aria-hidden="true">&raquo;</span></a>
+	                		</c:when>
+	                		<c:otherwise>
+	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next" id="next10PaginationButton"><span aria-hidden="true">&raquo;</span></a>
+	                		</c:otherwise>
+	                	</c:choose>
+	                	<!-- Next 50 computers if possible -->
+	                	<c:choose>
+	                		<c:when test="${pagination.endIndex + 50 <= computers.size()}">
+	                			<a href="?startIndex=${pagination.startIndex + 50}&endIndex=${pagination.endIndex + 50}" aria-label="Next" id="next50PaginationButton"><span aria-hidden="true">+ 50</span></a>
+	                		</c:when>
+	                		<c:otherwise>
+	                			<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" aria-label="Next" id="next50PaginationButton"><span aria-hidden="true">+ 50</span></a>
 	                		</c:otherwise>
 	                	</c:choose>
 	                	<a href="?startIndex=${computers.size() - 10}&endIndex=${computers.size()}" id="endPaginationButton">End</a>
