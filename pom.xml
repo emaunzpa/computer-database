@@ -6,27 +6,35 @@
   <packaging>war</packaging>
   <name>computer-database</name>
   
-  <dependencies>
+  <properties>
+  	<hikaricp.version>3.3.1</hikaricp.version>
+  	<jstl.version>1.2</jstl.version>
+  	<junit.version>4.11</junit.version>
+  	<selenium-java.version>3.141.59</selenium-java.version>
+  	<log4j.version>1.2.17</log4j.version>
+  	<mysql-connector.version>8.0.15</mysql-connector.version>
+  </properties>
   
+  <dependencies>
 	<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
 	<dependency>
 	    <groupId>com.zaxxer</groupId>
 	    <artifactId>HikariCP</artifactId>
-	    <version>3.3.1</version>
+	    <version>${hikaricp.version}</version>
 	</dependency>
   
   	<!-- https://mvnrepository.com/artifact/jstl/jstl -->
 	<dependency>
 	    <groupId>jstl</groupId>
 	    <artifactId>jstl</artifactId>
-	    <version>1.2</version>
+	    <version>${jstl.version}</version>
 	</dependency>
   
   	<!-- JUnit 4 -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     
@@ -34,21 +42,21 @@
     <dependency>
 	    <groupId>org.seleniumhq.selenium</groupId>
 	    <artifactId>selenium-java</artifactId>
-	    <version>3.141.59</version>
+	    <version>${selenium-java.version}</version>
 	</dependency>
     
     <!-- https://mvnrepository.com/artifact/log4j/log4j -->
 	<dependency>
 	    <groupId>log4j</groupId>
 	    <artifactId>log4j</artifactId>
-	    <version>1.2.17</version>
+	    <version>${log4j.version}</version>
 	</dependency>
     
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 	<dependency>
 	    <groupId>mysql</groupId>
 	    <artifactId>mysql-connector-java</artifactId>
-	    <version>8.0.15</version>
+	    <version>${mysql-connector.version}</version>
 	</dependency>
   </dependencies>
   
@@ -85,9 +93,9 @@
 				<suppressionsLocation>resources/suppressions.xml</suppressionsLocation>
 			</configuration>
 		</plugin>
-	      
     </plugins>
     
     <testSourceDirectory>tests/</testSourceDirectory>
+    
   </build>
 </project>
