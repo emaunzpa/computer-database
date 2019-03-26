@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
+import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
+import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
+import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
+import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Computer;
 
 public class ComputerFormValidator {
@@ -15,40 +19,58 @@ public class ComputerFormValidator {
 		log = Logger.getLogger(ComputerDriver.class);
 	}
 	
-	public boolean computerFound(ArrayList<Computer> computers, Integer searchId) {
+	public boolean computerFound(ArrayList<Computer> computers, Integer searchId) throws NoComputerFoundException {
+		
+		boolean result = false;
 		
 		if (computers.stream().filter(computer -> searchId.equals(computer.getId())).findFirst().orElse(null) == null) {
-			log.error("No computer found with this ID : " + searchId + ". Request cancelled.");
-			log.info("No computer found with this ID : " + searchId + ". Request cancelled.");
-			return false;
+			
+			throw new NoComputerFoundException("No computer found with this ID : " + searchId + ". Request cancelled.");
+		
 		}
 		else {
-			return true;
+			result = true;
 		}
 		
+		return result;
 	}
 	
-	public boolean newComputerHasName(Computer computer) {
+	public boolean newComputerHasName(Computer computer) throws ComputerWithoutNameException {
+		
+		boolean result = false;
 		
 		if(computer.getName() == null || computer.getName().equals("")) {
-			log.error("Impossible to add a computer without any name to the database. Request cancelled.");
-			log.info("Impossible to add a computer without any name to the database. Request cancelled.");
-			return false;
+			
+			throw new ComputerWithoutNameException("Impossible to add a computer without any name to the database. Request cancelled.");
 		}
+		
 		else {
-			return true;
+			result =  true;
 		}
+		
+		return result;
 	}
 	
-	public boolean introducedBeforeDiscontinued(Computer computer) {
+	public boolean introducedBeforeDiscontinued(Computer computer) throws IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+		
+		boolean result = false;
 		
 		if (computer.getIntroducedDate() != null && computer.getDiscontinuedDate() != null && computer.getIntroducedDate().after(computer.getDiscontinuedDate())){
-			log.info("Discontinued date must be after introduced date. Request cancelled.");
-			log.error("Discontinued date must be after introduced date. Request cancelled.");
-			return false;
+			
+			throw new DiscontinuedBeforeIntroducedException("Discontinued date must be after introduced date. Request cancelled.");
+			
 		}
+		
+		else if (computer.getDiscontinuedDate() != null && computer.getIntroducedDate() == null) {
+			
+			throw new IncoherenceBetweenDateException("Discontinued must be null if introduced date is null. Request cancelled.");
+			
+		}
+		
 		else {
-			return true;
+			result = true;
 		}
+		
+		return result;
 	}
 }

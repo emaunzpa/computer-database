@@ -2,10 +2,16 @@ package com.emaunzpa.computerdatabase.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
+import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
+import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
+import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
+import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
@@ -37,8 +43,31 @@ public class ComputerService {
 		
 	}
 	
-	public List<ComputerDTO> getAllComputers(){
-		ArrayList<Computer> computers = computerDriver.getAllComputers();
+	public List<ComputerDTO> getAllComputers(HttpServletRequest request){
+		ArrayList<Computer> computers = new ArrayList<>();
+		String searchStr = request.getParameter("search");
+		if (searchStr != null && !searchStr.equals("")){
+			for (Computer computerTested : computerDriver.getAllComputers()) {
+				Pattern pattern = Pattern.compile(".*" + searchStr.toLowerCase() + ".*");
+				Matcher macherComputerName = pattern.matcher(computerTested.getName().toLowerCase());
+				
+				if (computerTested.getManufacturerName() != null && !computerTested.getManufacturerName().equals("")) {
+					Matcher macherCompanyName = pattern.matcher(computerTested.getManufacturerName().toLowerCase());
+					if (macherCompanyName.matches() || macherComputerName.matches()) {
+						computers.add(computerTested);
+					}
+				}
+				
+				else {
+					if (macherComputerName.matches()) {
+						computers.add(computerTested);
+					}
+				}
+			}
+		}
+		else {
+			computers = computerDriver.getAllComputers();
+		}
 		return getAllDTOs(computers);
 	}
 	
@@ -65,6 +94,10 @@ public class ComputerService {
 		return computerDTO;
 	}
 	
+	public ComputerDTO getComputer(int id) throws NoComputerFoundException {
+		return convertComputerToDTO(computerDriver.getComputer(id).get());
+	}
+	
 	public Computer convertDTOtoComputer(ComputerDTO computerDTO) {
 		
 		Integer companyId = null;
@@ -83,7 +116,7 @@ public class ComputerService {
 		return computer;
 	}
 	
-	public void addComputer(HttpServletRequest request) {
+	public void addComputer(HttpServletRequest request) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		String computerName = request.getParameter("computerName");
 		String introducedDateStr = request.getParameter("introducedDate");
@@ -108,6 +141,23 @@ public class ComputerService {
 			result.add(convertComputerToDTO(c));
 		}
 		return result;
+	}
+	
+	public void updateComputer(HttpServletRequest request) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+		
+		int computerId = Integer.valueOf(request.getParameter("computerId"));
+		String computerName = request.getParameter("computerName");
+		String introducedDateStr = request.getParameter("introducedDate");
+		String discontinuedDateStr = request.getParameter("discontinuedDate");
+		Integer companyId = Integer.valueOf(request.getParameter("companyId"));
+		
+		computerDriver.updateComputer(computerId, computerName, dh.convertStringDateToSqlDate(introducedDateStr), dh.convertStringDateToSqlDate(discontinuedDateStr), companyId);
+	}
+	
+	public void deleteComputer(int computerId) throws NoComputerFoundException {
+		
+		computerDriver.removeComputer(computerId);
+		
 	}
 
 	public Pagination getPagination() {

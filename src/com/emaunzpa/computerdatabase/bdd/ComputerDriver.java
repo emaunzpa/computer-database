@@ -13,6 +13,10 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
+import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
+import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
+import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
+import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
@@ -44,7 +48,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public Optional<Computer> getComputer(int id) {
+	public Optional<Computer> getComputer(int id) throws NoComputerFoundException {
 		
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 		connectionDriver.initializeConnection();
@@ -110,7 +114,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean addComputer(Computer computer) {
+	public boolean addComputer(Computer computer) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		// Impossible to add a computer without a name
 		if (!computerFormValidator.newComputerHasName(computer)) {
@@ -221,7 +225,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean removeComputer(int id) {
+	public boolean removeComputer(int id) throws NoComputerFoundException {
 		
 		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
@@ -268,7 +272,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) {
+	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		boolean result = false;
 		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
