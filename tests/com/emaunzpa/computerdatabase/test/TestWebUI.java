@@ -63,15 +63,15 @@ public class TestWebUI {
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10"));
 		// Next Button
-		WebElement nextButton = driver.findElement(By.id("nextPaginationButton"));
+		WebElement nextButton = driver.findElement(By.id("next50PaginationButton"));
 		nextButton.click();
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=10&endIndex=20"));
 		// Previous Button
-		WebElement previousButton = driver.findElement(By.id("previousPaginationButton"));
+		WebElement previousButton = driver.findElement(By.id("previous10PaginationButton"));
 		previousButton.click();
 		Thread.sleep(1000);
-		previousButton = driver.findElement(By.id("previousPaginationButton"));
+		previousButton = driver.findElement(By.id("previous10PaginationButton"));
 		previousButton.click();
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10"));
@@ -117,7 +117,61 @@ public class TestWebUI {
 		
 		addButton.click();
 		WebElement discontinuedError = driver.findElement(By.id("discontinued-error"));
-		assertTrue(discontinuedError.getText().equals("Must be greater than Introduced Date or both null"));
+		assertTrue(discontinuedError.getText().equals("Must be coherent with introduced date"));
+		Thread.sleep(1000);
+		
+		WebElement companyIdSelect = driver.findElement(By.id("companyId"));
+		Thread.sleep(1000);
+		
+		List<WebElement> companyIdOptions = driver.findElements(By.className("companyId-option"));
+		assertTrue(companyIdOptions.size() == 42);
+		Thread.sleep(1000);
+		
+		companyIdSelect.click();
+		Thread.sleep(1000);
+		companyIdOptions.get(4).click();
+		Thread.sleep(1000);
+		assertTrue(companyIdOptions.get(4).getText().equals("Tandy Corporation"));
+		Thread.sleep(1000);
+		
+		WebElement cancelButton = driver.findElement(By.id("cancelButton"));
+		cancelButton.click();
+		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers"));
+		Thread.sleep(1000);
+		
+		driver.quit();
+	}
+	
+	@Test
+	public void editComputerValidation() throws InterruptedException {
+		
+		driver.get("http://localhost:8080/computer-database/views/editComputer?computerID=2");
+		Thread.sleep(1000);
+		
+		WebElement computerName = driver.findElement(By.id("computerName"));
+		assertTrue(computerName.getText().equals("CM-2a"));
+		Thread.sleep(1000);
+		
+		WebElement companyName = driver.findElement(By.id("companyId"));
+		assertTrue(companyName.getText().equals("Thinking Machines"));
+		
+		computerName.sendKeys("");
+		WebElement editButton = driver.findElement(By.id("editButton"));
+		editButton.click();
+		Thread.sleep(1000);
+		
+		WebElement computerNameError = driver.findElement(By.id("computerName-error"));
+		assertTrue(computerNameError.getText().equals("This field is required."));
+		Thread.sleep(1000);
+		
+		WebElement discontinuedDate = driver.findElement(By.id("discontinued"));
+		discontinuedDate.sendKeys("2019-03-19");
+		System.out.println(discontinuedDate.getText());
+		Thread.sleep(1000);
+		
+		editButton.click();
+		WebElement discontinuedError = driver.findElement(By.id("discontinued-error"));
+		assertTrue(discontinuedError.getText().equals("Must be coherent with introduced date"));
 		Thread.sleep(1000);
 		
 		WebElement companyIdSelect = driver.findElement(By.id("companyId"));
