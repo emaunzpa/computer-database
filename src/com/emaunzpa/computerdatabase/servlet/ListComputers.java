@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
+import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.service.ComputerService;
 
 public class ListComputers extends HttpServlet {
@@ -44,7 +45,12 @@ public class ListComputers extends HttpServlet {
 		
 		for (String idStr : idToDelete) {
 			Integer id = Integer.valueOf(idStr);
-			computerService.deleteComputer(id);
+			try {
+				computerService.deleteComputer(id);
+			} catch (NoComputerFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		response.sendRedirect(REDIRECT_DASHBOARD);

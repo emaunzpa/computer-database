@@ -10,6 +10,10 @@ import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
+import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
+import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
+import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
+import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.util.CasesCLI;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
@@ -66,8 +70,9 @@ public class CommandeLigneInterface {
 	/**
 	 * Show the details of a computer after listening to user entered id 
 	 * @return computer
+	 * @throws NoComputerFoundException 
 	 */
-	public Computer showComputerDetails() {
+	public Computer showComputerDetails() throws NoComputerFoundException {
 		System.out.println();
 		System.out.println("ENTER a computer id...");
 		int computerId = scIn.nextInt();
@@ -147,8 +152,12 @@ public class CommandeLigneInterface {
 	/**
 	 * Update the computer selected by the user with user's entered parameters
 	 * @throws ParseException
+	 * @throws NoComputerFoundException 
+	 * @throws ComputerWithoutNameException 
+	 * @throws DiscontinuedBeforeIntroducedException 
+	 * @throws IncoherenceBetweenDateException 
 	 */
-	public void updateComputer() throws ParseException {
+	public void updateComputer() throws ParseException, NoComputerFoundException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		Computer computer = showComputerDetails();
 		System.out.println("Do you want to update the computer name ? (y/n)");
 		String answer = scIn.next();
@@ -220,8 +229,9 @@ public class CommandeLigneInterface {
 	
 	/**
 	 * Remove the computer with the id selected by the user
+	 * @throws NoComputerFoundException 
 	 */
-	public void removeComputer() {
+	public void removeComputer() throws NoComputerFoundException {
 		Computer computerToRemove = showComputerDetails();
 		if (computerToRemove.getName() != null && !computerToRemove.getName().equals("")) {
 			System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
@@ -241,7 +251,7 @@ public class CommandeLigneInterface {
 		System.out.println();
 	}
 	
-	public void run() throws ParseException {
+	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException {
 		System.out.println(welcome + "\n");
 		while(actualActionId != 7) {
 			System.out.println(actionsHeader);

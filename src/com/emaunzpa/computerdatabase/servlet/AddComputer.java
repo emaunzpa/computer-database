@@ -7,6 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
+import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
+import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.service.ComputerService;
 import com.emaunzpa.computerdatabase.service.ManufacturerService;
@@ -32,7 +36,18 @@ public class AddComputer extends HttpServlet {
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
 		ComputerService computerService = new ComputerService();
-		computerService.addComputer(request);
+		try {
+			computerService.addComputer(request);
+		} catch (ComputerWithoutNameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IncoherenceBetweenDateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DiscontinuedBeforeIntroducedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		response.sendRedirect(VUE_LIST_COMPUTERS);
 	}

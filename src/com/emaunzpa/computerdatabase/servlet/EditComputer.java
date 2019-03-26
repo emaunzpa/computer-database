@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
+import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
+import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
+import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.service.ComputerService;
 import com.emaunzpa.computerdatabase.service.ManufacturerService;
@@ -28,7 +31,13 @@ public class EditComputer extends HttpServlet {
 		ManufacturerService manufacturerService = new ManufacturerService();
 		ArrayList<Manufacturer> manufacturers = manufacturerService.getAllManufacturers();
 		ComputerService computerService = new ComputerService();
-		ComputerDTO computer = computerService.getComputer(computerID);
+		ComputerDTO computer = null;
+		try {
+			computer = computerService.getComputer(computerID);
+		} catch (NoComputerFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
 		request.setAttribute(ATT_COMPUTER, computer);
@@ -40,7 +49,18 @@ public class EditComputer extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		ComputerService computerService = new ComputerService();
-		computerService.updateComputer(request);
+		try {
+			computerService.updateComputer(request);
+		} catch (NoComputerFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IncoherenceBetweenDateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DiscontinuedBeforeIntroducedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		response.sendRedirect(VUE_LIST_COMPUTERS);
 		
