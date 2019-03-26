@@ -24,6 +24,11 @@
 		<servlet-class>com.emaunzpa.computerdatabase.servlet.AddComputer</servlet-class>
 	</servlet>
 	
+	<servlet>
+		<servlet-name>EditComputer</servlet-name>
+		<servlet-class>com.emaunzpa.computerdatabase.servlet.EditComputer</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>ListComputers</servlet-name>
 		<url-pattern>/views/listComputers</url-pattern>
@@ -32,6 +37,11 @@
 	<servlet-mapping>
 		<servlet-name>AddComputer</servlet-name>
 		<url-pattern>/views/addComputer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>EditComputer</servlet-name>
+		<url-pattern>/views/editComputer</url-pattern>
 	</servlet-mapping>
 
 </web-app>

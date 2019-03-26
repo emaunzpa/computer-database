@@ -1,7 +1,17 @@
 //On load
+$(document).ready(function(){
+  $("#searchbox").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#table tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
 $(function() {
-    // Default: hide edit mode
+    // Default: hide edit and delete modes
     $(".editMode").hide();
+    $("#deleteComputer").hide();
     
     // Click on "selectall" box
     $("#selectall").click(function () {
@@ -48,10 +58,12 @@ $(function() {
         if($(".editMode").is(":visible")) {
             $(".editMode").hide();
             $("#editComputer").text("Edit");
+            $("#deleteComputer").hide();
         }
         else {
             $(".editMode").show();
             $("#editComputer").text("View");
+            $("#deleteComputer").show();
         }
         return this;
     };
@@ -90,3 +102,43 @@ $(document).keydown(function(e) {
             break;
     }
 });
+
+// Delete selected computers
+function postDeleteForm() {
+	
+	$("#deleteForm").submit();
+	
+}
+
+//Hide delete alert and edit mode
+function hideDeleteAlert() {
+	
+    $("#deleteAlert").hide();
+    $.fn.toggleEditMode();
+
+}
+
+// Display delete alert
+function displayDeleteAlert() {
+	
+	var checkboxes = document.getElementsByClassName("cb");
+	var count = 0;
+	
+	for (var i = 0; i < checkboxes.length; i++) {	
+		if (checkboxes[i].checked == true){
+			count++;
+		}
+	}
+	
+	var numbberOfSelectedComputers = count;
+	
+	$("#numberOfSelectedComputers").text(count);
+	
+	if (count > 0){
+		$("#deleteAlert").show();
+		$('html, body').animate({ scrollTop: 0 }, 'fast');
+	}
+
+}
+
+
