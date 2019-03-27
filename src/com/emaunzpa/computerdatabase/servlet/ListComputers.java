@@ -46,16 +46,15 @@ public class ListComputers extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		String[] checkboxValues = request.getParameterValues("cb");
-		System.out.println(checkboxValues);
 		List<String> idToDelete = Arrays.asList(checkboxValues);
 		ComputerService computerService = new ComputerService();
 		
 		for (String idStr : idToDelete) {
 			Integer id = Integer.valueOf(idStr);
+			System.out.println("computer nb : " + id + " deleted");
 			try {
 				computerService.deleteComputer(id);
 			} catch (NoComputerFoundException | SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

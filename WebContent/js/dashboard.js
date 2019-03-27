@@ -1,4 +1,5 @@
 //On load
+
 $(function() {
     // Default: hide edit and delete modes
     $(".editMode").hide();

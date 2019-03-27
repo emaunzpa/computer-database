@@ -37,7 +37,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		
 //		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 //		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = HikariConnection.getInstance(databaseName);
+		HikariConnection hikariConnection = new HikariConnection(databaseName);
 
 		Optional<Manufacturer> manufacturer = Optional.of(new Manufacturer());
 		
@@ -87,7 +87,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
 //		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
 //		connectionDriver.initializeConnection();
-		HikariConnection hikariConnection = HikariConnection.getInstance(databaseName);
+		HikariConnection hikariConnection = new HikariConnection(databaseName);
 		
 		try {
 //	        statement = connectionDriver.getConnection().createStatement();

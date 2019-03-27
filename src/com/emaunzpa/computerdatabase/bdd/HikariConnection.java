@@ -19,31 +19,21 @@ import com.zaxxer.hikari.HikariDataSource;
 public class HikariConnection {
 
     private HikariDataSource dataSource;
-    private static HikariConnection instance = null;
     
-    private HikariConnection(HikariDataSource ds){
-  	  	this.dataSource = ds;
-    }
-    
-    public static HikariConnection getInstance(String databaseName) throws FileNotFoundException, IOException {
+    public HikariConnection(String databaseName) throws FileNotFoundException, IOException {
     	
-    	if (instance == null) {
 	    	/**
 			 * The file database.properties has to be added to the /root/resources/ path with 
 			 * parameters url, user and password for accessing the database.
 			 * TODO Change path to relative path
 			 */
 			HikariConfig config = new HikariConfig("/home/emaunzpa/excilys/computer-database/resources/" + databaseName + "HikariConfig.properties");
-			HikariDataSource dataSource = new HikariDataSource(config);
-			instance = new HikariConnection(dataSource);
-    	}
-    	
-		return instance;
+			dataSource = new HikariDataSource(config);
+
     }
     
     public void finalizeConnection() throws SQLException {
     	dataSource.close();
-    	instance = null;
     }
  
     public Connection getConnection() throws SQLException {
@@ -56,10 +46,6 @@ public class HikariConnection {
 
 	public void setDataSource(HikariDataSource dataSource) {
 		this.dataSource = dataSource;
-	}
-
-	public static void setInstance(HikariConnection instance) {
-		HikariConnection.instance = instance;
 	}
     
 }
