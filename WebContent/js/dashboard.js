@@ -1,13 +1,4 @@
 //On load
-$(document).ready(function(){
-  $("#searchbox").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#table tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-
 $(function() {
     // Default: hide edit and delete modes
     $(".editMode").hide();

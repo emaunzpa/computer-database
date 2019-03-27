@@ -1,6 +1,8 @@
 package com.emaunzpa.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +26,13 @@ public class ListComputers extends HttpServlet {
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
 		ComputerService computerService = new ComputerService();
-		List<ComputerDTO> computers = computerService.getAllComputers(request);
+		List<ComputerDTO> computers = new ArrayList<ComputerDTO>();
+		try {
+			computers = computerService.getAllComputers(request);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		computerService.initializePagination(request, computers);
 		
 		request.setAttribute(ATT_SEARCH, request.getParameter("search"));
@@ -46,7 +54,7 @@ public class ListComputers extends HttpServlet {
 			Integer id = Integer.valueOf(idStr);
 			try {
 				computerService.deleteComputer(id);
-			} catch (NoComputerFoundException e) {
+			} catch (NoComputerFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

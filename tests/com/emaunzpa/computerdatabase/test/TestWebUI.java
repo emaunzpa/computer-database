@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -61,20 +63,20 @@ public class TestWebUI {
 		WebElement startButton = driver.findElement(By.id("startPaginationButton"));
 		startButton.click();
 		Thread.sleep(1000);
-		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10"));
+		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10&search="));
 		// Next Button
 		WebElement nextButton = driver.findElement(By.id("next50PaginationButton"));
 		nextButton.click();
 		Thread.sleep(1000);
-		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=10&endIndex=20"));
+		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=50&endIndex=60&search="));
 		// Previous Button
-		WebElement previousButton = driver.findElement(By.id("previous10PaginationButton"));
+		WebElement previousButton = driver.findElement(By.id("previous50PaginationButton"));
 		previousButton.click();
 		Thread.sleep(1000);
 		previousButton = driver.findElement(By.id("previous10PaginationButton"));
 		previousButton.click();
 		Thread.sleep(1000);
-		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10"));
+		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10&search="));
 		
 		// Add Computer link
 		WebElement addComputerButton = driver.findElement(By.id("addComputer"));
@@ -139,7 +141,6 @@ public class TestWebUI {
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers"));
 		Thread.sleep(1000);
 		
-		driver.quit();
 	}
 	
 	@Test
@@ -148,14 +149,14 @@ public class TestWebUI {
 		driver.get("http://localhost:8080/computer-database/views/editComputer?computerID=2");
 		Thread.sleep(1000);
 		
-		WebElement computerName = driver.findElement(By.id("computerName"));
-		assertTrue(computerName.getText().equals("CM-2a"));
+		String computerName = driver.findElement(By.id("computerName")).getAttribute("value");
+		assertTrue(computerName.equals("CM-2a"));
 		Thread.sleep(1000);
 		
-		WebElement companyName = driver.findElement(By.id("companyId"));
-		assertTrue(companyName.getText().equals("Thinking Machines"));
+		String companyName = driver.findElement(By.id("companyId")).getAttribute("value");
+		assertTrue(companyName.equals("2"));
 		
-		computerName.sendKeys("");
+		driver.findElement(By.id("computerName")).clear();
 		WebElement editButton = driver.findElement(By.id("editButton"));
 		editButton.click();
 		Thread.sleep(1000);
@@ -193,6 +194,10 @@ public class TestWebUI {
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers"));
 		Thread.sleep(1000);
 		
+	}
+	
+	@AfterClass
+	public static void quitDriver() {
 		driver.quit();
 	}
 	

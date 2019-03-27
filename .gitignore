@@ -14,8 +14,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-resources/database.properties
 logging/
+*.properties
 
 # External tool builders
 .externalToolBuilders/

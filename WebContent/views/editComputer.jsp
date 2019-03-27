@@ -44,7 +44,7 @@
                                     			<option class="companyId-option" value="${count}" selected="selected">${manufacturer.name}</option>
                                     		</c:when>
                                     		<c:otherwise>
-                                    			<option class="companyId-option" value="${count}">${manufacturer.name}></option>
+                                    			<option class="companyId-option" value="${count}">${manufacturer.name}</option>
                                     		</c:otherwise>
                                     	</c:choose>
                                     	 <c:set var="count" value="${count + 1}"></c:set>

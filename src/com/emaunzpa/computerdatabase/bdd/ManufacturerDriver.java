@@ -1,5 +1,7 @@
 package com.emaunzpa.computerdatabase.bdd;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -8,6 +10,8 @@ import java.util.Optional;
 
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 
@@ -29,17 +33,17 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	}
 	
 	@Override
-	public Optional<Manufacturer> getManufacturer(int id) {
+	public Optional<Manufacturer> getManufacturer(int id) throws FileNotFoundException, IOException, SQLException {
 		
-		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-		connectionDriver.initializeConnection();
-//		HikariConnection hikariConnection = new HikariConnection(databaseName);
-//		hikariConnection.initializeConnection();
+//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+//		connectionDriver.initializeConnection();
+		HikariConnection hikariConnection = HikariConnection.getInstance(databaseName);
+
 		Optional<Manufacturer> manufacturer = Optional.of(new Manufacturer());
 		
 		try {
-	        statement = connectionDriver.getConnection().createStatement();
-//			statement = hikariConnection.getConnection().createStatement();
+//	        statement = connectionDriver.getConnection().createStatement();
+			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request =  _GET_COMPANY_ + id;
 	        resultat = statement.executeQuery( request );
@@ -71,24 +75,23 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		connectionDriver.finalizeConnection();
-//		hikariConnection.finalizeConnection();
+//		connectionDriver.finalizeConnection();
+		hikariConnection.finalizeConnection();
 		log.info("Fin de connexion.");
 		return manufacturer;
 	}
 
 	@Override
-	public ArrayList<Manufacturer> getAllManufacturers() {
+	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
-		connectionDriver.initializeConnection();
-//		HikariConnection hikariConnection = new HikariConnection(databaseName);
-//		hikariConnection.initializeConnection();
+//		ConnectionDriver connectionDriver = new ConnectionDriver(databaseName);
+//		connectionDriver.initializeConnection();
+		HikariConnection hikariConnection = HikariConnection.getInstance(databaseName);
 		
 		try {
-	        statement = connectionDriver.getConnection().createStatement();
-//	        statement = hikariConnection.getConnection().createStatement();
+//	        statement = connectionDriver.getConnection().createStatement();
+	        statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_ALL_COMPANIES;
 	        resultat = statement.executeQuery( request );
@@ -119,8 +122,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		connectionDriver.finalizeConnection();
-//		hikariConnection.finalizeConnection();
+//		connectionDriver.finalizeConnection();
+		hikariConnection.finalizeConnection();
 		log.info("Fin de connexion.");
 		return manufacturers;
 	}

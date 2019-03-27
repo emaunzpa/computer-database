@@ -1,5 +1,8 @@
 package com.emaunzpa.computerdatabase.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,7 +49,7 @@ public class ComputerService {
 		
 	}
 	
-	public List<ComputerDTO> getAllComputers(HttpServletRequest request){
+	public List<ComputerDTO> getAllComputers(HttpServletRequest request) throws FileNotFoundException, IOException, SQLException{
 		ArrayList<Computer> computers = new ArrayList<>();
 		String searchStr = request.getParameter("search");
 		if (searchStr != null && !searchStr.equals("")){
@@ -74,7 +77,7 @@ public class ComputerService {
 		return getAllDTOs(computers);
 	}
 	
-	public List<ComputerDTO> restrictedListComputers(){
+	public List<ComputerDTO> restrictedListComputers() throws FileNotFoundException, IOException, SQLException{
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
 		List<Computer> restrictedList = pagination.showRestrictedComputerList(computers);
 		return getAllDTOs(restrictedList);
@@ -97,7 +100,7 @@ public class ComputerService {
 		return computerDTO;
 	}
 	
-	public ComputerDTO getComputer(int id) throws NoComputerFoundException {
+	public ComputerDTO getComputer(int id) throws NoComputerFoundException, FileNotFoundException, SQLException, IOException {
 		return convertComputerToDTO(computerDriver.getComputer(id).get());
 	}
 	
@@ -119,7 +122,7 @@ public class ComputerService {
 		return computer;
 	}
 	
-	public void addComputer(HttpServletRequest request) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+	public void addComputer(HttpServletRequest request) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
 		
 		String computerName = request.getParameter("computerName");
 		String introducedDateStr = request.getParameter("introducedDate");
@@ -146,7 +149,7 @@ public class ComputerService {
 		return result;
 	}
 	
-	public void updateComputer(HttpServletRequest request) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+	public void updateComputer(HttpServletRequest request) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
 		
 		int computerId = Integer.valueOf(request.getParameter("computerId"));
 		String computerName = request.getParameter("computerName");
@@ -157,7 +160,7 @@ public class ComputerService {
 		computerDriver.updateComputer(computerId, computerName, dh.convertStringDateToSqlDate(introducedDateStr), dh.convertStringDateToSqlDate(discontinuedDateStr), companyId);
 	}
 	
-	public void deleteComputer(int computerId) throws NoComputerFoundException {
+	public void deleteComputer(int computerId) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {
 		
 		computerDriver.removeComputer(computerId);
 		

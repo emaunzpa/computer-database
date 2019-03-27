@@ -88,7 +88,7 @@
 	                <li>
 	                	<a href="?startIndex=0&endIndex=10&search=${search}" id="startPaginationButton">Start</a>
 	                	<a href="?startIndex=${pagination.previous50Index}&endIndex=${pagination.previous50Index + 10}&search=${search}" aria-label="Previous" id="previous50PaginationButton"><i class="fas fa-fast-backward"></i></a>
-	                	<a href="?startIndex=${pagination.previous50Index}&endIndex=${pagination.previous50Index + 10}&search=${search}" aria-label="Previous" id="previous10PaginationButton"><i class="fas fa-step-backward"></i></a>
+	                	<a href="?startIndex=${pagination.previous10Index}&endIndex=${pagination.previous10Index + 10}&search=${search}" aria-label="Previous" id="previous10PaginationButton"><i class="fas fa-step-backward"></i></a>
 	                	<a href="?startIndex=${pagination.next10Index - 10}&endIndex=${pagination.next10Index}&search=${search}" aria-label="Next" id="next10PaginationButton"><i class="fas fa-step-forward"></i></a>
 	                	<a href="?startIndex=${pagination.next50Index - 10}&endIndex=${pagination.next50Index}&search=${search}" aria-label="Next" id="next50PaginationButton"><i class="fas fa-fast-forward"></i></a>
 	                	<a href="?startIndex=${pagination.toEndIndex - 10}&endIndex=${pagination.toEndIndex}&search=${search}" id="endPaginationButton">End</a>

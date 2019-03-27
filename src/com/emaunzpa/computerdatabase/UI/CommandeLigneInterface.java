@@ -1,5 +1,8 @@
 package com.emaunzpa.computerdatabase.UI;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,8 +52,11 @@ public class CommandeLigneInterface {
 	
 	/**
 	 * Show the list of all computers
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public void showAllComputer() {
+	public void showAllComputer() throws FileNotFoundException, IOException, SQLException {
 		System.out.println(actionResult + "\n");
 		ArrayList<Computer> computers = computerDriver.getAllComputers();
 		pagination.displayComputers(computers);
@@ -59,8 +65,11 @@ public class CommandeLigneInterface {
 	
 	/**
 	 * Show the list of all companies
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public void showAllCompanies() {
+	public void showAllCompanies() throws FileNotFoundException, IOException, SQLException {
 		System.out.println(actionResult + "\n");
 		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
 		pagination.displayManufacturers(manufacturers);
@@ -71,8 +80,11 @@ public class CommandeLigneInterface {
 	 * Show the details of a computer after listening to user entered id 
 	 * @return computer
 	 * @throws NoComputerFoundException 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 * @throws FileNotFoundException 
 	 */
-	public Computer showComputerDetails() throws NoComputerFoundException {
+	public Computer showComputerDetails() throws NoComputerFoundException, FileNotFoundException, SQLException, IOException {
 		System.out.println();
 		System.out.println("ENTER a computer id...");
 		int computerId = scIn.nextInt();
@@ -156,8 +168,11 @@ public class CommandeLigneInterface {
 	 * @throws ComputerWithoutNameException 
 	 * @throws DiscontinuedBeforeIntroducedException 
 	 * @throws IncoherenceBetweenDateException 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 * @throws FileNotFoundException 
 	 */
-	public void updateComputer() throws ParseException, NoComputerFoundException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+	public void updateComputer() throws ParseException, NoComputerFoundException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
 		Computer computer = showComputerDetails();
 		System.out.println("Do you want to update the computer name ? (y/n)");
 		String answer = scIn.next();
@@ -230,8 +245,11 @@ public class CommandeLigneInterface {
 	/**
 	 * Remove the computer with the id selected by the user
 	 * @throws NoComputerFoundException 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 * @throws FileNotFoundException 
 	 */
-	public void removeComputer() throws NoComputerFoundException {
+	public void removeComputer() throws NoComputerFoundException, FileNotFoundException, SQLException, IOException {
 		Computer computerToRemove = showComputerDetails();
 		if (computerToRemove.getName() != null && !computerToRemove.getName().equals("")) {
 			System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
@@ -251,7 +269,7 @@ public class CommandeLigneInterface {
 		System.out.println();
 	}
 	
-	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException {
+	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException, FileNotFoundException, IOException, SQLException {
 		System.out.println(welcome + "\n");
 		while(actualActionId != 7) {
 			System.out.println(actionsHeader);

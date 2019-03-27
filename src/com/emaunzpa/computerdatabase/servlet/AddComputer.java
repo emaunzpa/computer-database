@@ -2,6 +2,7 @@ package com.emaunzpa.computerdatabase.servlet;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,13 @@ public class AddComputer extends HttpServlet {
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
 		ManufacturerService manufacturerService = new ManufacturerService();
-		ArrayList<Manufacturer> manufacturers = manufacturerService.getAllManufacturers();
+		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
+		try {
+			manufacturers = manufacturerService.getAllManufacturers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
 		
@@ -45,6 +52,9 @@ public class AddComputer extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DiscontinuedBeforeIntroducedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

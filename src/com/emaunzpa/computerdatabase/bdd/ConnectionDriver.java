@@ -21,13 +21,13 @@ public class ConnectionDriver {
 	private static String _URL_;
     private static String _USER_;
     private static String _MDP_;
-    private static Logger log;
-    private static HTMLLayout htmlLayout = new HTMLLayout();	  
+    private static Logger log;	  
     
     private Connection connection;
     
     public ConnectionDriver(String databaseName) {
     	this.connection = null;
+    	PropertyConfigurator.configure("resources/log4j.properties");
     	log = Logger.getLogger(ConnectionDriver.class.getName());
     	
     	try {

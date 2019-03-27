@@ -2,6 +2,10 @@ package com.emaunzpa.computerdatabase.test;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,12 +25,12 @@ public class TestManufacturer {
 	}
 	
 	@Test
-	public void getAllManufacturers() {
+	public void getAllManufacturers() throws FileNotFoundException, IOException, SQLException {
 		assertTrue(manufacturerDriver.getAllManufacturers().size() >= 0);
 	}
 	
 	@Test
-	public void getManufacturer() {
+	public void getManufacturer() throws FileNotFoundException, IOException, SQLException {
 		assertEquals("Apple Inc.", manufacturerDriver.getManufacturer(1).get().getName());
 		assertEquals(0, manufacturerDriver.getManufacturer(0).get().getId());
 		assertNull(manufacturerDriver.getManufacturer(0).get().getName());

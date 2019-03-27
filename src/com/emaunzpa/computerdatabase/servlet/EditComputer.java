@@ -1,6 +1,7 @@
 package com.emaunzpa.computerdatabase.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +30,18 @@ public class EditComputer extends HttpServlet {
 		int computerID = Integer.valueOf(request.getParameter("computerID"));
 
 		ManufacturerService manufacturerService = new ManufacturerService();
-		ArrayList<Manufacturer> manufacturers = manufacturerService.getAllManufacturers();
+		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
+		try {
+			manufacturers = manufacturerService.getAllManufacturers();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		ComputerService computerService = new ComputerService();
 		ComputerDTO computer = null;
 		try {
 			computer = computerService.getComputer(computerID);
-		} catch (NoComputerFoundException e) {
+		} catch (NoComputerFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -58,6 +65,9 @@ public class EditComputer extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DiscontinuedBeforeIntroducedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

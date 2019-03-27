@@ -18,63 +18,48 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class HikariConnection {
 
-	private static Properties prop = new Properties();
-    private static HikariDataSource ds;
-    private Connection connection;
-    private static InputStream dbInput;
-    private static Logger log; 
+    private HikariDataSource dataSource;
+    private static HikariConnection instance = null;
     
-    public HikariConnection(String databaseName) {
-    	log = Logger.getLogger(HikariConnection.class);
-    	connection = null;
-    	ds = new HikariDataSource();
-    	
-    	try {
-    		/**
-    		 * The file database.properties has to be added to the /root/resources/ path with 
-    		 * parameters url, user and password for accessing the database.
-    		 * TODO Change path to relative path
-    		 */
-    		HikariConnection.dbInput = new FileInputStream("/home/emaunzpa/excilys/computer-database/resources/"+databaseName+".properties");
-			HikariConnection.prop.load(dbInput);
-		} catch (FileNotFoundException e) {
-			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());
-		} catch (IOException e) {
-			log.error("Erreur lors du chargement du fichier properties " + e.getMessage());
-		}
-    	
-    	ds.setJdbcUrl(prop.getProperty("url"));
-    	ds.setUsername(prop.getProperty("user"));
-    	ds.setPassword(prop.getProperty("pwd"));
-    	
+    private HikariConnection(HikariDataSource ds){
+  	  	this.dataSource = ds;
     }
     
-    public void initializeConnection() {
+    public static HikariConnection getInstance(String databaseName) throws FileNotFoundException, IOException {
     	
-    	try {
-			Class.forName( "com.mysql.jdbc.Driver" );
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+    	if (instance == null) {
+	    	/**
+			 * The file database.properties has to be added to the /root/resources/ path with 
+			 * parameters url, user and password for accessing the database.
+			 * TODO Change path to relative path
+			 */
+			HikariConfig config = new HikariConfig("/home/emaunzpa/excilys/computer-database/resources/" + databaseName + "HikariConfig.properties");
+			HikariDataSource dataSource = new HikariDataSource(config);
+			instance = new HikariConnection(dataSource);
+    	}
     	
-    	try {
-			connection = ds.getConnection();
-		} catch (SQLException e) {
-			log.error("Erreur lors de l'initialisation de la connexion " + e.getMessage());
-		}
-    	
+		return instance;
     }
     
-    public void finalizeConnection() {
-    	try {
-			connection.close();
-		} catch (SQLException e) {
-			log.error("Impossible de fermer la connexion " + e.getMessage());
-		}
+    public void finalizeConnection() throws SQLException {
+    	dataSource.close();
+    	instance = null;
     }
  
-    public Connection getConnection() {
-        return connection;
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
+
+	public HikariDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(HikariDataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	public static void setInstance(HikariConnection instance) {
+		HikariConnection.instance = instance;
+	}
     
 }

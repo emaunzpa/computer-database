@@ -1,5 +1,8 @@
 package com.emaunzpa.computerdatabase.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
@@ -15,7 +18,7 @@ public class ManufacturerService {
 		
 	}
 	
-	public ArrayList<Manufacturer> getAllManufacturers(){
+	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException{
 		return manufacturerDriver.getAllManufacturers();
 	}
 	
