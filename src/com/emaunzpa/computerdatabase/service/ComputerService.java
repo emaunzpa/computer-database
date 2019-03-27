@@ -32,7 +32,7 @@ public class ComputerService {
 	 * We initiate pagination with parameters passed trough url.
 	 * If params are null, the default params are set to 0 and 10 to print the 10 first computers
 	 */
-	public void initializePagination(HttpServletRequest request) {
+	public void initializePagination(HttpServletRequest request, List<ComputerDTO> computers) {
 		
 		if (request.getParameter("startIndex") != null) {
 			pagination.setStartIndex(Integer.valueOf(request.getParameter("startIndex")));
@@ -40,6 +40,9 @@ public class ComputerService {
 		if (request.getParameter("endIndex") != null) {
 			pagination.setEndIndex(Integer.valueOf(request.getParameter("endIndex")));
 		}
+		
+		pagination.initializeIndexes(computers);
+		
 		
 	}
 	

@@ -24,9 +24,8 @@ public class ListComputers extends HttpServlet {
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
 		ComputerService computerService = new ComputerService();
-		computerService.initializePagination(request);
-		
 		List<ComputerDTO> computers = computerService.getAllComputers(request);
+		computerService.initializePagination(request, computers);
 		
 		request.setAttribute(ATT_SEARCH, request.getParameter("search"));
 		request.setAttribute(ATT_LIST_COMPUTERS, computers);

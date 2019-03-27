@@ -4,13 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
+import com.emaunzpa.computerdatabase.service.ComputerService;
 
 public class Pagination {
 
 	private int startIndex;
 	private int endIndex;
+	private int next10Index;
+	private int next50Index;
+	private int previous10Index;
+	private int previous50Index;
+	private int toEndIndex;
+	private int toBeginIndex;
 	private Scanner scIn = new Scanner(System.in);
 	
 	public Pagination(){
@@ -131,6 +139,112 @@ public class Pagination {
 
 	public void setEndIndex(int endIndex) {
 		this.endIndex = endIndex;
+	}
+
+	public int getNext10Index() {
+		return next10Index;
+	}
+
+	public void setNext10Index(int next10Index) {
+		this.next10Index = next10Index;
+	}
+
+	public int getNext50Index() {
+		return next50Index;
+	}
+
+	public void setNext50Index(int next50Index) {
+		this.next50Index = next50Index;
+	}
+
+	public int getPrevious10Index() {
+		return previous10Index;
+	}
+
+	public void setPrevious10Index(int previous10Index) {
+		this.previous10Index = previous10Index;
+	}
+
+	public int getPrevious50Index() {
+		return previous50Index;
+	}
+
+	public void setPrevious50Index(int previous50Index) {
+		this.previous50Index = previous50Index;
+	}
+
+	public int getToEndIndex() {
+		return toEndIndex;
+	}
+
+	public void setToEndIndex(int toEndIndex) {
+		this.toEndIndex = toEndIndex;
+	}
+
+	public int getToBeginIndex() {
+		return toBeginIndex;
+	}
+
+	public void setToBeginIndex(int toBeginIndex) {
+		this.toBeginIndex = toBeginIndex;
+	}
+
+	public Scanner getScIn() {
+		return scIn;
+	}
+
+	public void setScIn(Scanner scIn) {
+		this.scIn = scIn;
+	}
+
+	public void initializeIndexes(List<ComputerDTO> computers) {
+		
+		this.setToBeginIndex(0);
+		this.setPrevious50Index(differenceOrZero(50, this.getStartIndex()));
+		this.setPrevious10Index(differenceOrZero(10, this.getStartIndex()));
+		
+		if (this.getEndIndex() + 10 <= computers.size()) {
+			this.setNext10Index(this.getEndIndex() + 10);
+		}
+		else {
+			if (computers.size() > 10) {
+				this.setNext10Index(computers.size());
+				this.setToEndIndex(computers.size());
+			}
+			else {
+				this.setNext10Index(10);
+				this.setToEndIndex(10);
+			}
+		}
+		
+		if (this.getEndIndex() + 50 <= computers.size()) {
+			this.setNext50Index(this.getEndIndex() + 50);
+		}
+		else {
+			if (computers.size() > 10) {
+				this.setNext50Index(computers.size());
+			}
+			else {
+				this.setNext50Index(10);
+			}
+		}
+		
+		if (computers.size() > 10) {
+			this.setToEndIndex(computers.size());
+		}
+		else {
+			this.setToEndIndex(10);
+		}
+		
+	}
+	
+	public int differenceOrZero(int a, int b) {
+		if (b - a > 0) {
+			return b-a;
+		}
+		else {
+			return 0;
+		}
 	}
 	
 	
