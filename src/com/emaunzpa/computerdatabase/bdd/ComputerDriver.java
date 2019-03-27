@@ -282,7 +282,7 @@ public class ComputerDriver implements ComputerDAO {
 		Optional<Computer> computer;
 		
 		// Cannot update a unexisting computer
-		if (getComputer(id) == null) {
+		if (!getComputer(id).isPresent()) {
 			log.error("Impossible to update a unexisting computer. Request cancelled.");
 			return false;
 		}
