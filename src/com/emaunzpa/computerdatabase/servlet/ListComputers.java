@@ -14,12 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.service.ComputerService;
+import com.emaunzpa.computerdatabase.util.Pagination;
 
 public class ListComputers extends HttpServlet {
 
 	public static final String VUE_LIST_COMPUTERS = "/views/listComputers.jsp";
 	public static final String ATT_LIST_COMPUTERS = "computers";
 	public static final String ATT_PAGINATION = "pagination";
+	public static final String ATT_SORTED = "sorted";
 	public static final String ATT_SEARCH = "search";
 	public static final String REDIRECT_DASHBOARD = "listComputers";
 	
@@ -34,8 +36,10 @@ public class ListComputers extends HttpServlet {
 			e.printStackTrace();
 		}
 		computerService.initializePagination(request, computers);
+		computerService.sortComputers(computers, request);
 		
 		request.setAttribute(ATT_SEARCH, request.getParameter("search"));
+		request.setAttribute(ATT_SORTED, request.getParameter("sorted"));
 		request.setAttribute(ATT_LIST_COMPUTERS, computers);
 		request.setAttribute(ATT_PAGINATION, computerService.getPagination());
 		

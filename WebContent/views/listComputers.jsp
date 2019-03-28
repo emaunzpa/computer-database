@@ -23,9 +23,12 @@
 		
 	    <section id="main">
 	        <div class="container">
-	            <h1 id="homeTitle">${computers.size()} Computers found (${pagination.startIndex + 1} 
-	            <c:if test="${computers.size() > 10}"> to ${pagination.endIndex}</c:if>
-	             printed)
+	            <h1 id="homeTitle">${computers.size()} Computers found (
+	            <c:choose>
+	            	<c:when test="${computers.size() > 10}">${pagination.startIndex + 1} to ${pagination.endIndex}</c:when>
+	            	<c:otherwise>${computers.size()}</c:otherwise>
+	            </c:choose>
+	             printed )
 	            </h1>
 	            <div id="actions" class="form-horizontal">
 	                <div class="pull-left">
@@ -51,12 +54,47 @@
 	                            <input type="checkbox" id="selectall" /> 
 	                            <span style="vertical-align: top;">
 	                                 -  <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"><i class="fa fa-trash-o fa-lg"></i></a></span></th>
-	                        <th>Computer name</th>
-	                        <th>Introduced date</th>
-	                        <!-- Table header for Discontinued Date -->
-	                        <th>Discontinued date</th>
-	                        <!-- Table header for Company -->
-	                        <th>Company name</th>
+	                        <th>Computer name 
+	                        <c:choose>
+	                        	<c:when test="${pagination.sorted == 'byName'}">
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byNameReverse"><i class="fas fa-sort"></i></a>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byName"><i class="fas fa-sort"></i></a>
+	                        	</c:otherwise>
+	                        </c:choose>
+	                        </th>
+	                        
+	                        <th>Introduced date
+	                        <c:choose>
+	                        	<c:when test="${pagination.sorted == 'byIntroduced'}">
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byIntroducedReverse"><i class="fas fa-sort"></i></a>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byIntroduced"><i class="fas fa-sort"></i></a>
+	                        	</c:otherwise>
+	                        </c:choose>
+	                        </th>
+	                        <th>Discontinued date
+	                        <c:choose>
+	                        	<c:when test="${pagination.sorted == 'byDiscontinued'}">
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byDiscontinuedReverse"><i class="fas fa-sort"></i></a>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byDiscontinued"><i class="fas fa-sort"></i></a>
+	                        	</c:otherwise>
+	                        </c:choose>
+	                        </th>
+	                        <th>Company name
+	                        <c:choose>
+	                        	<c:when test="${pagination.sorted == 'byCompany'}">
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byCompanyReverse"><i class="fas fa-sort"></i></a>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byCompany"><i class="fas fa-sort"></i></a>
+	                        	</c:otherwise>
+	                        </c:choose>
+	                        </th>
 	                    </tr>
 	                </thead>
 	                <!-- Browse attribute computers -->
@@ -86,12 +124,12 @@
 	        <div class="container text-center">
 	            <ul class="pagination">
 	                <li>
-	                	<a href="?startIndex=0&endIndex=10&search=${search}" id="startPaginationButton">Start</a>
-	                	<a href="?startIndex=${pagination.previous50Index}&endIndex=${pagination.previous50Index + 10}&search=${search}" aria-label="Previous" id="previous50PaginationButton"><i class="fas fa-fast-backward"></i></a>
-	                	<a href="?startIndex=${pagination.previous10Index}&endIndex=${pagination.previous10Index + 10}&search=${search}" aria-label="Previous" id="previous10PaginationButton"><i class="fas fa-step-backward"></i></a>
-	                	<a href="?startIndex=${pagination.next10Index - 10}&endIndex=${pagination.next10Index}&search=${search}" aria-label="Next" id="next10PaginationButton"><i class="fas fa-step-forward"></i></a>
-	                	<a href="?startIndex=${pagination.next50Index - 10}&endIndex=${pagination.next50Index}&search=${search}" aria-label="Next" id="next50PaginationButton"><i class="fas fa-fast-forward"></i></a>
-	                	<a href="?startIndex=${pagination.toEndIndex - 10}&endIndex=${pagination.toEndIndex}&search=${search}" id="endPaginationButton">End</a>
+	                	<a href="?startIndex=0&endIndex=10&search=${search}&sorted=${pagination.sorted}" id="startPaginationButton">Start</a>
+	                	<a href="?startIndex=${pagination.previous50Index}&endIndex=${pagination.previous50Index + 10}&search=${search}&sorted=${pagination.sorted}" aria-label="Previous" id="previous50PaginationButton"><i class="fas fa-fast-backward"></i></a>
+	                	<a href="?startIndex=${pagination.previous10Index}&endIndex=${pagination.previous10Index + 10}&search=${search}&sorted=${pagination.sorted}" aria-label="Previous" id="previous10PaginationButton"><i class="fas fa-step-backward"></i></a>
+	                	<a href="?startIndex=${pagination.next10Index - 10}&endIndex=${pagination.next10Index}&search=${search}&sorted=${pagination.sorted}" aria-label="Next" id="next10PaginationButton"><i class="fas fa-step-forward"></i></a>
+	                	<a href="?startIndex=${pagination.next50Index - 10}&endIndex=${pagination.next50Index}&search=${search}&sorted=${pagination.sorted}" aria-label="Next" id="next50PaginationButton"><i class="fas fa-fast-forward"></i></a>
+	                	<a href="?startIndex=${pagination.toEndIndex - 10}&endIndex=${pagination.toEndIndex}&search=${search}&sorted=${pagination.sorted}" id="endPaginationButton">End</a>
 	            	</li>
 	       		</ul>
 	       	</div>

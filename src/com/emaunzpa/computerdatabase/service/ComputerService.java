@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +20,7 @@ import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
+import com.emaunzpa.computerdatabase.util.CasesSorted;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 import com.emaunzpa.computerdatabase.util.Pagination;
 
@@ -164,6 +168,73 @@ public class ComputerService {
 		
 		computerDriver.removeComputer(computerId);
 		
+	}
+	
+	public void sortComputers(List<ComputerDTO> computers, HttpServletRequest request) {
+		
+		String sorted = request.getParameter("sorted");
+		if (sorted != null && !sorted.equals("")) {
+			
+			switch(generateEnumFromString(sorted)) {
+			
+				case BY_NAME:
+					pagination.sortByName(computers);
+					pagination.setSorted(CasesSorted.BY_NAME.getSortType());
+					break;
+					
+				case BY_COMPANY:
+					pagination.sortByCompany(computers);
+					pagination.setSorted(CasesSorted.BY_COMPANY.getSortType());
+					break;
+					
+				case BY_INTRODUCED:
+					pagination.sortByIntroduced(computers);
+					pagination.setSorted(CasesSorted.BY_INTRODUCED.getSortType());
+					break;
+					
+				case BY_DISCONTINUED:
+					pagination.sortByDiscontinued(computers);
+					pagination.setSorted(CasesSorted.BY_DISCONTINUED.getSortType());
+					break;
+					
+				case BY_NAME_REVERSE:
+					pagination.sortByName(computers);
+					Collections.reverse(computers);
+					pagination.setSorted(CasesSorted.BY_NAME_REVERSE.getSortType());
+					break;
+					
+				case BY_COMPANY_REVERSE:
+					pagination.sortByCompany(computers);
+					Collections.reverse(computers);
+					pagination.setSorted(CasesSorted.BY_COMPANY_REVERSE.getSortType());
+					break;
+					
+				case BY_INTRODUCED_REVERSE:
+					pagination.sortByIntroduced(computers);
+					Collections.reverse(computers);
+					pagination.setSorted(CasesSorted.BY_INTRODUCED_REVERSE.getSortType());
+					break;
+					
+				case BY_DISCONTINUED_REVERSE:
+					pagination.sortByDiscontinued(computers);
+					Collections.reverse(computers);
+					pagination.setSorted(CasesSorted.BY_DISCONTINUED_REVERSE.getSortType());
+					break;
+			}
+			
+		}
+		
+	}
+	
+	public CasesSorted generateEnumFromString(String str) {
+		
+		for (CasesSorted casesSorted : CasesSorted.values()) {
+			if (casesSorted.getSortType().equals(str)) {
+				return casesSorted;
+			}
+		}
+		
+		return CasesSorted.BY_NAME;
 	}
 
 	public Pagination getPagination() {

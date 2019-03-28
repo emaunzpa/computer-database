@@ -1,6 +1,7 @@
 package com.emaunzpa.computerdatabase.util;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,11 +20,13 @@ public class Pagination {
 	private int previous50Index;
 	private int toEndIndex;
 	private int toBeginIndex;
+	private String sorted;
 	private Scanner scIn = new Scanner(System.in);
 	
 	public Pagination(){
 		this.startIndex = 0;
 		this.endIndex = 10;
+		this.sorted = "";
 	}
 	
 	public List<Computer> showRestrictedComputerList(ArrayList<Computer> computers){
@@ -247,5 +250,108 @@ public class Pagination {
 		}
 	}
 	
+	public void sortByName(List<ComputerDTO> computers) {
+		
+		computers.sort(new Comparator<ComputerDTO>() {
+
+			@Override
+			public int compare(ComputerDTO computer1, ComputerDTO computer2) {
+				
+				if (computer2.getName() == null) {
+					return 1;
+				}
+				
+				else if (computer1.getName() == null ){
+					return -1;
+				}
+				
+				else {
+					return computer1.getName().compareTo(computer2.getName());
+				}
+			}
+			
+		});
+
+	}
+	
+	public void sortByCompany(List<ComputerDTO> computers) {
+		
+		computers.sort(new Comparator<ComputerDTO>() {
+
+			@Override
+			public int compare(ComputerDTO computer1, ComputerDTO computer2) {
+				
+				if (computer2.getManufacturerName() == null) {
+					return -1;
+				}
+				
+				else if (computer1.getManufacturerName() == null ){
+					return 1;
+				}
+				
+				else {
+					return computer1.getManufacturerName().compareTo(computer2.getManufacturerName());
+				}
+			}
+			
+		});
+
+	}
+	
+	public void sortByIntroduced(List<ComputerDTO> computers) {
+		
+		computers.sort(new Comparator<ComputerDTO>() {
+
+			@Override
+			public int compare(ComputerDTO computer1, ComputerDTO computer2) {
+				
+				if (computer2.getIntroducedDate() == null) {
+					return -1;
+				}
+				
+				else if (computer1.getIntroducedDate() == null ){
+					return 1;
+				}
+				
+				else {
+					return computer1.getIntroducedDate().compareTo(computer2.getIntroducedDate());
+				}
+			}
+			
+		});
+
+	}
+	
+	public void sortByDiscontinued(List<ComputerDTO> computers) {
+		
+		computers.sort(new Comparator<ComputerDTO>() {
+
+			@Override
+			public int compare(ComputerDTO computer1, ComputerDTO computer2) {
+				
+				if (computer2.getDiscontinuedDate() == null) {
+					return -1;
+				}
+				
+				else if (computer1.getDiscontinuedDate() == null ){
+					return 1;
+				}
+				
+				else {
+					return computer1.getDiscontinuedDate().compareTo(computer2.getDiscontinuedDate());
+				}
+			}
+			
+		});
+
+	}
+
+	public String getSorted() {
+		return sorted;
+	}
+
+	public void setSorted(String sorted) {
+		this.sorted = sorted;
+	}
 	
 }
