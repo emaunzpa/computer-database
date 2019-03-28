@@ -8,7 +8,8 @@ public enum CasesCLI {
 	CREATE_COMPUTER(4),
 	UPDATE_COMPUTER(5),
 	DELETE_COMPUTER(6),
-	EXIT(7);
+	DELETE_COMPANY(7),
+	EXIT(8);
 	
 	private int choice;
 	

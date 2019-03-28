@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import com.emaunzpa.computerdatabase.model.Computer;
@@ -17,6 +17,7 @@ import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
+import com.emaunzpa.computerdatabase.exception.NoManufacturerFoundException;
 import com.emaunzpa.computerdatabase.util.CasesCLI;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
@@ -31,7 +32,6 @@ public class CommandeLigneInterface {
 	private int actualActionId;
 	private String actionResult;
 	private Scanner scIn = new Scanner(System.in);
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver("computer-database-db");
 	private ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
 	private DatesHandler datesHandler = new DatesHandler();
@@ -47,7 +47,7 @@ public class CommandeLigneInterface {
 		this.welcome = "-------- Welcome in computer-database ! --------";
 		this.goodBye = "-------- Thank you for visiting us and see you next time ! --------";
 		this.actionsHeader = "Which action would you like to realize ? (ENTER the corresponding number)\n";
-		this.availableActions = new ArrayList<String>( Arrays.asList("1) List all computers", "2) List all companies", "3) Show computer details", "4) Create a new computer", "5) Update a computer", "6) Delete a computer", "7) Leave computer-database"));
+		this.availableActions = new ArrayList<String>( Arrays.asList("1) List all computers", "2) List all companies", "3) Show computer details", "4) Create a new computer", "5) Update a computer", "6) Delete a computer", "7) Delete a company and its computers", "8) Leave computer-database"));
 	}
 	
 	/**
@@ -258,6 +258,7 @@ public class CommandeLigneInterface {
 			System.out.println();
 			switch(answer) {
 				case "y" :
+						computerDriver.removeComputer(computerToRemove.getId());
 						System.out.println("The computer was well removed from database !");
 					break;
 				case "n" :	
@@ -269,9 +270,69 @@ public class CommandeLigneInterface {
 		System.out.println();
 	}
 	
-	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException, FileNotFoundException, IOException, SQLException {
+	public Manufacturer showCompanyDetails() throws FileNotFoundException, IOException, SQLException {
+		System.out.println();
+		System.out.println("ENTER a company id...");
+		int companyId = scIn.nextInt();
+		scIn.nextLine();
+		Manufacturer manufacturer;
+		if (manufacturerDriver.getManufacturer(companyId).isPresent()) {
+			manufacturer = manufacturerDriver.getManufacturer(companyId).get();
+			System.out.println();
+			System.out.println("Following are the details of the selected company \n");
+			String companyDetails = "Id : " + manufacturer.getId() + " | Name : " + manufacturer.getName();
+			System.out.println(companyDetails);
+			System.out.println();
+		}
+		else {
+			manufacturer = new Manufacturer();
+			System.out.println();
+			System.out.println("Company not found with this id : " + companyId);
+			System.out.println();
+		}
+		
+		return manufacturer;
+	}
+	
+	private void deleteCompany() throws FileNotFoundException, IOException, SQLException, NoComputerFoundException, NoManufacturerFoundException {
+		Manufacturer manufacturerToRemove = showCompanyDetails();
+		if (manufacturerToRemove.getName() != null && !manufacturerToRemove.getName().equals("")) {
+			System.out.println("You are gonna remove this company and its related " + getCompanyComputers(manufacturerToRemove.getId()).size() + " computers from the database, are you sure ? (y/n)");
+			String answer = scIn.next();
+			scIn.nextLine();
+			System.out.println();
+			switch(answer) {
+				case "y" :
+						manufacturerDriver.removeManufacturer(manufacturerToRemove.getId());
+						System.out.println("The company was well removed from database !");
+					break;
+				case "n" :	
+					System.out.println("Remove request canceled");
+					break;
+			}
+		}
+		
+		System.out.println();		
+		
+	}
+	
+	private List<Computer> getCompanyComputers(int id) throws FileNotFoundException, IOException, SQLException {
+		
+		List<Computer> companyComputers = new ArrayList<Computer>();
+		
+		List<Computer> computers = computerDriver.getAllComputers();
+		for (Computer computer : computers) {
+			if (computer.getmanufacturerId() == id) {
+				companyComputers.add(computer);
+			}
+		}
+		
+		return companyComputers;
+	}
+
+	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException, FileNotFoundException, IOException, SQLException, NoManufacturerFoundException {
 		System.out.println(welcome + "\n");
-		while(actualActionId != 7) {
+		while(actualActionId != 8) {
 			System.out.println(actionsHeader);
 			for(String action : availableActions) {
 				System.out.println(action);
@@ -313,6 +374,9 @@ public class CommandeLigneInterface {
 				case DELETE_COMPUTER :
 					removeComputer();
 					break;
+				case DELETE_COMPANY :
+					deleteCompany();
+					break;
 				case EXIT : 
 					System.out.println(goodBye);
 					break;
@@ -323,4 +387,5 @@ public class CommandeLigneInterface {
 			}
 		}
 	}
+
 }
