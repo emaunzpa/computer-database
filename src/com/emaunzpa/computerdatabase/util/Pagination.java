@@ -8,7 +8,6 @@ import java.util.Scanner;
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
-import com.emaunzpa.computerdatabase.service.ComputerService;
 
 public class Pagination {
 

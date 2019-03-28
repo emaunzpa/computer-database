@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.service.ComputerService;
-import com.emaunzpa.computerdatabase.util.Pagination;
 
 public class ListComputers extends HttpServlet {
 
