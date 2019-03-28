@@ -51,9 +51,8 @@
 	                <thead>
 	                    <tr>
 	                        <th class="editMode" style="width: 60px; height: 22px;">
-	                            <input type="checkbox" id="selectall" /> 
-	                            <span style="vertical-align: top;">
-	                                 -  <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"><i class="fa fa-trash-o fa-lg"></i></a></span></th>
+	                            <input type="checkbox" id="selectall"><i class="fas fa-level-down-alt pull-right"></i>
+	                       	</th>
 	                        <th>Computer name 
 	                        <c:choose>
 	                        	<c:when test="${pagination.sorted == 'byName'}">
@@ -103,7 +102,7 @@
 	                	<c:forEach items="${computers}" var="computer">
 	                    <tr class="computer-ligne" <c:if test="${countComputer < pagination.startIndex || countComputer > pagination.endIndex}">hidden</c:if> >
 	                        <td class="editMode">
-	                        	<input type="checkbox" name="cb" class="cb" value="${computer.id}">
+	                        	<input type="checkbox" name="cb" class="cb<c:if test="${countComputer >= pagination.startIndex && countComputer <= pagination.endIndex}"> cb-display</c:if>" value="${computer.id}"/>
 	                        </td>
 	                        <td>
 	                            <a href="editComputer?computerID=${computer.id}" id="computerName${countComputer}">${computer.name}</a>

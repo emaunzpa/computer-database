@@ -7,7 +7,8 @@ $(function() {
     
     // Click on "selectall" box
     $("#selectall").click(function () {
-        $('.cb').prop('checked', this.checked);
+        $('.cb-display').prop('checked', this.checked);
+        console.log($('.cb-display').length);
     });
 
     // Click on a checkbox
@@ -83,7 +84,7 @@ $(document).keydown(function(e) {
         //DEL key
         case 46:
             if($(".editMode").is(":visible") && $(".cb:checked").length != 0) {
-                $.fn.deleteSelected();
+                displayDeleteAlert();
             }   
             break;
         //E key (CTRL+E will switch to edit mode)
