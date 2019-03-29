@@ -54,7 +54,6 @@ public class ListComputers extends HttpServlet {
 		
 		for (String idStr : idToDelete) {
 			Integer id = Integer.valueOf(idStr);
-			System.out.println("computer nb : " + id + " deleted");
 			try {
 				computerService.deleteComputer(id);
 			} catch (NoComputerFoundException | SQLException e) {
