@@ -1,6 +1,5 @@
 package com.emaunzpa.computerdatabase.bdd;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;

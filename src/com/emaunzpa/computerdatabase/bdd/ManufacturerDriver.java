@@ -6,17 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
-import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.exception.NoManufacturerFoundException;
-import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.util.CompanyFormValidator;
 
@@ -30,12 +24,12 @@ public class ManufacturerDriver implements ManufacturerDAO{
     private static String databaseName;
     private static String _GET_COMPANY_ = "select id, name from company where id = ";
     private static String _GET_ALL_COMPANIES = "select id, name from company";
-    private static String _GET_COMPANY_COMPUTERS = "select id from computer where company_id = ";
     private static String _DELETE_COMPANY = "delete from company where id = ";
+    private static String _DELETE_COMPUTERS_BY_COMPANY_ID = "delete from computer where company_id = ";
     
 	public ManufacturerDriver(String databaseName) {
 
-		this.databaseName = databaseName;
+		ManufacturerDriver.databaseName = databaseName;
     	log = Logger.getLogger(ConnectionDriver.class.getName());
     	companyFormValidator = new CompanyFormValidator();
 		
@@ -132,38 +126,36 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		
 		boolean result = false;
 		
-		ComputerDriver computerDriver = new ComputerDriver(databaseName);
 		HikariConnection hikariConnection = new HikariConnection(databaseName);
 		
+		Integer searchId = Integer.valueOf(id);
+		if (!companyFormValidator.companyFound(getAllManufacturers(), searchId)) {
+			System.out.println("Company not found !!!!");
+			return false;
+		}
+		
 		try {
+			hikariConnection.getConnection().setAutoCommit(false);
 			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
-	        String request =  _GET_COMPANY_COMPUTERS + id;
-	        resultat = statement.executeQuery( request );
+	        String request =  _DELETE_COMPUTERS_BY_COMPANY_ID + id;
+	        statut = statement.executeUpdate( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
-	        while ( resultat.next() ) {
-	            int computerId = resultat.getInt( "id" );
-	            computerDriver.removeComputer(computerId);
-	        }
-	        
-	        Integer searchId = Integer.valueOf(id);
-			if (!companyFormValidator.companyFound(getAllManufacturers(), searchId)) {
-				return false;
-			}
-			
-	        statement = hikariConnection.getConnection().createStatement();
+	        System.out.println("Computers deleted !!");
+	        		
+			statement = hikariConnection.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        request =  _DELETE_COMPANY + id;
 	        statut = statement.executeUpdate( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
+	        System.out.println("Company deleted !!");
+			
+	        hikariConnection.getConnection().commit();
 	        result = true;
 	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : "
 	                + e.getMessage() );
-	    } catch (NoComputerFoundException e) {
-			log.error("Erreur lors de la suppression du computeur : "
-					+ e.getMessage());
-		} finally {
+	    } finally {
 	    	log.info( "Fermeture de l'objet ResultSet." );
 	        if ( resultat != null ) {
 	            try {

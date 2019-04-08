@@ -1,18 +1,9 @@
 package com.emaunzpa.computerdatabase.bdd;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Properties;
-
-import javax.servlet.ServletContext;
-
-import org.apache.log4j.Logger;
-
-import com.emaunzpa.computerdatabase.servlet.ListComputers;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
