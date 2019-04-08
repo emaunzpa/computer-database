@@ -35,7 +35,6 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		ManufacturerDriver.databaseName = databaseName;
 		Properties prop = new Properties();
 		try {
-			System.out.println(this.getClass().getClassLoader().getResourceAsStream("log4j.properties").toString());
 			prop.load(this.getClass().getClassLoader().getResourceAsStream("log4j.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
