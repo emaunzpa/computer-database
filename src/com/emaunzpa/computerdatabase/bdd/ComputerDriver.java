@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
@@ -42,6 +45,13 @@ public class ComputerDriver implements ComputerDAO {
      */
 	public ComputerDriver(String databaseName) {
 		ComputerDriver.databaseName = databaseName;
+		Properties prop = new Properties();
+		try {
+			prop.load(this.getClass().getClassLoader().getResourceAsStream("log4j.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PropertyConfigurator.configure(prop);
 		log = Logger.getLogger(ComputerDriver.class);
 	}
 

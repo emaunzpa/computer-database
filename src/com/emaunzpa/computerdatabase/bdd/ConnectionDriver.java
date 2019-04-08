@@ -25,10 +25,13 @@ public class ConnectionDriver {
     
     private Connection connection;
     
-    public ConnectionDriver(String databaseName) {
+    public ConnectionDriver(String databaseName) throws IOException {
     	this.connection = null;
-    	PropertyConfigurator.configure("resources/log4j.properties");
-    	log = Logger.getLogger(ConnectionDriver.class.getName());
+    	
+    	Properties prop = new Properties();
+		prop.load(this.getClass().getClassLoader().getResourceAsStream("log4j.properties"));
+		PropertyConfigurator.configure(prop);    	
+		log = Logger.getLogger(ConnectionDriver.class.getName());
     	
     	try {
     		/**

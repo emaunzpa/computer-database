@@ -7,8 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
 import com.emaunzpa.computerdatabase.exception.NoManufacturerFoundException;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
@@ -30,7 +33,15 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public ManufacturerDriver(String databaseName) {
 
 		ManufacturerDriver.databaseName = databaseName;
-    	log = Logger.getLogger(ConnectionDriver.class.getName());
+		Properties prop = new Properties();
+		try {
+			System.out.println(this.getClass().getClassLoader().getResourceAsStream("log4j.properties").toString());
+			prop.load(this.getClass().getClassLoader().getResourceAsStream("log4j.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PropertyConfigurator.configure(prop);
+		log = Logger.getLogger(ConnectionDriver.class.getName());
     	companyFormValidator = new CompanyFormValidator();
 		
 	}
