@@ -77,12 +77,58 @@ public class TestWebUI {
 		previousButton.click();
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/listComputers?startIndex=0&endIndex=10&search=&sorted="));
-		
+		//Searchbox
+		WebElement searchBox = driver.findElement(By.id("searchbox"));
+		searchBox.sendKeys("Thinking");
+		WebElement searchSubmit = driver.findElement(By.id("searchsubmit"));
+		searchSubmit.click();
+		Thread.sleep(1000);
+		WebElement homeTitle = driver.findElement(By.id("homeTitle"));
+		assertTrue(homeTitle.getText().equals("6 Computers found ( 6 printed )"));
+		//Sort by name
+		WebElement sortByName = driver.findElement(By.className("fa-sort"));
+		sortByName.click();
+		Thread.sleep(1000);
+		assertTrue(driver.findElement(By.id("computerName1")).getText().equals("CM-2"));
+		sortByName = driver.findElement(By.className("fa-sort"));
+		sortByName.click();
+		Thread.sleep(1000);
+		assertTrue(driver.findElement(By.id("computerName1")).getText().equals("Connection Machine"));
 		// Add Computer link
 		WebElement addComputerButton = driver.findElement(By.id("addComputer"));
 		addComputerButton.click();
 		Thread.sleep(1000);
 		assertTrue(driver.getCurrentUrl().equals("http://localhost:8080/computer-database/views/addComputer"));
+		
+	}
+	
+	/**
+	 * Validation for edit mode and computer delete
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void editModeAndDeleteValidation() throws InterruptedException {
+		
+		driver.get("http://localhost:8080/computer-database/views/listComputers");
+		Thread.sleep(1000);
+		
+		WebElement editButton = driver.findElement(By.id("editComputer"));
+		editButton.click();
+		Thread.sleep(1000);
+
+		WebElement selectAll = driver.findElement(By.id("selectall"));
+		selectAll.click();
+		Thread.sleep(1000);
+
+		WebElement deleteButton = driver.findElement(By.id("deleteComputer"));
+		deleteButton.click();
+		Thread.sleep(1000);
+
+		WebElement numberOfComputers = driver.findElement(By.id("numberOfSelectedComputers"));
+		assertTrue(numberOfComputers.getText().equals("10"));
+		
+		WebElement deleteCancel = driver.findElement(By.id("deleteCancel"));
+		deleteCancel.click();
 		
 	}
 	

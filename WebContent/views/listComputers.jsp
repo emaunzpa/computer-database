@@ -18,7 +18,7 @@
 			YOU ARE GONNA DELETE
 			<span id="numberOfSelectedComputers"></span>
 			COMPUTERS, ARE YOU SURE ?
-			<a class="btn btn-default" id="" onclick="postDeleteForm();">Delete</a> or <a class="btn btn-default" onclick="hideDeleteAlert();">Cancel</a>
+			<a class="btn btn-default" id="deleteConfirmation" onclick="postDeleteForm();">Delete</a> or <a id="deleteCancel" class="btn btn-default" onclick="hideDeleteAlert();">Cancel</a>
 		</div>
 		
 	    <section id="main">
