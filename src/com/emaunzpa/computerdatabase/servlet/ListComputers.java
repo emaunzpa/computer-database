@@ -16,9 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
-import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
-import com.emaunzpa.computerdatabase.model.HelloWorld;
 import com.emaunzpa.computerdatabase.service.ComputerService;
 
 public class ListComputers extends HttpServlet {
