@@ -45,13 +45,6 @@ public class ComputerDriver implements ComputerDAO {
      */
 	public ComputerDriver(String databaseName) {
 		ComputerDriver.databaseName = databaseName;
-		Properties prop = new Properties();
-		try {
-			prop.load(this.getClass().getClassLoader().getResourceAsStream("log4j.properties"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		PropertyConfigurator.configure(prop);
 		log = Logger.getLogger(ComputerDriver.class);
 	}
 
