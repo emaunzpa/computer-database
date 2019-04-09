@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
@@ -23,16 +27,18 @@ public class AddComputer extends HttpServlet {
 	public String vueComputerDetails;
 	public static final String ATT_LIST_MANUFACTURERS = "manufacturers";
 	public static final String ATT_FORM = "form";
+	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
+	private static Logger log = Logger.getLogger(AddComputer.class);
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		ManufacturerService manufacturerService = new ManufacturerService();
+		ManufacturerService manufacturerService = (ManufacturerService) CONTEXT.getBean("manufacturerService");
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
 		try {
 			manufacturers = manufacturerService.getAllManufacturers();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Calling manufacturerService method 'getAllManufacturers()' generated an SQL exception : "
+					+ e.getMessage());
 		}
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
@@ -42,21 +48,22 @@ public class AddComputer extends HttpServlet {
 	
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		ComputerService computerService = new ComputerService();
+		ComputerService computerService = (ComputerService) CONTEXT.getBean("computerService");
 		try {
 			computerService.addComputer(request);
 		} catch (ComputerWithoutNameException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error while adding a computer without any name : "
+					+ e.getMessage());
 		} catch (IncoherenceBetweenDateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error while adding a computer with incoherence between dates : "
+					+ e.getMessage());
 		} catch (DiscontinuedBeforeIntroducedException e) {
-			// TODO Auto-generated catch block
+			log.error("Error while adding a computer with discontinuedDate before introducedDate : "
+					+ e.getMessage());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Calling computerService method 'addComputer()' generated an SQL exception : "
+					+ e.getMessage());
 		}
 		
 		response.sendRedirect(VUE_LIST_COMPUTERS);

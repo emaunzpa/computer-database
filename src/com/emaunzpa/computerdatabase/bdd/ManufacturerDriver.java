@@ -23,7 +23,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
     private ResultSet resultat;
     private Integer statut;
     private static Logger log;
-    private CompanyFormValidator companyFormValidator;
+    private CompanyFormValidator companyFormValidator = new CompanyFormValidator();
     private static String databaseName;
     private static String _GET_COMPANY_ = "select id, name from company where id = ";
     private static String _GET_ALL_COMPANIES = "select id, name from company";
@@ -33,9 +33,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public ManufacturerDriver(String databaseName) {
 
 		ManufacturerDriver.databaseName = databaseName;
-		log = Logger.getLogger(ConnectionDriver.class.getName());
-    	companyFormValidator = new CompanyFormValidator();
-		
+		log = Logger.getLogger(ManufacturerDriver.class);
+
 	}
 	
 	@Override

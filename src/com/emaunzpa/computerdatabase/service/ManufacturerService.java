@@ -21,6 +21,14 @@ public class ManufacturerService {
 	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException{
 		return manufacturerDriver.getAllManufacturers();
 	}
+
+	public ManufacturerDriver getManufacturerDriver() {
+		return manufacturerDriver;
+	}
+
+	public void setManufacturerDriver(ManufacturerDriver manufacturerDriver) {
+		this.manufacturerDriver = manufacturerDriver;
+	}
 	
 	
 }
