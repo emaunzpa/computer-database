@@ -14,7 +14,7 @@ public class ManufacturerService {
 	
 	public ManufacturerService() {
 		
-		manufacturerDriver = new ManufacturerDriver("computer-database-db");
+		manufacturerDriver = new ManufacturerDriver();
 		
 	}
 	

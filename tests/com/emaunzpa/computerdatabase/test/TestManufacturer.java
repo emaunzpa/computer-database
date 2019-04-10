@@ -21,7 +21,7 @@ public class TestManufacturer {
 	
 	@Before
 	public void createManufacturerDriver() {
-		manufacturerDriver = new ManufacturerDriver("computer-database-db-test");
+		manufacturerDriver = new ManufacturerDriver();
 	}
 	
 	@Test

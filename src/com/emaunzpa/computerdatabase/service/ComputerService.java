@@ -30,7 +30,7 @@ public class ComputerService {
 
 	public ComputerService() {
 		pagination = new Pagination();
-		computerDriver = new ComputerDriver("computer-database-db");
+		computerDriver = new ComputerDriver();
 	}
 	
 	/**

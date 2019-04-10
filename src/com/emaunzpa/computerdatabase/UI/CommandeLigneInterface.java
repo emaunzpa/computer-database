@@ -32,8 +32,8 @@ public class CommandeLigneInterface {
 	private int actualActionId;
 	private String actionResult;
 	private Scanner scIn = new Scanner(System.in);
-	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver("computer-database-db");
-	private ComputerDriver computerDriver = new ComputerDriver("computer-database-db");
+	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver();
+	private ComputerDriver computerDriver = new ComputerDriver();
 	private DatesHandler datesHandler = new DatesHandler();
 	private Pagination pagination = new Pagination();
 	private ComputerFormValidator computerFormValidator = new ComputerFormValidator();

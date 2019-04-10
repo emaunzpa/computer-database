@@ -13,16 +13,8 @@ public class HikariConnection {
 
     private HikariDataSource dataSource;
     
-    public HikariConnection(String databaseName) throws FileNotFoundException, IOException {
-    	
-	    	/**
-			 * The file database.properties has to be added to the /root/resources/ path with 
-			 * parameters url, user and password for accessing the database.
-			 */
-			Properties prop = new Properties();
-			prop.load(this.getClass().getClassLoader().getResourceAsStream(databaseName + "HikariConfig.properties"));
-    		HikariConfig config = new HikariConfig(prop);
-			dataSource = new HikariDataSource(config);
+    public HikariConnection(HikariDataSource ds) throws FileNotFoundException, IOException {
+			this.dataSource = ds;
     }
     
     public void finalizeConnection() throws SQLException {

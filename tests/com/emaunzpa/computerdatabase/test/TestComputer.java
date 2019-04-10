@@ -31,7 +31,7 @@ public class TestComputer {
 
 	@Before
 	public void createComputerDriver() {
-		computerDriver = new ComputerDriver("computer-database-db-test");
+		computerDriver = new ComputerDriver();
 		datesHandler = new DatesHandler();
 	}
 	

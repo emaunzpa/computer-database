@@ -12,6 +12,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
@@ -21,6 +23,7 @@ import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class ComputerDriver implements ComputerDAO {
 	
@@ -30,9 +33,9 @@ public class ComputerDriver implements ComputerDAO {
     private Integer statut;
     private DatesHandler dh = new DatesHandler();
     private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
+    private static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
     
 	private static Logger log;
-	private static String databaseName;
 	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	private static String _GET_ALL_COMPUTERS_ = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
 	private static String _GET_COMPUTER_ = "select id, name, introduced, discontinued, company_id from computer where id = ";
@@ -43,15 +46,14 @@ public class ComputerDriver implements ComputerDAO {
      * Empty creator without params
      * @throws IOException 
      */
-	public ComputerDriver(String databaseName) {
-		ComputerDriver.databaseName = databaseName;
+	public ComputerDriver() {
 		log = Logger.getLogger(ComputerDriver.class);
 	}
 
 	@Override
 	public Optional<Computer> getComputer(int id) throws NoComputerFoundException, SQLException, FileNotFoundException, IOException {
 		
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		Optional<Computer> computer = Optional.empty();		
 		Integer searchId = Integer.valueOf(id);
 		
@@ -123,7 +125,7 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		boolean result = false;
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		try {
 			String request = _ADD_COMPUTER_;
@@ -164,7 +166,7 @@ public class ComputerDriver implements ComputerDAO {
 	public ArrayList<Computer> getAllComputers() throws FileNotFoundException, IOException, SQLException {
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		try {
 			statement = hikariConnection.getConnection().createStatement();
@@ -214,7 +216,7 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean removeComputer(int id) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {
 		
 		boolean result = false;
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		Integer searchId = Integer.valueOf(id);
 		if (!computerFormValidator.computerFound(getAllComputers(), searchId)) {
@@ -256,7 +258,7 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
 		
 		boolean result = false;
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		Optional<Computer> computer;
 		
 		// Cannot update a unexisting computer

@@ -11,11 +11,14 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
 import com.emaunzpa.computerdatabase.exception.NoManufacturerFoundException;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.util.CompanyFormValidator;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class ManufacturerDriver implements ManufacturerDAO{
 
@@ -24,15 +27,14 @@ public class ManufacturerDriver implements ManufacturerDAO{
     private Integer statut;
     private static Logger log;
     private CompanyFormValidator companyFormValidator = new CompanyFormValidator();
-    private static String databaseName;
+    private static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
     private static String _GET_COMPANY_ = "select id, name from company where id = ";
     private static String _GET_ALL_COMPANIES = "select id, name from company";
     private static String _DELETE_COMPANY = "delete from company where id = ";
     private static String _DELETE_COMPUTERS_BY_COMPANY_ID = "delete from computer where company_id = ";
     
-	public ManufacturerDriver(String databaseName) {
+	public ManufacturerDriver() {
 
-		ManufacturerDriver.databaseName = databaseName;
 		log = Logger.getLogger(ManufacturerDriver.class);
 
 	}
@@ -40,7 +42,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	@Override
 	public Optional<Manufacturer> getManufacturer(int id) throws FileNotFoundException, IOException, SQLException {
 		
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		Optional<Manufacturer> manufacturer = Optional.of(new Manufacturer());
 		
 		try {
@@ -85,7 +87,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		try {
 	        statement = hikariConnection.getConnection().createStatement();
@@ -128,7 +130,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		
 		boolean result = false;
 		
-		HikariConnection hikariConnection = new HikariConnection(databaseName);
+		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		Integer searchId = Integer.valueOf(id);
 		if (!companyFormValidator.companyFound(getAllManufacturers(), searchId)) {
