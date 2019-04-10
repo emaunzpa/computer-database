@@ -5,24 +5,18 @@
    xsi:schemaLocation = "http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
    
-   	<bean id="computerService" class="com.emaunzpa.computerdatabase.service.ComputerService" scope="prototype">
-   		<property name="pagination">
-   			<bean id="pagination" class="com.emaunzpa.computerdatabase.util.Pagination" scope="prototype"></bean>
-   		</property>
-   		
-   		<property name="computerDriver">
-   			<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" scope="singleton">
-   				<constructor-arg index="0" value="computer-database-db"/>
-   			</bean>
-   		</property>
+   	<bean id="computerService" class="com.emaunzpa.computerdatabase.service.ComputerService" scope="prototype" autowire="byName"></bean>
+	
+	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" scope="singleton" autowire="byName"></bean>
+
+	<bean id="manufacturerDriver" class="com.emaunzpa.computerdatabase.bdd.ManufacturerDriver" scope="singleton">
+		<constructor-arg index="0" value="computer-database-db"/>
 	</bean>
 	
-	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" scope="singleton">
-		<property name="manufacturerDriver">
-			<bean id="manufacturerDriver" class="com.emaunzpa.computerdatabase.bdd.ManufacturerDriver" scope="singleton">
-				<constructor-arg index="0" value="computer-database-db"/>
-			</bean>
-		</property>
+	<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" scope="singleton">
+		<constructor-arg index="0" value="computer-database-db"/>
 	</bean>
-
+	
+	<bean id="pagination" class="com.emaunzpa.computerdatabase.util.Pagination" scope="prototype"></bean>
+	
 </beans>
