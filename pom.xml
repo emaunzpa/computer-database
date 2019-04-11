@@ -70,6 +70,14 @@
 	    <version>${spring-boot-starter-jdbc.version}</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-web</artifactId>
+	    <version>5.1.5.RELEASE</version>
+	</dependency>
+	
+	
 	<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 	<dependency>
 	    <groupId>org.springframework</groupId>

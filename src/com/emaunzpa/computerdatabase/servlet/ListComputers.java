@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
@@ -27,12 +28,13 @@ public class ListComputers extends HttpServlet {
 	public static final String ATT_SORTED = "sorted";
 	public static final String ATT_SEARCH = "search";
 	public static final String REDIRECT_DASHBOARD = "listComputers";
-	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
+	private ApplicationContext CONTEXT = new ClassPathXmlApplicationContext();
 	private static Logger log = Logger.getLogger(ListComputers.class);
+	// TODO Change static access of services
+	private static ComputerService computerService;
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
-		ComputerService computerService = (ComputerService) CONTEXT.getBean("computerService");
 		List<ComputerDTO> computers = new ArrayList<ComputerDTO>();
 		try {
 			computers = computerService.getAllComputers(request);
@@ -56,7 +58,6 @@ public class ListComputers extends HttpServlet {
 		
 		String[] checkboxValues = request.getParameterValues("cb");
 		List<String> idToDelete = Arrays.asList(checkboxValues);
-		ComputerService computerService = (ComputerService) CONTEXT.getBean("computerService");
 		
 		for (String idStr : idToDelete) {
 			Integer id = Integer.valueOf(idStr);
@@ -71,4 +72,13 @@ public class ListComputers extends HttpServlet {
 		response.sendRedirect(REDIRECT_DASHBOARD);
 		
 	}
+
+	public ComputerService getComputerService() {
+		return computerService;
+	}
+
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
+	}
+	
 }

@@ -29,10 +29,12 @@ public class AddComputer extends HttpServlet {
 	public static final String ATT_FORM = "form";
 	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
 	private static Logger log = Logger.getLogger(AddComputer.class);
+	// TODO Change static access of services
+	private static ManufacturerService manufacturerService;
+	private static ComputerService computerService;
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		ManufacturerService manufacturerService = (ManufacturerService) CONTEXT.getBean("manufacturerService");
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
 		try {
 			manufacturers = manufacturerService.getAllManufacturers();
@@ -48,7 +50,6 @@ public class AddComputer extends HttpServlet {
 	
 	public void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
-		ComputerService computerService = (ComputerService) CONTEXT.getBean("computerService");
 		try {
 			computerService.addComputer(request);
 		} catch (ComputerWithoutNameException e) {
@@ -67,6 +68,22 @@ public class AddComputer extends HttpServlet {
 		}
 		
 		response.sendRedirect(VUE_LIST_COMPUTERS);
+	}
+
+	public ManufacturerService getManufacturerService() {
+		return manufacturerService;
+	}
+
+	public void setManufacturerService(ManufacturerService manufacturerService) {
+		this.manufacturerService = manufacturerService;
+	}
+
+	public ComputerService getComputerService() {
+		return computerService;
+	}
+
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
 	}
 	
 }

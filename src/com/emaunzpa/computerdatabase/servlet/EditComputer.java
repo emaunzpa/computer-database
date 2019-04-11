@@ -30,12 +30,14 @@ public class EditComputer extends HttpServlet {
 	private static final String ATT_LIST_MANUFACTURERS = "manufacturers";
 	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
 	private static Logger log = Logger.getLogger(EditComputer.class);
+	// TODO Change static access of services
+	private static ManufacturerService manufacturerService;
+	private static ComputerService computerService;
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
 		int computerID = Integer.valueOf(request.getParameter("computerID"));
 
-		ManufacturerService manufacturerService = (ManufacturerService) CONTEXT.getBean("manufacturerService");
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
 		try {
 			manufacturers = manufacturerService.getAllManufacturers();
@@ -43,7 +45,6 @@ public class EditComputer extends HttpServlet {
 			log.error("Calling manufacturerService method 'getAllManufacturers()' generated an exception : "
 					+ e.getMessage());
 		}
-		ComputerService computerService = (ComputerService) CONTEXT.getBean("computerService");
 		ComputerDTO computer = null;
 		try {
 			computer = computerService.getComputer(computerID);
@@ -61,7 +62,6 @@ public class EditComputer extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-		ComputerService computerService = (ComputerService) CONTEXT.getBean("computerService");
 		try {
 			computerService.updateComputer(request);
 		} catch (NoComputerFoundException e) {
@@ -81,4 +81,21 @@ public class EditComputer extends HttpServlet {
 		response.sendRedirect(VUE_LIST_COMPUTERS);
 		
 	}
+
+	public ManufacturerService getManufacturerService() {
+		return manufacturerService;
+	}
+
+	public void setManufacturerService(ManufacturerService manufacturerService) {
+		this.manufacturerService = manufacturerService;
+	}
+
+	public ComputerService getComputerService() {
+		return computerService;
+	}
+
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
+	}
+	
 }
