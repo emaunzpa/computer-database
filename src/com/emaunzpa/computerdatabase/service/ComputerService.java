@@ -28,10 +28,7 @@ public class ComputerService {
 	private ComputerDriver computerDriver;
 	DatesHandler dh = new DatesHandler();
 
-	public ComputerService() {
-		pagination = new Pagination();
-		computerDriver = new ComputerDriver();
-	}
+	public ComputerService() {}
 	
 	/**
 	 * We initiate pagination with parameters passed trough url.

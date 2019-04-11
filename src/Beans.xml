@@ -9,6 +9,8 @@
 		<property name="locations">
 			<list>
 				<value>classpath:computer-database-dbHikariConfig.properties</value>
+				<value>classpath:log4j.properties</value>
+				<value>classpath:application.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -27,7 +29,7 @@
 		<constructor-arg index="0" ref="dataSource"></constructor-arg>
 	</bean>
 	
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig" scope="singleton">  
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig" scope="singleton">
 		<property name="driverClassName" value="${driverClassName}"></property>
 		<property name="jdbcUrl" value="${jdbcUrl}"></property>
 		<property name="username" value="${username}"></property>

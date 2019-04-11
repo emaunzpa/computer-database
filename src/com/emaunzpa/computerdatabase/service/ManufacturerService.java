@@ -12,11 +12,7 @@ public class ManufacturerService {
 
 	private ManufacturerDriver manufacturerDriver;
 	
-	public ManufacturerService() {
-		
-		manufacturerDriver = new ManufacturerDriver();
-		
-	}
+	public ManufacturerService() {}
 	
 	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException{
 		return manufacturerDriver.getAllManufacturers();
