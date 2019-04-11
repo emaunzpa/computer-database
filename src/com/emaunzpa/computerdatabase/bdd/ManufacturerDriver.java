@@ -7,18 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
 import com.emaunzpa.computerdatabase.exception.NoManufacturerFoundException;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.util.CompanyFormValidator;
-import com.zaxxer.hikari.HikariDataSource;
 
 public class ManufacturerDriver implements ManufacturerDAO{
 
@@ -26,8 +21,8 @@ public class ManufacturerDriver implements ManufacturerDAO{
     private ResultSet resultat;
     private Integer statut;
     private static Logger log;
+    private DriverManagerDataSource dataSource;
     private CompanyFormValidator companyFormValidator = new CompanyFormValidator();
-    private static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
     private static String _GET_COMPANY_ = "select id, name from company where id = ";
     private static String _GET_ALL_COMPANIES = "select id, name from company";
     private static String _DELETE_COMPANY = "delete from company where id = ";
@@ -42,11 +37,10 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	@Override
 	public Optional<Manufacturer> getManufacturer(int id) throws FileNotFoundException, IOException, SQLException {
 		
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		Optional<Manufacturer> manufacturer = Optional.of(new Manufacturer());
 		
 		try {
-			statement = hikariConnection.getConnection().createStatement();
+			statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request =  _GET_COMPANY_ + id;
 	        resultat = statement.executeQuery( request );
@@ -78,7 +72,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		log.info("Fin de connexion.");
 		return manufacturer;
 	}
@@ -87,10 +81,9 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		try {
-	        statement = hikariConnection.getConnection().createStatement();
+	        statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_ALL_COMPANIES;
 	        resultat = statement.executeQuery( request );
@@ -121,7 +114,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		log.info("Fin de connexion.");
 		return manufacturers;
 	}
@@ -129,9 +122,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	public boolean removeManufacturer(int id) throws FileNotFoundException, IOException, SQLException, NoManufacturerFoundException {
 		
 		boolean result = false;
-		
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
-		
+				
 		Integer searchId = Integer.valueOf(id);
 		if (!companyFormValidator.companyFound(getAllManufacturers(), searchId)) {
 			System.out.println("Company not found !!!!");
@@ -139,22 +130,22 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		}
 		
 		try {
-			hikariConnection.getConnection().setAutoCommit(false);
-			statement = hikariConnection.getConnection().createStatement();
+			dataSource.getConnection().setAutoCommit(false);
+			statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request =  _DELETE_COMPUTERS_BY_COMPANY_ID + id;
 	        statut = statement.executeUpdate( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        System.out.println("Computers deleted !!");
 	        		
-			statement = hikariConnection.getConnection().createStatement();
+			statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        request =  _DELETE_COMPANY + id;
 	        statut = statement.executeUpdate( request );
 	        log.info( "Requête -- " + request + " -- effectuée !" );
 	        System.out.println("Company deleted !!");
 			
-	        hikariConnection.getConnection().commit();
+	        dataSource.getConnection().commit();
 	        result = true;
 	    } catch ( SQLException e ) {
 	        log.error( "Erreur lors de la connexion : "
@@ -181,8 +172,16 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		return result;
+	}
+
+	public DriverManagerDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DriverManagerDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }

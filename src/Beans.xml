@@ -10,34 +10,25 @@
 			<list>
 				<value>classpath:computer-database-dbHikariConfig.properties</value>
 				<value>classpath:log4j.properties</value>
-				<value>classpath:application.properties</value>
 			</list>
 		</property>
 	</bean>
    
    	<bean id="computerService" class="com.emaunzpa.computerdatabase.service.ComputerService" scope="prototype" autowire="byName"></bean>
 	
-	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" scope="singleton" autowire="byName"></bean>
+	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" scope="prototype" autowire="byName"></bean>
 
-	<bean id="manufacturerDriver" class="com.emaunzpa.computerdatabase.bdd.ManufacturerDriver" scope="singleton"></bean>
+	<bean id="manufacturerDriver" class="com.emaunzpa.computerdatabase.bdd.ManufacturerDriver" scope="singleton" autowire="byName"></bean>
 	
-	<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" scope="singleton"></bean>
+	<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" scope="singleton" autowire="byName"></bean>
 	
 	<bean id="pagination" class="com.emaunzpa.computerdatabase.util.Pagination" scope="prototype"></bean>
-	
-	<bean id="HikariConnection" class="com.emaunzpa.computerdatabase.bdd.HikariConnection" scope="prototype">
-		<constructor-arg index="0" ref="dataSource"></constructor-arg>
+    
+    <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" scope="singleton">
+	    <property name="driverClassName" value="${driverClassName}" />
+	    <property name="url" value="${jdbcUrl}" />
+	    <property name="username" value="${username}" />
+	    <property name="password" value="${password}" />
 	</bean>
-	
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig" scope="singleton">
-		<property name="driverClassName" value="${driverClassName}"></property>
-		<property name="jdbcUrl" value="${jdbcUrl}"></property>
-		<property name="username" value="${username}"></property>
-		<property name="password" value="${password}"></property>
-    </bean>
-
-    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" scope="prototype">  
-          <constructor-arg ref="hikariConfig"/>  
-    </bean>
     
 </beans>

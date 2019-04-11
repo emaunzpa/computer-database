@@ -8,12 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
@@ -23,7 +20,6 @@ import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
-import com.zaxxer.hikari.HikariDataSource;
 
 public class ComputerDriver implements ComputerDAO {
 	
@@ -32,8 +28,8 @@ public class ComputerDriver implements ComputerDAO {
     private PreparedStatement prepareStatement;
     private Integer statut;
     private DatesHandler dh = new DatesHandler();
+    private DriverManagerDataSource dataSource;
     private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
-    private static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
     
 	private static Logger log;
 	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
@@ -53,7 +49,6 @@ public class ComputerDriver implements ComputerDAO {
 	@Override
 	public Optional<Computer> getComputer(int id) throws NoComputerFoundException, SQLException, FileNotFoundException, IOException {
 		
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		Optional<Computer> computer = Optional.empty();		
 		Integer searchId = Integer.valueOf(id);
 		
@@ -63,7 +58,7 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		try {
-			statement = hikariConnection.getConnection().createStatement();
+			statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_COMPUTER_ + id;
 	        resultat = statement.executeQuery( request );
@@ -106,7 +101,7 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		log.info("Fin de la connexion");
 		return computer;
 	}
@@ -125,12 +120,11 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		boolean result = false;
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		try {
 			String request = _ADD_COMPUTER_;
 	        log.info( "Objet requête créé !" );
-	        prepareStatement = hikariConnection.getConnection().prepareStatement(request);
+	        prepareStatement = dataSource.getConnection().prepareStatement(request);
 	        prepareStatement.setString(1, computer.getName());
 	        prepareStatement.setDate(2, computer.getIntroducedDate());
 	        prepareStatement.setDate(3, computer.getDiscontinuedDate());
@@ -157,7 +151,7 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		log.info("Fin de la connexion");
 		return result;
 	}
@@ -166,10 +160,9 @@ public class ComputerDriver implements ComputerDAO {
 	public ArrayList<Computer> getAllComputers() throws FileNotFoundException, IOException, SQLException {
 		
 		ArrayList<Computer> computers = new ArrayList<Computer>();
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		try {
-			statement = hikariConnection.getConnection().createStatement();
+			statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request = _GET_ALL_COMPUTERS_;
 	        resultat = statement.executeQuery( request );
@@ -207,7 +200,7 @@ public class ComputerDriver implements ComputerDAO {
 	        }
 	       	        
 	    }
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		log.info("Fin de la connexion.");
 		return computers;
 	}
@@ -216,7 +209,6 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean removeComputer(int id) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {
 		
 		boolean result = false;
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		
 		Integer searchId = Integer.valueOf(id);
 		if (!computerFormValidator.computerFound(getAllComputers(), searchId)) {
@@ -224,7 +216,7 @@ public class ComputerDriver implements ComputerDAO {
 		}
 		
 		try {
-			statement = hikariConnection.getConnection().createStatement();
+			statement = dataSource.getConnection().createStatement();
 	        log.info( "Objet requête créé !" );
 	        String request =  _DELETE_COMPUTER_ + id;
 	        statut = statement.executeUpdate( request );
@@ -249,7 +241,7 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
+		dataSource.getConnection().close();
 		log.info("Fin de la connexion.");
 		return result;
 	}
@@ -258,7 +250,6 @@ public class ComputerDriver implements ComputerDAO {
 	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
 		
 		boolean result = false;
-		HikariConnection hikariConnection = (HikariConnection) CONTEXT.getBean("HikariConnection");
 		Optional<Computer> computer;
 		
 		// Cannot update a unexisting computer
@@ -278,7 +269,7 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 	        String request = _UPDATE_COMPUTER_ ;
 	        log.info( "Objet requête créé !" );
-	        prepareStatement = hikariConnection.getConnection().prepareStatement(request);
+	        prepareStatement = dataSource.getConnection().prepareStatement(request);
 	        prepareStatement.setString(1, newName);
 	        prepareStatement.setDate(2, newIntroduced);
 	        prepareStatement.setDate(3, newDiscontinued);
@@ -306,9 +297,15 @@ public class ComputerDriver implements ComputerDAO {
 	       	        
 	    }
 		
-		hikariConnection.finalizeConnection();
-		log.info("Fin de connexion.");
 		return result;
+	}
+
+	public DriverManagerDataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DriverManagerDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 }

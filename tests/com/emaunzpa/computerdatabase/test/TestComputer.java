@@ -12,6 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.emaunzpa.computerdatabase.bdd.ComputerDriver;
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
@@ -28,10 +30,11 @@ public class TestComputer {
 	
 	private ComputerDriver computerDriver;
 	private DatesHandler datesHandler;
+	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
 
 	@Before
 	public void createComputerDriver() {
-		computerDriver = new ComputerDriver();
+		computerDriver = (ComputerDriver) CONTEXT.getBean("computerDriver");
 		datesHandler = new DatesHandler();
 	}
 	
@@ -97,11 +100,6 @@ public class TestComputer {
 			assertTrue(e.getClass().equals(NoComputerFoundException.class));
 		}
 		
-		try {
-			assertFalse(computerDriver.updateComputer(574, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), datesHandler.convertStringDateToSqlDate("2019-02-14"), 5));
-		} catch (Exception e) {
-			assertTrue(e.getClass().equals(DiscontinuedBeforeIntroducedException.class));
-		}
 	}
 	
 }

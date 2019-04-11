@@ -8,6 +8,8 @@ import java.sql.SQLException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 
@@ -18,10 +20,11 @@ import com.emaunzpa.computerdatabase.bdd.ManufacturerDriver;
 public class TestManufacturer {
 
 	private ManufacturerDriver manufacturerDriver;
+	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
 	
 	@Before
 	public void createManufacturerDriver() {
-		manufacturerDriver = new ManufacturerDriver();
+		manufacturerDriver = (ManufacturerDriver) CONTEXT.getBean("manufacturerDriver");
 	}
 	
 	@Test
