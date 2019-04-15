@@ -34,6 +34,8 @@
 	                <div class="pull-left">
 	                    <form id="searchForm" action="listComputers" method="GET" class="form-inline">
 	                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
+	                        <input hidden="hidden" name="startIndex" value="0" />
+	                        <input hidden="hidden" name="endIndex" value="10" />
 	                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
 	                    </form>
 	                </div>
