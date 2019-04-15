@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
@@ -28,7 +27,6 @@ public class ListComputers extends HttpServlet {
 	public static final String ATT_SORTED = "sorted";
 	public static final String ATT_SEARCH = "search";
 	public static final String REDIRECT_DASHBOARD = "listComputers";
-	private ApplicationContext CONTEXT = new ClassPathXmlApplicationContext();
 	private static Logger log = Logger.getLogger(ListComputers.class);
 	// TODO Change static access of services
 	private static ComputerService computerService;
@@ -78,7 +76,7 @@ public class ListComputers extends HttpServlet {
 	}
 
 	public void setComputerService(ComputerService computerService) {
-		this.computerService = computerService;
+		ListComputers.computerService = computerService;
 	}
 	
 }
