@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
@@ -29,9 +31,16 @@ public class AddComputer extends HttpServlet {
 	public static final String ATT_FORM = "form";
 	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
 	private static Logger log = Logger.getLogger(AddComputer.class);
-	// TODO Change static access of services
-	private static ManufacturerService manufacturerService;
-	private static ComputerService computerService;
+	private ManufacturerService manufacturerService;
+	private ComputerService computerService;
+	private WebApplicationContext context;
+	
+	public void init() throws ServletException {
+		super.init();
+	    context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+	    computerService = (ComputerService) context.getBean("computerService");
+	    manufacturerService = (ManufacturerService) context.getBean("manufacturerService");
+	}
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		

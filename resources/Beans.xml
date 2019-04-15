@@ -14,23 +14,23 @@
 		</property>
 	</bean>
 	
-	<bean id="listComputers" class="com.emaunzpa.computerdatabase.servlet.ListComputers" scope="singleton" autowire="byName"></bean>
+	<bean id="listComputers" class="com.emaunzpa.computerdatabase.servlet.ListComputers" autowire="byName"></bean>
 	
-	<bean id="addComputer" class="com.emaunzpa.computerdatabase.servlet.AddComputer" scope="singleton" autowire="byName"></bean>
+	<bean id="addComputer" class="com.emaunzpa.computerdatabase.servlet.AddComputer" autowire="byName"></bean>
 	
-	<bean id="editComputer" class="com.emaunzpa.computerdatabase.servlet.EditComputer" scope="singleton" autowire="byName"></bean>
+	<bean id="editComputer" class="com.emaunzpa.computerdatabase.servlet.EditComputer" autowire="byName"></bean>
    	
-   	<bean id="computerService" class="com.emaunzpa.computerdatabase.service.ComputerService" scope="prototype" autowire="byName"></bean>
+   	<bean id="computerService" class="com.emaunzpa.computerdatabase.service.ComputerService" autowire="byName"></bean>
 	
-	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" scope="prototype" autowire="byName"></bean>
+	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" autowire="byName"></bean>
 
-	<bean id="manufacturerDriver" class="com.emaunzpa.computerdatabase.bdd.ManufacturerDriver" scope="singleton" autowire="byName"></bean>
+	<bean id="manufacturerDriver" class="com.emaunzpa.computerdatabase.bdd.ManufacturerDriver" autowire="byName"></bean>
 	
-	<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" scope="singleton" autowire="byName"></bean>
+	<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" autowire="byName"></bean>
 	
-	<bean id="pagination" class="com.emaunzpa.computerdatabase.util.Pagination" scope="prototype"></bean>
+	<bean id="pagination" class="com.emaunzpa.computerdatabase.util.Pagination"></bean>
     
-    <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" scope="singleton">
+    <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	    <property name="driverClassName" value="${driverClassName}" />
 	    <property name="url" value="${jdbcUrl}" />
 	    <property name="username" value="${username}" />

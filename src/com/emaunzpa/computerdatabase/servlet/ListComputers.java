@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
@@ -28,8 +28,14 @@ public class ListComputers extends HttpServlet {
 	public static final String ATT_SEARCH = "search";
 	public static final String REDIRECT_DASHBOARD = "listComputers";
 	private static Logger log = Logger.getLogger(ListComputers.class);
-	// TODO Change static access of services
-	private static ComputerService computerService;
+	private ComputerService computerService;
+	private WebApplicationContext context;
+	
+	public void init() throws ServletException {
+		super.init();
+	    context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+	    computerService = (ComputerService) context.getBean("computerService");
+	}
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
@@ -76,7 +82,7 @@ public class ListComputers extends HttpServlet {
 	}
 
 	public void setComputerService(ComputerService computerService) {
-		ListComputers.computerService = computerService;
+		this.computerService = computerService;
 	}
 	
 }

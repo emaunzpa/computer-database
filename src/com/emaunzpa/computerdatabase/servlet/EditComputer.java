@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
@@ -28,9 +30,16 @@ public class EditComputer extends HttpServlet {
 	private static final String ATT_LIST_MANUFACTURERS = "manufacturers";
 	public static final ApplicationContext CONTEXT = new ClassPathXmlApplicationContext("Beans.xml");
 	private static Logger log = Logger.getLogger(EditComputer.class);
-	// TODO Change static access of services
-	private static ManufacturerService manufacturerService;
-	private static ComputerService computerService;
+	private ManufacturerService manufacturerService;
+	private ComputerService computerService;
+	private WebApplicationContext context;
+	
+	public void init() throws ServletException {
+		super.init();
+	    context = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+	    computerService = (ComputerService) context.getBean("computerService");
+	    manufacturerService = (ManufacturerService) context.getBean("manufacturerService");
+	}
 	
 	public void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 		
