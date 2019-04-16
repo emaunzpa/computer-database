@@ -3,6 +3,7 @@ package com.emaunzpa.computerdatabase.util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
@@ -28,7 +29,7 @@ public class Pagination {
 		this.sorted = "";
 	}
 	
-	public List<Computer> showRestrictedComputerList(ArrayList<Computer> computers){
+	public List<Optional<Computer>> showRestrictedComputerList(ArrayList<Optional<Computer>> computers){
 		
 		return computers.subList(startIndex, endIndex);
 		
@@ -40,7 +41,7 @@ public class Pagination {
 		
 	}
 	
-	public void displayComputers(ArrayList<Computer> computers) {
+	public void displayComputers(ArrayList<Optional<Computer>> computers) {
 		
 		String displayChoice = "";
 		while(!displayChoice.equals("q")) {
@@ -48,8 +49,8 @@ public class Pagination {
 			System.out.println();
 			System.out.println("                   --------- Type q to exit display ---------");
 			System.out.println();
-			for (Computer computer : showRestrictedComputerList(computers)) {
-				String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_name : " + computer.getManufacturerName();
+			for (Optional<Computer> computer : showRestrictedComputerList(computers)) {
+				String computerDetails = "Id : " + computer.get().getId() + " | Name : " + computer.get().getName() + " | Introduced : " + computer.get().getIntroducedDate() + " | Discontinued : " + computer.get().getDiscontinuedDate() + " | Company_name : " + computer.get().getManufacturerName();
 				System.out.println(computerDetails);
 			}
 			System.out.println();

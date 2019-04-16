@@ -1,6 +1,7 @@
 package com.emaunzpa.computerdatabase.util;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
@@ -19,11 +20,11 @@ public class ComputerFormValidator {
 		log = Logger.getLogger(ComputerDriver.class);
 	}
 	
-	public boolean computerFound(ArrayList<Computer> computers, Integer searchId) throws NoComputerFoundException {
+	public boolean computerFound(ArrayList<Optional<Computer>> arrayList, Integer searchId) throws NoComputerFoundException {
 		
 		boolean result = false;
 		
-		if (computers.stream().filter(computer -> searchId.equals(computer.getId())).findFirst().orElse(null) == null) {
+		if (arrayList.stream().filter(computer -> searchId.equals(computer.get().getId())).findFirst().orElse(null) == null) {
 			
 			throw new NoComputerFoundException("No computer found with this ID : " + searchId + ". Request cancelled.");
 		

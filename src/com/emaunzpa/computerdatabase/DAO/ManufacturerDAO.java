@@ -18,7 +18,7 @@ public interface ManufacturerDAO {
 	 * @throws FileNotFoundException 
 	 * @throws SQLException 
 	 */
-	public Optional<Manufacturer> getManufacturer(int id) throws FileNotFoundException, IOException, SQLException;
+	public Manufacturer getManufacturer(int id) throws FileNotFoundException, IOException, SQLException;
 	
 	/**
 	 * List all companies from the databaseeeeeeee

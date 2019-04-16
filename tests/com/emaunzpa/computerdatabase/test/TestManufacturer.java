@@ -34,9 +34,9 @@ public class TestManufacturer {
 	
 	@Test
 	public void getManufacturer() throws FileNotFoundException, IOException, SQLException {
-		assertEquals("Apple Inc.", manufacturerDriver.getManufacturer(1).get().getName());
-		assertEquals(0, manufacturerDriver.getManufacturer(0).get().getId());
-		assertNull(manufacturerDriver.getManufacturer(0).get().getName());
+		assertEquals("Apple Inc.", manufacturerDriver.getManufacturer(1).getName());
+		assertEquals(0, manufacturerDriver.getManufacturer(0).getId());
+		assertNull(manufacturerDriver.getManufacturer(0).getName());
 	}
 
 }

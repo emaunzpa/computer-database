@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,15 +50,15 @@ public class ComputerService {
 	}
 	
 	public List<ComputerDTO> getAllComputers(HttpServletRequest request) throws FileNotFoundException, IOException, SQLException{
-		ArrayList<Computer> computers = new ArrayList<>();
+		ArrayList<Optional<Computer>> computers = new ArrayList<>();
 		String searchStr = request.getParameter("search");
 		if (searchStr != null && !searchStr.equals("")){
-			for (Computer computerTested : computerDriver.getAllComputers()) {
+			for (Optional<Computer> computerTested : computerDriver.getAllComputers()) {
 				Pattern pattern = Pattern.compile(".*" + searchStr.toLowerCase() + ".*");
-				Matcher macherComputerName = pattern.matcher(computerTested.getName().toLowerCase());
+				Matcher macherComputerName = pattern.matcher(computerTested.get().getName().toLowerCase());
 				
-				if (computerTested.getManufacturerName() != null && !computerTested.getManufacturerName().equals("")) {
-					Matcher macherCompanyName = pattern.matcher(computerTested.getManufacturerName().toLowerCase());
+				if (computerTested.get().getManufacturerName() != null && !computerTested.get().getManufacturerName().equals("")) {
+					Matcher macherCompanyName = pattern.matcher(computerTested.get().getManufacturerName().toLowerCase());
 					if (macherCompanyName.matches() || macherComputerName.matches()) {
 						computers.add(computerTested);
 					}
@@ -77,8 +78,8 @@ public class ComputerService {
 	}
 	
 	public List<ComputerDTO> restrictedListComputers() throws FileNotFoundException, IOException, SQLException{
-		ArrayList<Computer> computers = computerDriver.getAllComputers();
-		List<Computer> restrictedList = pagination.showRestrictedComputerList(computers);
+		ArrayList<Optional<Computer>> computers = computerDriver.getAllComputers();
+		List<Optional<Computer>> restrictedList = pagination.showRestrictedComputerList(computers);
 		return getAllDTOs(restrictedList);
 	}
 	
@@ -139,11 +140,11 @@ public class ComputerService {
 		computerDriver.addComputer(newComputer);
 	}
 	
-	public List<ComputerDTO> getAllDTOs(List<Computer> computers){
+	public List<ComputerDTO> getAllDTOs(List<Optional<Computer>> restrictedList){
 		
 		List<ComputerDTO> result = new ArrayList<ComputerDTO>();
-		for (Computer c : computers) {
-			result.add(convertComputerToDTO(c));
+		for (Optional<Computer> c : restrictedList) {
+			result.add(convertComputerToDTO(c.get()));
 		}
 		return result;
 	}

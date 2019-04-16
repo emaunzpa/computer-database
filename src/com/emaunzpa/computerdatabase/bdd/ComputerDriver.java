@@ -2,14 +2,12 @@ package com.emaunzpa.computerdatabase.bdd;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
@@ -17,26 +15,23 @@ import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
+import com.emaunzpa.computerdatabase.mapper.ComputerMapper;
+import com.emaunzpa.computerdatabase.mapper.MCMapper;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
-import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 public class ComputerDriver implements ComputerDAO {
 	
-	private Statement statement;
-    private ResultSet resultat;
-    private PreparedStatement prepareStatement;
-    private Integer statut;
-    private DatesHandler dh = new DatesHandler();
-    private DriverManagerDataSource dataSource;
+	private DriverManagerDataSource dataSource;
     private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
+	private JdbcTemplate jdbcTemplate;
     
 	private static Logger log;
 	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
 	private static String _GET_ALL_COMPUTERS_ = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
-	private static String _GET_COMPUTER_ = "select id, name, introduced, discontinued, company_id from computer where id = ";
+	private static String _GET_COMPUTER_ = "select id, name, introduced, discontinued, company_id from computer where id = ?";
 	private static String _UPDATE_COMPUTER_ = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
-	private static String _DELETE_COMPUTER_ = "delete from computer where id = ";
+	private static String _DELETE_COMPUTER_ = "delete from computer where id = ?";
 	
     /**
      * Empty creator without params
@@ -57,49 +52,11 @@ public class ComputerDriver implements ComputerDAO {
 			return computer;
 		}
 		
-		try {
-			statement = dataSource.getConnection().createStatement();
-	        log.info( "Objet requête créé !" );
-	        String request = _GET_COMPUTER_ + id;
-	        resultat = statement.executeQuery( request );
-	        log.info( "Requête -- " + request + " -- effectuée !" );
-	        if(resultat.first()) {
-	        	int idComputer = resultat.getInt( "id" );
-	        	String nameComputer = resultat.getString( "name" );
-	            String introducedStr = resultat.getString( "introduced" );
-	            String discontinuedStr = resultat.getString( "discontinued" );
-	            java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedStr);
-	            java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedStr);
-	            Integer manufacturerId = resultat.getInt( "company_id" );
-	            computer = Optional.of(new Computer.ComputerBuilder().build());
-	            computer.get().setId(idComputer);
-		        computer.get().setName(nameComputer);
-		        computer.get().setIntroducedDate(introducedDate);
-		        computer.get().setDiscontinuedDate(discontinuedDate);
-		        computer.get().setmanufacturerId(manufacturerId);
-	        }
-	    } catch ( SQLException e ) {
-	        log.error( "Erreur lors de la connexion : "
-	                + e.getMessage() );
-	    } finally {
-	    	log.info( "Fermeture de l'objet ResultSet." );
-	        if ( resultat != null ) {
-	            try {
-	                resultat.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn( "La fermeture de l'objet ResultSet a généré une exception" );
-	            }
-	        }
-	        log.info( "Fermeture de l'objet Statement." );
-	        if ( statement != null ) {
-	            try {
-	                statement.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn( "La fermeture de l'objet Statement a généré une exception" );
-	            }
-	        }
-	       	        
-	    }
+		log.info( "Objet requête créé !" );
+		String request = _GET_COMPUTER_ ;
+		computer = (Optional<Computer>) jdbcTemplate.queryForObject(
+				request, new Object[]{id}, new ComputerMapper());
+		log.info( "Requête -- " + request + " -- effectuée !" );
 		
 		dataSource.getConnection().close();
 		log.info("Fin de la connexion");
@@ -119,131 +76,39 @@ public class ComputerDriver implements ComputerDAO {
 			return false;
 		}
 		
-		boolean result = false;
+		String request = _ADD_COMPUTER_;
+		jdbcTemplate.update(request, new Object[]{computer.getName(), computer.getIntroducedDate(), computer.getDiscontinuedDate(), computer.getmanufacturerId()});
+		log.info( "Requête -- " + request + " -- effectuée !" );
 		
-		try {
-			String request = _ADD_COMPUTER_;
-	        log.info( "Objet requête créé !" );
-	        prepareStatement = dataSource.getConnection().prepareStatement(request);
-	        prepareStatement.setString(1, computer.getName());
-	        prepareStatement.setDate(2, computer.getIntroducedDate());
-	        prepareStatement.setDate(3, computer.getDiscontinuedDate());
-	        prepareStatement.setObject(4, computer.getmanufacturerId());
-	        prepareStatement.executeUpdate();
-	        log.info( "Requête -- " + request + " -- effectuée !" );
-	        result = true;
-	    } catch ( SQLException e ) {
-	        log.error( "Erreur lors de la connexion : "
-	                + e.getMessage() );
-	    } finally {
-	    	log.info( "Réinitialisation du statut." );
-	        if ( statut != null ) {
-	            statut = null;
-	        }
-	        log.info( "Fermeture de l'objet Statement." );
-	        if ( statement != null ) {
-	            try {
-	                statement.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn("La fermeture du Statement a généré une exception.");
-	            }
-	        }
-	       	        
-	    }
+		return true;
 		
-		dataSource.getConnection().close();
-		log.info("Fin de la connexion");
-		return result;
 	}
 
 	@Override
-	public ArrayList<Computer> getAllComputers() throws FileNotFoundException, IOException, SQLException {
+	public ArrayList<Optional<Computer>> getAllComputers() throws FileNotFoundException, IOException, SQLException {
 		
-		ArrayList<Computer> computers = new ArrayList<Computer>();
-		
-		try {
-			statement = dataSource.getConnection().createStatement();
-	        log.info( "Objet requête créé !" );
-	        String request = _GET_ALL_COMPUTERS_;
-	        resultat = statement.executeQuery( request );
-	        log.info( "Requête -- " + request + " -- effectuée !" );
-	        while ( resultat.next() ) {
-	            int idComputer = resultat.getInt( "id" );
-	            String nameComputer = resultat.getString( "name" );
-	            String introducedStr = resultat.getString( "introduced" );
-	            String discontinuedStr = resultat.getString( "discontinued" );
-	            String manufacturerName = resultat.getString( "company_name" );
-	            java.sql.Date introducedDate = dh.convertStringDateToSqlDate(introducedStr);
-	            java.sql.Date discontinuedDate = dh.convertStringDateToSqlDate(discontinuedStr);
-	            Integer idCompany = resultat.getInt( "company_id" );
-	            computers.add(new Computer.ComputerBuilder().withId(idComputer).withName(nameComputer).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(idCompany).withManufacturerName(manufacturerName).build());
-	        }
-	    } catch ( SQLException e ) {
-	        log.error( "Erreur lors de la connexion : <br/>"
-	                + e.getMessage() );
-	    } finally {
-	    	log.info( "Fermeture de l'objet ResultSet." );
-	        if ( resultat != null ) {
-	            try {
-	                resultat.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn("La fermeture de l'objet Resultset a provoqué une exception.");
-	            }
-	        }
-	        log.info( "Fermeture de l'objet Statement." );
-	        if ( statement != null ) {
-	            try {
-	                statement.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn("La fermeture de l'objet Statement a provoqué une exception.");
-	            }
-	        }
-	       	        
-	    }
-		dataSource.getConnection().close();
-		log.info("Fin de la connexion.");
+		String request = _GET_ALL_COMPUTERS_;
+		ArrayList<Optional<Computer>> computers = (ArrayList<Optional<Computer>>) jdbcTemplate.query(
+				request, new MCMapper());
+		log.info( "Requête -- " + request + " -- effectuée !" );
 		return computers;
+		
 	}
 
 	@Override
 	public boolean removeComputer(int id) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {
-		
-		boolean result = false;
-		
+				
 		Integer searchId = Integer.valueOf(id);
 		if (!computerFormValidator.computerFound(getAllComputers(), searchId)) {
 			return false;
 		}
 		
-		try {
-			statement = dataSource.getConnection().createStatement();
-	        log.info( "Objet requête créé !" );
-	        String request =  _DELETE_COMPUTER_ + id;
-	        statut = statement.executeUpdate( request );
-	        log.info( "Requête -- "+ request + " -- effectuée !" );
-	        result = true;
-	    } catch ( SQLException e ) {
-	        log.error( "Erreur lors de la connexion : "
-	                + e.getMessage() );
-	    } finally {
-	    	log.info( "Réinitialisation du statut" );
-	        if ( statut != null ) {
-	           statut = null;
-	        }
-	        log.info( "Fermeture de l'objet Statement." );
-	        if ( statement != null ) {
-	            try {
-	                statement.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn("La fermeture de l'objet Statement a provoqué une exception.");
-	            }
-	        }
-	       	        
-	    }
+        String request =  _DELETE_COMPUTER_ ;
+		jdbcTemplate.update(request, new Object[]{id});
+        log.info( "Requête -- "+ request + " -- effectuée !" );
+        
+		return true;
 		
-		dataSource.getConnection().close();
-		log.info("Fin de la connexion.");
-		return result;
 	}
 
 	@Override
@@ -266,37 +131,10 @@ public class ComputerDriver implements ComputerDAO {
 			return false;
 		}
 		
-		try {
-	        String request = _UPDATE_COMPUTER_ ;
-	        log.info( "Objet requête créé !" );
-	        prepareStatement = dataSource.getConnection().prepareStatement(request);
-	        prepareStatement.setString(1, newName);
-	        prepareStatement.setDate(2, newIntroduced);
-	        prepareStatement.setDate(3, newDiscontinued);
-	        prepareStatement.setObject(4, newManufacturerId);
-	        prepareStatement.setInt(5, id); 
-	        prepareStatement.executeUpdate();
-	        log.info( "Requête -- " + request + " -- effectuée !" );
-	        result = true;
-	    } catch ( SQLException e ) {
-	        log.error( "Erreur lors de la connexion : "
-	                + e.getMessage() );
-	    } finally {
-	    	log.info( "Réinitialisation du statut" );
-	        if ( statut != null ) {
-	            statut = null;
-	        }
-	        log.info( "Fermeture de l'objet Statement." );
-	        if ( statement != null ) {
-	            try {
-	                statement.close();
-	            } catch ( SQLException ignore ) {
-	            	log.warn("La fermeture de l'objet Statement a provoqué une exception.");
-	            }
-	        }
-	       	        
-	    }
-		
+        String request = _UPDATE_COMPUTER_ ;
+		jdbcTemplate.update(request, new Object[]{newName, newIntroduced, newDiscontinued, newManufacturerId, id});
+        log.info( "Requête -- " + request + " -- effectuée !" );
+
 		return result;
 	}
 
@@ -306,6 +144,14 @@ public class ComputerDriver implements ComputerDAO {
 
 	public void setDataSource(DriverManagerDataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 	
 }

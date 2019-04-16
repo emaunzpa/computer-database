@@ -2,14 +2,14 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   	<display-name>computer-database</display-name>
   	
-  	<listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    
-    <context-param>
+  	<context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/classes/Beans.xml</param-value>
     </context-param>
+    
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
   	<jsp-config>
 		<jsp-property-group>
@@ -19,33 +19,18 @@
 	</jsp-config>
 	
 	<servlet>
-		<servlet-name>ListComputers</servlet-name>
-		<servlet-class>com.emaunzpa.computerdatabase.servlet.ListComputers</servlet-class>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>AddComputer</servlet-name>
-		<servlet-class>com.emaunzpa.computerdatabase.servlet.AddComputer</servlet-class>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>EditComputer</servlet-name>
-		<servlet-class>com.emaunzpa.computerdatabase.servlet.EditComputer</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>ListComputers</servlet-name>
-		<url-pattern>/views/listComputers</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>AddComputer</servlet-name>
-		<url-pattern>/views/addComputer</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>EditComputer</servlet-name>
-		<url-pattern>/views/editComputer</url-pattern>
-	</servlet-mapping>
+      <servlet-name>WebAppController</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/classes/Beans.xml</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+   <servlet-mapping>
+      <servlet-name>WebAppController</servlet-name>
+      <url-pattern>/</url-pattern>
+   </servlet-mapping>
 
 </web-app>

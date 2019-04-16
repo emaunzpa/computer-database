@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.emaunzpa.computerdatabase.model.Computer;
@@ -32,10 +33,10 @@ public class CommandeLigneInterface {
 	private int actualActionId;
 	private String actionResult;
 	private Scanner scIn = new Scanner(System.in);
-	private ManufacturerDriver manufacturerDriver = new ManufacturerDriver();
-	private ComputerDriver computerDriver = new ComputerDriver();
+	private ManufacturerDriver manufacturerDriver;
+	private ComputerDriver computerDriver;
 	private DatesHandler datesHandler = new DatesHandler();
-	private Pagination pagination = new Pagination();
+	private Pagination pagination;
 	private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
 	
 	/**
@@ -58,7 +59,7 @@ public class CommandeLigneInterface {
 	 */
 	public void showAllComputer() throws FileNotFoundException, IOException, SQLException {
 		System.out.println(actionResult + "\n");
-		ArrayList<Computer> computers = computerDriver.getAllComputers();
+		ArrayList<Optional<Computer>> computers = computerDriver.getAllComputers();
 		pagination.displayComputers(computers);
 		System.out.println();
 	}
@@ -276,8 +277,8 @@ public class CommandeLigneInterface {
 		int companyId = scIn.nextInt();
 		scIn.nextLine();
 		Manufacturer manufacturer;
-		if (manufacturerDriver.getManufacturer(companyId).isPresent()) {
-			manufacturer = manufacturerDriver.getManufacturer(companyId).get();
+		if (manufacturerDriver.getManufacturer(companyId) != null) {
+			manufacturer = manufacturerDriver.getManufacturer(companyId);
 			System.out.println();
 			System.out.println("Following are the details of the selected company \n");
 			String companyDetails = "Id : " + manufacturer.getId() + " | Name : " + manufacturer.getName();
@@ -316,13 +317,13 @@ public class CommandeLigneInterface {
 		
 	}
 	
-	private List<Computer> getCompanyComputers(int id) throws FileNotFoundException, IOException, SQLException {
+	private List<Optional<Computer>> getCompanyComputers(int id) throws FileNotFoundException, IOException, SQLException {
 		
-		List<Computer> companyComputers = new ArrayList<Computer>();
+		List<Optional<Computer>> companyComputers = new ArrayList<Optional<Computer>>();
 		
-		List<Computer> computers = computerDriver.getAllComputers();
-		for (Computer computer : computers) {
-			if (computer.getmanufacturerId() == id) {
+		List<Optional<Computer>> computers = computerDriver.getAllComputers();
+		for (Optional<Computer> computer : computers) {
+			if (computer.get().getmanufacturerId() == id) {
 				companyComputers.add(computer);
 			}
 		}
@@ -386,6 +387,30 @@ public class CommandeLigneInterface {
 					break;	
 			}
 		}
+	}
+
+	public ManufacturerDriver getManufacturerDriver() {
+		return manufacturerDriver;
+	}
+
+	public void setManufacturerDriver(ManufacturerDriver manufacturerDriver) {
+		this.manufacturerDriver = manufacturerDriver;
+	}
+
+	public ComputerDriver getComputerDriver() {
+		return computerDriver;
+	}
+
+	public void setComputerDriver(ComputerDriver computerDriver) {
+		this.computerDriver = computerDriver;
+	}
+
+	public Pagination getPagination() {
+		return pagination;
+	}
+
+	public void setPagination(Pagination pagination) {
+		this.pagination = pagination;
 	}
 
 }

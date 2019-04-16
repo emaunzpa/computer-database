@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -60,7 +61,7 @@ public class TestComputer {
 	
 	@Test
 	public void getAllComputers() throws FileNotFoundException, IOException, SQLException {
-		ArrayList<Computer> computers = computerDriver.getAllComputers();
+		ArrayList<Optional<Computer>> computers = computerDriver.getAllComputers();
 		assertTrue(computers.size() >= 0);
 	}
 	

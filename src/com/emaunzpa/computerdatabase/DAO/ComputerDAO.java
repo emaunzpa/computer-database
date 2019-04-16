@@ -44,7 +44,7 @@ public interface ComputerDAO {
 	 * @throws FileNotFoundException 
 	 * @throws SQLException 
 	 */
-	public ArrayList<Computer> getAllComputers() throws FileNotFoundException, IOException, SQLException;
+	public ArrayList<Optional<Computer>> getAllComputers() throws FileNotFoundException, IOException, SQLException;
 	
 	/**
 	 * Remove computer with the given id from the database 
