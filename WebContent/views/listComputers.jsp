@@ -5,9 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="utf-8">
 		<!-- Bootstrap -->
-		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<link href="css/font-awesome.min.css" rel="stylesheet" media="screen">
-		<link href="css/main.css" rel="stylesheet" media="screen">
+		<link href="static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="static/css/font-awesome.min.css" rel="stylesheet" media="screen">
+		<link href="static/css/main.css" rel="stylesheet" media="screen">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	</head>
 	
@@ -135,9 +135,9 @@
 	       		</ul>
 	       	</div>
 	    </footer>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/dashboard.js"></script>
+	<script src="static/js/jquery.min.js"></script>
+	<script src="static/js/bootstrap.min.js"></script>
+	<script src="static/js/dashboard.js"></script>
 	
 	</body>
 </html>
