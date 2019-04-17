@@ -18,6 +18,16 @@
 		</jsp-property-group>
 	</jsp-config>
 	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/views/404</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/views/500</location>
+	</error-page>
+	
 	<servlet>
       <servlet-name>WebAppController</servlet-name>
       <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

@@ -60,6 +60,5 @@
     <script src="static/js/jquery.validate.min.js"></script>
     <script src="static/js/computerFormValidator.js"></script>
     
-    
 </body>
 </html>
