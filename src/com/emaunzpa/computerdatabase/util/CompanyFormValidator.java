@@ -16,7 +16,7 @@ public class CompanyFormValidator {
 	private static Logger log;
 
 	public CompanyFormValidator() {
-		log = Logger.getLogger(ComputerDriver.class);
+		log = Logger.getLogger(CompanyFormValidator.class);
 	}
 	
 	public boolean companyFound(ArrayList<Manufacturer> arrayList, Integer searchId) throws NoManufacturerFoundException {

@@ -17,7 +17,7 @@ public class ComputerFormValidator {
 	private static Logger log;
 
 	public ComputerFormValidator() {
-		log = Logger.getLogger(ComputerDriver.class);
+		log = Logger.getLogger(ComputerFormValidator.class);
 	}
 	
 	public boolean computerFound(ArrayList<Optional<Computer>> arrayList, Integer searchId) throws NoComputerFoundException {

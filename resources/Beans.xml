@@ -24,13 +24,7 @@
 	</bean>
 			
 	<bean id="commandeLigneInterface" class="com.emaunzpa.computerdatabase.UI.CommandeLigneInterface" autowire="byName"></bean>
-	
-	<bean id="listComputers" class="com.emaunzpa.computerdatabase.servlet.ListComputers" autowire="byName"></bean>
-	
-	<bean id="addComputer" class="com.emaunzpa.computerdatabase.servlet.AddComputer" autowire="byName"></bean>
-	
-	<bean id="editComputer" class="com.emaunzpa.computerdatabase.servlet.EditComputer" autowire="byName"></bean>
-   	
+			   	
    	<bean id="computerService" class="com.emaunzpa.computerdatabase.service.ComputerService" autowire="byName"></bean>
 	
 	<bean id="manufacturerService" class="com.emaunzpa.computerdatabase.service.ManufacturerService" autowire="byName"></bean>
@@ -40,6 +34,8 @@
 	<bean id="computerDriver" class="com.emaunzpa.computerdatabase.bdd.ComputerDriver" autowire="byName"></bean>
 	
 	<bean id="pagination" class="com.emaunzpa.computerdatabase.util.Pagination"></bean>
+	
+	<bean id="computerSpringValidator" class="com.emaunzpa.computerdatabase.validator.ComputerSpringValidator"></bean>
 	
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource" />

@@ -10,7 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +30,7 @@ import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.service.ComputerService;
 import com.emaunzpa.computerdatabase.service.ManufacturerService;
+import com.emaunzpa.computerdatabase.validator.ComputerSpringValidator;
 
 @Controller
 public class WebController {
@@ -37,10 +44,23 @@ public class WebController {
 	private static Logger log = Logger.getLogger(WebController.class);
 	private ComputerService computerService;
 	private ManufacturerService manufacturerService;
+	private ComputerSpringValidator computerSpringValidator;
 	
-	public WebController(ComputerService computerService, ManufacturerService manufacturerService) {
+	public WebController(ComputerService computerService, ManufacturerService manufacturerService, ComputerSpringValidator computerSpringValidator) {
 		this.computerService = computerService;
 		this.manufacturerService = manufacturerService;
+		this.computerSpringValidator = computerSpringValidator;
+	}
+	
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		binder.addValidators(computerSpringValidator);
+	}
+	
+	@ModelAttribute
+	public ComputerDTO initComputerDTO() {
+		return new ComputerDTO.ComputerDTOBuilder()
+				.build();
 	}
 	
 	@GetMapping({"/", "/listComputers"})
@@ -100,10 +120,14 @@ public class WebController {
 	}
 	
 	@PostMapping("/addComputer")
-	public RedirectView addComputerPost(HttpServletRequest request) {
+	public RedirectView addComputerPost(@ModelAttribute("computerDTO") @Validated ComputerDTO computerDTO, BindingResult result) {
+		
+		if (result.hasErrors()) {
+	         return new RedirectView("addComputer");
+	    }
 		
 		try {
-			computerService.addComputer(request);
+			computerService.addComputer(computerDTO);
 		} catch (ComputerWithoutNameException e) {
 			log.error("Error while adding a computer without any name : "
 					+ e.getMessage());
@@ -149,10 +173,14 @@ public class WebController {
 	}
 	
 	@PostMapping("/editComputer")
-	public RedirectView editComputerPost(HttpServletRequest request) {
+	public RedirectView editComputerPost(@ModelAttribute("computerDTO") @Validated ComputerDTO computerDTO, BindingResult result) {
+		
+		if (result.hasErrors()) {
+	         return new RedirectView("editComputer");
+	    }
 		
 		try {
-			computerService.updateComputer(request);
+			computerService.updateComputer(computerDTO);
 		} catch (NoComputerFoundException e) {
 			log.error("Error while updating unexisting computer : "
 					+ e.getMessage());

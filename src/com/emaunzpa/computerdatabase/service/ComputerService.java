@@ -122,19 +122,7 @@ public class ComputerService {
 		return computer;
 	}
 	
-	public void addComputer(HttpServletRequest request) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
-		
-		String computerName = request.getParameter("computerName");
-		String introducedDateStr = request.getParameter("introducedDate");
-		String discontinuedDateStr = request.getParameter("discontinuedDate");
-		int companyId = Integer.valueOf(request.getParameter("companyId"));
-		
-		ComputerDTO computerDTO = new ComputerDTO.ComputerDTOBuilder()
-				.withName(computerName)
-				.withIntroducedDate(introducedDateStr)
-				.withDiscontinuedDate(discontinuedDateStr)
-				.withManufacturerId(companyId)
-				.build();
+	public void addComputer(ComputerDTO computerDTO) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
 		
 		Computer newComputer = convertDTOtoComputer(computerDTO);
 		computerDriver.addComputer(newComputer);
@@ -149,13 +137,16 @@ public class ComputerService {
 		return result;
 	}
 	
-	public void updateComputer(HttpServletRequest request) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
+	public void updateComputer(ComputerDTO computerDTO) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
 		
-		int computerId = Integer.valueOf(request.getParameter("computerId"));
-		String computerName = request.getParameter("computerName");
-		String introducedDateStr = request.getParameter("introducedDate");
-		String discontinuedDateStr = request.getParameter("discontinuedDate");
-		Integer companyId = Integer.valueOf(request.getParameter("companyId"));
+		int computerId = computerDTO.getId();
+		String computerName = computerDTO.getName();
+		String introducedDateStr = computerDTO.getIntroducedDate();
+		String discontinuedDateStr = computerDTO.getDiscontinuedDate();
+		Integer companyId = computerDTO.getmanufacturerId();
+		if (companyId == 0) {
+			companyId = null;
+		}
 		
 		computerDriver.updateComputer(computerId, computerName, dh.convertStringDateToSqlDate(introducedDateStr), dh.convertStringDateToSqlDate(discontinuedDateStr), companyId);
 	}

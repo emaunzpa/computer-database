@@ -18,38 +18,41 @@
                     <div class="label label-default pull-right">ID : ${computer.id}</div>
                     <h1>Edit Computer</h1>
 
-                    <form id="computerForm" action="editComputer" method="POST">
-                        <input type="hidden" value="${computer.id}" id="id" name="computerId"/>
+                    <form:form id="computerForm" action="editComputer" method="POST" modelAttribute="computerDTO">
+                        <form:input type="hidden" value="${computer.id}" id="id" path="id"/>
                         <fieldset>
                             <div class="form-group">
-                                <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" value="${computer.name}" name="computerName" required="required">
+                                <form:label path="name">Computer name</form:label>
+                                <form:input type="text" class="form-control" id="computerName" value="${computer.name}" path="name" required="required"/>
+                            	<form:errors path="name" class="error"></form:errors>
                             </div>
                             <div class="form-group">
-                                <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" value="${computer.introducedDate}" name="introducedDate">
+                                <form:label path="introducedDate">Introduced date</form:label>
+                                <form:input type="date" class="form-control" id="introduced" value="${computer.introducedDate}" path="introducedDate"/>
+                            	<form:errors path="introducedDate" class="error"></form:errors>
                             </div>
                             <div class="form-group">
-                                <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" value="${computer.discontinuedDate}" name="discontinuedDate">
+                                <form:label path="discontinuedDate">Discontinued date</form:label>
+                                <form:input type="date" class="form-control" id="discontinued" value="${computer.discontinuedDate}" path="discontinuedDate"/>
+                            	<form:errors path="discontinuedDate" class="error"></form:errors>
                             </div>
                             <div class="form-group">
-                                <label for="companyId">Company</label>
-                                <select class="form-control" id="companyId" name="companyId">
-                                    <option value="0">--</option>
+                                <form:label path="manufacturerId">Company</form:label>
+                                <form:select class="form-control" id="companyId" path="manufacturerId">
+                                    <form:option value="0">--</form:option>
                                     <c:set var="count" value="1"></c:set>
                                     <c:forEach items="${manufacturers}" var="manufacturer">
                                     	<c:choose>
                                     		<c:when test="${manufacturer.id == computer.manufacturerId}">
-                                    			<option class="companyId-option" value="${count}" selected="selected">${manufacturer.name}</option>
+                                    			<form:option class="companyId-option" value="${count}" selected="selected">${manufacturer.name}</form:option>
                                     		</c:when>
                                     		<c:otherwise>
-                                    			<option class="companyId-option" value="${count}">${manufacturer.name}</option>
+                                    			<form:option class="companyId-option" value="${count}">${manufacturer.name}</form:option>
                                     		</c:otherwise>
                                     	</c:choose>
                                     	 <c:set var="count" value="${count + 1}"></c:set>
                                     </c:forEach>
-                                </select>
+                                </form:select>
                             </div>            
                         </fieldset>
                         <div class="actions pull-right">
@@ -57,7 +60,7 @@
                             or
                             <a id="cancelButton" href="listComputers" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>
