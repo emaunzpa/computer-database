@@ -15,33 +15,35 @@
 	    <c:import url="/views/navbar.jsp"/>
 	
 		<div id="deleteAlert" class="alert alert-warning" role="alert" style="text-align:center;" hidden>
-			YOU ARE GONNA DELETE
+			<spring:message code="lbl.gonnaDelete"/>
 			<span id="numberOfSelectedComputers"></span>
-			COMPUTERS, ARE YOU SURE ?
-			<a class="btn btn-default" id="deleteConfirmation" onclick="postDeleteForm();">Delete</a> or <a id="deleteCancel" class="btn btn-default" onclick="hideDeleteAlert();">Cancel</a>
+			<spring:message code="lbl.areYouSure"/>
+			<a class="btn btn-default" id="deleteConfirmation" onclick="postDeleteForm();"><spring:message code="lbl.deleteConfirm"/></a> <spring:message code="lbl.or"/> <a id="deleteCancel" class="btn btn-default" onclick="hideDeleteAlert();"><spring:message code="lbl.deleteCancel"/></a>
 		</div>
 		
 	    <section id="main">
 	        <div class="container">
-	            <h1 id="homeTitle">${computers.size()} Computers found (
+	            <h1 id="homeTitle">${computers.size()} <spring:message code="lbl.computersFound"/>
 	            <c:choose>
-	            	<c:when test="${computers.size() > 10}">${pagination.startIndex + 1} to ${pagination.endIndex}</c:when>
+	            	<c:when test="${computers.size() > 10}">${pagination.startIndex + 1} <spring:message code="lbl.to"/> ${pagination.endIndex}</c:when>
 	            	<c:otherwise>${computers.size()}</c:otherwise>
 	            </c:choose>
-	             printed )
+	             <spring:message code="lbl.printed"/>
 	            </h1>
 	            <div id="actions" class="form-horizontal">
 	                <div class="pull-left">
 	                    <form id="searchForm" action="listComputers" method="GET" class="form-inline">
-	                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
+	                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="<spring:message code="lbl.search"/>" />
 	                        <input hidden="hidden" name="startIndex" value="0" />
 	                        <input hidden="hidden" name="endIndex" value="10" />
-	                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
+	                        <input type="submit" id="searchsubmit" value="<spring:message code="lbl.searchSubmit"/>" class="btn btn-primary" />
 	                    </form>
 	                </div>
 	                <div class="pull-right">
-	                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
-	                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();">Edit</a>
+	                    <a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="lbl.add"/></a>
+	                    <div id="hiddenViewMode" hidden><spring:message code="lbl.viewMode"/></div>
+	                    <div id="hiddenEditMode" hidden><spring:message code="lbl.editMode"/></div>
+	                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();"><spring:message code="lbl.edit"/></a>
 						<a class="btn btn-primary" id="deleteComputer" onclick="displayDeleteAlert();"><i class="fas fa-trash-alt"></i></a> 
 	                </div>
 	            </div>
@@ -55,7 +57,7 @@
 	                        <th class="editMode" style="width: 60px; height: 22px;">
 	                            <input type="checkbox" id="selectall"><i class="fas fa-level-down-alt pull-right"></i>
 	                       	</th>
-	                        <th>Computer name 
+	                        <th><spring:message code="lbl.computerName"/> 
 	                        <c:choose>
 	                        	<c:when test="${pagination.sorted == 'byName'}">
 	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byNameReverse"><i class="fas fa-sort"></i></a>
@@ -66,7 +68,7 @@
 	                        </c:choose>
 	                        </th>
 	                        
-	                        <th>Introduced date
+	                        <th><spring:message code="lbl.introduced"/>
 	                        <c:choose>
 	                        	<c:when test="${pagination.sorted == 'byIntroduced'}">
 	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byIntroducedReverse"><i class="fas fa-sort"></i></a>
@@ -76,7 +78,7 @@
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        </th>
-	                        <th>Discontinued date
+	                        <th><spring:message code="lbl.discontinued"/>
 	                        <c:choose>
 	                        	<c:when test="${pagination.sorted == 'byDiscontinued'}">
 	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byDiscontinuedReverse"><i class="fas fa-sort"></i></a>
@@ -86,7 +88,7 @@
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        </th>
-	                        <th>Company name
+	                        <th><spring:message code="lbl.companyName"/>
 	                        <c:choose>
 	                        	<c:when test="${pagination.sorted == 'byCompany'}">
 	                        		<a class="pull-right" href="?startIndex=${pagination.startIndex}&endIndex=${pagination.endIndex}&search=${search}&sorted=byCompanyReverse"><i class="fas fa-sort"></i></a>
@@ -125,12 +127,12 @@
 	        <div class="container text-center">
 	            <ul class="pagination">
 	                <li>
-	                	<a href="?startIndex=0&endIndex=10&search=${search}&sorted=${pagination.sorted}" id="startPaginationButton">Start</a>
+	                	<a href="?startIndex=0&endIndex=10&search=${search}&sorted=${pagination.sorted}" id="startPaginationButton"><spring:message code="lbl.start"/></a>
 	                	<a href="?startIndex=${pagination.previous50Index}&endIndex=${pagination.previous50Index + 10}&search=${search}&sorted=${pagination.sorted}" aria-label="Previous" id="previous50PaginationButton"><i class="fas fa-fast-backward"></i></a>
 	                	<a href="?startIndex=${pagination.previous10Index}&endIndex=${pagination.previous10Index + 10}&search=${search}&sorted=${pagination.sorted}" aria-label="Previous" id="previous10PaginationButton"><i class="fas fa-step-backward"></i></a>
 	                	<a href="?startIndex=${pagination.next10Index - 10}&endIndex=${pagination.next10Index}&search=${search}&sorted=${pagination.sorted}" aria-label="Next" id="next10PaginationButton"><i class="fas fa-step-forward"></i></a>
 	                	<a href="?startIndex=${pagination.next50Index - 10}&endIndex=${pagination.next50Index}&search=${search}&sorted=${pagination.sorted}" aria-label="Next" id="next50PaginationButton"><i class="fas fa-fast-forward"></i></a>
-	                	<a href="?startIndex=${pagination.toEndIndex - 10}&endIndex=${pagination.toEndIndex}&search=${search}&sorted=${pagination.sorted}" id="endPaginationButton">End</a>
+	                	<a href="?startIndex=${pagination.toEndIndex - 10}&endIndex=${pagination.toEndIndex}&search=${search}&sorted=${pagination.sorted}" id="endPaginationButton"><spring:message code="lbl.end"/></a>
 	            	</li>
 	       		</ul>
 	       	</div>

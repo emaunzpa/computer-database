@@ -4,8 +4,6 @@ jQuery.validator.addMethod(
 		"greaterThan", 
 		function(value, element, params) {
 
-			console.log(new Date($(params).val()));
-			console.log(new Date(value));
 			if (/Invalid/.test(new Date(value))){
 				return true;
 			}
@@ -16,7 +14,7 @@ jQuery.validator.addMethod(
 				return new Date(value) > new Date($(params).val());
 			}			
 		},
-		'Must be coherent with introduced date'
+		$("#hiddenDatesCoherence").text()
 );
 
 $("#computerForm").validate({
@@ -26,3 +24,10 @@ $("#computerForm").validate({
 		}
 	}
 });
+
+jQuery.extend(jQuery.validator.messages, {
+	required: $("#hiddenRequired").text()
+});
+		
+	 
+	 

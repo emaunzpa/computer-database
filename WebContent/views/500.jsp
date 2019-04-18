@@ -12,8 +12,8 @@
 	
 	<body>
 		<div id="errorAlert" class="alert alert-danger" role="alert" style="text-align:center;">
-			ERROR 500 : ${errorMessage} Go back to dashboard 
-			<a class="btn btn-default" id="backToDashboard" href="listComputers">Dashboard</a>
+			<spring:message code="lbl.500"/> ${errorMessage} <spring:message code="lbl.goBack"/>
+			<a class="btn btn-default" id="backToDashboard" href="listComputers"><spring:message code="lbl.dashboard"/></a>
 		</div>
 	</body>
 </html>

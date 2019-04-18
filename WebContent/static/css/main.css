@@ -31,3 +31,18 @@ input[type='checkbox'] {
     border-radius: 5px;
     white-space: nowrap;
 }
+
+.navItem {
+	
+	vertical-align: middle;
+	
+}
+
+.navbar-right img {
+	
+	margin-top: 0.7em;
+	margin-right: 1em;
+	height: 2em;
+	width: 2em;
+	
+}
