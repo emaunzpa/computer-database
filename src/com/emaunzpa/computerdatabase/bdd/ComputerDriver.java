@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -25,6 +27,7 @@ public class ComputerDriver implements ComputerDAO {
 	private DriverManagerDataSource dataSource;
     private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
 	private JdbcTemplate jdbcTemplate;
+	private SessionFactory sessionFactory;
     
 	private static Logger log;
 	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
@@ -44,7 +47,7 @@ public class ComputerDriver implements ComputerDAO {
 	@Override
 	public Optional<Computer> getComputer(int id) throws NoComputerFoundException, SQLException, FileNotFoundException, IOException {
 		
-		Optional<Computer> computer = Optional.empty();		
+		Optional<Computer> computer = Optional.empty();	
 		Integer searchId = Integer.valueOf(id);
 		
 		// Test if computer exists
@@ -152,6 +155,14 @@ public class ComputerDriver implements ComputerDAO {
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	public SessionFactory getFactory() {
+		return sessionFactory;
+	}
+
+	public void setFactory(SessionFactory factory) {
+		this.sessionFactory = factory;
 	}
 	
 }

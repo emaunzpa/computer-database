@@ -19,6 +19,7 @@
 			<list>
 				<value>classpath:computer-database-dbHikariConfig.properties</value>
 				<value>classpath:log4j.properties</value>
+				<value>classpath:hibernate/hibernate.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -79,6 +80,21 @@
 
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
+	</bean>
+	
+	<!-- Hibernate -->
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	    <property name="hibernateProperties">
+	        <props>
+	            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+	            <prop key="hibernate.connection.url">${hibernate.connection.url}</prop>
+	            <prop key="hibernate.connection.driver_class" >${hibernate.connection.driver_class}</prop>
+	            <prop key="hibernate.connection.username">${hibernate.connection.username}</prop>
+	            <prop key="hibernate.connection.password">${hibernate.connection.password}</prop>
+	        </props>
+	    </property>
 	</bean>
 	
 </beans>
