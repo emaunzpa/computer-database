@@ -4,15 +4,15 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-   <class name = "Manufacturer" table = "company">
+   <class name = "com.emaunzpa.computerdatabase.model.Manufacturer" table = "company">
       
       <meta attribute = "class-description">This class contains the manufacturer detail.</meta>
       
-      <id name = "id" type = "INTEGER" column = "id">
+      <id name = "id" type = "integer" column = "id">
          <generator class="native"/>
       </id>
       
-      <property name = "name" column = "name" type = "VARCHAR"/>
+      <property name = "name" column = "name" type = "string"/>
       
    </class>
 </hibernate-mapping>

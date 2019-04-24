@@ -9,6 +9,10 @@ public class Computer {
 	private Integer manufacturerId;
 	private String manufacturerName;
 	
+	public Computer() {
+		
+	}
+	
 	public static class ComputerBuilder {
 		
 		private int id;

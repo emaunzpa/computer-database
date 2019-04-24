@@ -191,7 +191,7 @@ public class WebController {
 	public RedirectView editComputerPost(HttpServletRequest request, @ModelAttribute("computerDTO") @Validated ComputerDTO computerDTO, BindingResult result) {
 		
 		if (result.hasErrors()) {
-	         return new RedirectView("editComputer");
+	         return new RedirectView("editComputer?computerID=" + request.getParameter("id"));
 	    }
 		
 		try {

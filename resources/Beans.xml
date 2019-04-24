@@ -11,7 +11,7 @@
    http://www.springframework.org/schema/mvc
    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
    
-   	<context:component-scan base-package = "com.emaunzpa.computerdatabase.controller" />
+   	<context:component-scan base-package = "com.emaunzpa.computerdatabase.controller, com.emaunzpa.computerdatabase.model" />
    	<mvc:annotation-driven />
    
    	<bean id="myProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -85,7 +85,14 @@
 	<!-- Hibernate -->
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="mappingLocations"> 
+			<list> 
+				<value>classpath:hibernate/*.hbm.xml</value>
+			</list>
+		</property>
+		
 		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.emaunzpa.computerdatabase.model"/>
 	    <property name="hibernateProperties">
 	        <props>
 	            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
@@ -95,6 +102,7 @@
 	            <prop key="hibernate.connection.password">${hibernate.connection.password}</prop>
 	        </props>
 	    </property>
+	    
 	</bean>
 	
 </beans>
