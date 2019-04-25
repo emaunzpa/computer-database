@@ -18,6 +18,7 @@ import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedExcep
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Computer;
+import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.DTO.ComputerDTO;
 import com.emaunzpa.computerdatabase.util.CasesSorted;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
@@ -57,8 +58,8 @@ public class ComputerService {
 				Pattern pattern = Pattern.compile(".*" + searchStr.toLowerCase() + ".*");
 				Matcher macherComputerName = pattern.matcher(computerTested.get().getName().toLowerCase());
 				
-				if (computerTested.get().getManufacturerName() != null && !computerTested.get().getManufacturerName().equals("")) {
-					Matcher macherCompanyName = pattern.matcher(computerTested.get().getManufacturerName().toLowerCase());
+				if (computerTested.get().getManufacturer().getName() != null && !computerTested.get().getManufacturer().getName().equals("")) {
+					Matcher macherCompanyName = pattern.matcher(computerTested.get().getManufacturer().getName().toLowerCase());
 					if (macherCompanyName.matches() || macherComputerName.matches()) {
 						computers.add(computerTested);
 					}
@@ -85,17 +86,16 @@ public class ComputerService {
 	
 	public ComputerDTO convertComputerToDTO(Computer computer) {
 		
-		int companyId = 0;
-		if (computer.getmanufacturerId() != null) {
-			companyId = (int) computer.getmanufacturerId();
-		}
+		int companyId = computer.getManufacturer() != null ? computer.getManufacturer().getId() : 0;
+		String manufacturerName = computer.getManufacturer() != null ? computer.getManufacturer().getName() : "";
+
 		ComputerDTO computerDTO = new ComputerDTO.ComputerDTOBuilder()
 				.withId(computer.getId())
 				.withName(computer.getName())
 				.withIntroducedDate(dh.convertSqlDateToString(computer.getIntroducedDate()))
 				.withDiscontinuedDate(dh.convertSqlDateToString(computer.getDiscontinuedDate()))
 				.withManufacturerId(companyId)
-				.withManufacturerName(computer.getManufacturerName())
+				.withManufacturerName(manufacturerName)
 				.build();
 		return computerDTO;
 	}
@@ -106,17 +106,13 @@ public class ComputerService {
 	
 	public Computer convertDTOtoComputer(ComputerDTO computerDTO) {
 		
-		Integer companyId = null;
-		if (computerDTO.getmanufacturerId() != 0) {
-			companyId = (Integer) computerDTO.getmanufacturerId();
-		}
+		Manufacturer manufacturer = computerDTO.getmanufacturerId() != 0 ? new Manufacturer(computerDTO.getmanufacturerId(), computerDTO.getManufacturerName()) : null;
+		
 		Computer computer = new Computer.ComputerBuilder()
-				.withId(computerDTO.getId())
 				.withName(computerDTO.getName())
 				.withIntroducedDate(dh.convertStringDateToSqlDate(computerDTO.getIntroducedDate()))
 				.withDiscontinuedDate(dh.convertStringDateToSqlDate(computerDTO.getDiscontinuedDate()))
-				.withManufacturerId(companyId)
-				.withManufacturerName(computerDTO.getManufacturerName())
+				.withManufacturer(manufacturer)
 				.build();
 		
 		return computer;
@@ -143,12 +139,10 @@ public class ComputerService {
 		String computerName = computerDTO.getName();
 		String introducedDateStr = computerDTO.getIntroducedDate();
 		String discontinuedDateStr = computerDTO.getDiscontinuedDate();
+		Manufacturer manufacturer = computerDTO.getmanufacturerId() != 0 ? new Manufacturer(computerDTO.getmanufacturerId(), computerDTO.getManufacturerName()) : null;
 		Integer companyId = computerDTO.getmanufacturerId();
-		if (companyId == 0) {
-			companyId = null;
-		}
 		
-		computerDriver.updateComputer(computerId, computerName, dh.convertStringDateToSqlDate(introducedDateStr), dh.convertStringDateToSqlDate(discontinuedDateStr), companyId);
+		computerDriver.updateComputer(computerId, computerName, dh.convertStringDateToSqlDate(introducedDateStr), dh.convertStringDateToSqlDate(discontinuedDateStr), manufacturer);
 	}
 	
 	public void deleteComputer(int computerId) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {

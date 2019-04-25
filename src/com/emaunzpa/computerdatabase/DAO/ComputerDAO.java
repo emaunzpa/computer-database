@@ -11,6 +11,7 @@ import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedExcep
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Computer;
+import com.emaunzpa.computerdatabase.model.Manufacturer;
 
 public interface ComputerDAO {
 
@@ -70,6 +71,6 @@ public interface ComputerDAO {
 	 * @throws FileNotFoundException 
 	 * @throws SQLException 
 	 */
-	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException;
+	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Manufacturer newManufacturer) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException;
 	
 }

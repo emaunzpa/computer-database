@@ -26,6 +26,7 @@ import com.emaunzpa.computerdatabase.mapper.ComputerMapper;
 import com.emaunzpa.computerdatabase.mapper.MCMapper;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
+import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 
 public class ComputerDriver implements ComputerDAO {
 	
@@ -62,7 +63,7 @@ public class ComputerDriver implements ComputerDAO {
 		if(!computerFormValidator.computerFound(getAllComputers(), searchId)) {
 			return computer;
 		}
-		
+			
 		session = sessionFactory.openSession();
 		try {
 			transaction = session.beginTransaction();
@@ -179,7 +180,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Integer newManufacturerId) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
+	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Manufacturer newManufacturer) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
 		
 		Optional<Computer> computer;
 		
@@ -203,7 +204,7 @@ public class ComputerDriver implements ComputerDAO {
 			computer.get().setIntroducedDate(newIntroduced);
 			computer.get().setDiscontinuedDate(newDiscontinued);
 			computer.get().setName(newName);
-			computer.get().setmanufacturerId(newManufacturerId);
+			computer.get().setManufacturer(newManufacturer);
 			session.update(computer.get());
 			transaction.commit();
 		} catch (HibernateException e) {

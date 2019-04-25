@@ -6,8 +6,7 @@ public class Computer {
 	private String name;
 	private java.sql.Date introducedDate;
 	private java.sql.Date discontinuedDate;
-	private Integer manufacturerId;
-	private String manufacturerName;
+	private Manufacturer manufacturer;
 	
 	public Computer() {
 		
@@ -19,16 +18,10 @@ public class Computer {
 		private String name;
 		private java.sql.Date introducedDate;
 		private java.sql.Date discontinuedDate;
-		private Integer manufacturerId;
-		private String manufacturerName;
+		private Manufacturer manufacturer;
 		
 		public ComputerBuilder() {
 
-		}
-		
-		public ComputerBuilder withId(int id) {
-			this.id = id;
-			return this;
 		}
 		
 		public ComputerBuilder withName(String name) {
@@ -46,13 +39,8 @@ public class Computer {
 			return this;
 		}
 		
-		public ComputerBuilder withManufacturerId(Integer manufacturerId) {
-			this.manufacturerId = manufacturerId;
-			return this;
-		}
-		
-		public ComputerBuilder withManufacturerName(String manufacturerName) {
-			this.manufacturerName = manufacturerName;
+		public ComputerBuilder withManufacturer(Manufacturer manufacturer) {
+			this.manufacturer = manufacturer;
 			return this;
 		}
 		
@@ -62,8 +50,7 @@ public class Computer {
 			computer.setName(this.name);
 			computer.setIntroducedDate(this.introducedDate);
 			computer.setDiscontinuedDate(this.discontinuedDate);
-			computer.setmanufacturerId(this.manufacturerId);	
-			computer.setManufacturerName(this.manufacturerName);
+			computer.setManufacturer(this.manufacturer);
 			return computer;
 		}
 	}
@@ -73,8 +60,7 @@ public class Computer {
 		this.name = builder.name;
 		this.introducedDate = builder.introducedDate;
 		this.discontinuedDate = builder.discontinuedDate;
-		this.manufacturerId = builder.manufacturerId;
-		this.manufacturerName = builder.manufacturerName;
+		this.manufacturer = builder.manufacturer;
 	}
 	
 	public int getId() {
@@ -83,14 +69,6 @@ public class Computer {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Integer getmanufacturerId() {
-		return manufacturerId;
-	}
-
-	public void setmanufacturerId(Integer manufacturerId) {
-		this.manufacturerId = manufacturerId;
 	}
 
 	public String getName() {
@@ -117,12 +95,12 @@ public class Computer {
 		this.discontinuedDate = discontinuedDate;
 	}
 
-	public String getManufacturerName() {
-		return manufacturerName;
+	public Manufacturer getManufacturer() {
+		return manufacturer;
 	}
 
-	public void setManufacturerName(String manufacturerName) {
-		this.manufacturerName = manufacturerName;
+	public void setManufacturer(Manufacturer manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 	
 }

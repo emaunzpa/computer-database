@@ -50,7 +50,7 @@ public class Pagination {
 			System.out.println("                   --------- Type q to exit display ---------");
 			System.out.println();
 			for (Optional<Computer> computer : showRestrictedComputerList(computers)) {
-				String computerDetails = "Id : " + computer.get().getId() + " | Name : " + computer.get().getName() + " | Introduced : " + computer.get().getIntroducedDate() + " | Discontinued : " + computer.get().getDiscontinuedDate() + " | Company_name : " + computer.get().getManufacturerName();
+				String computerDetails = "Id : " + computer.get().getId() + " | Name : " + computer.get().getName() + " | Introduced : " + computer.get().getIntroducedDate() + " | Discontinued : " + computer.get().getDiscontinuedDate() + " | Company_name : " + computer.get().getManufacturer().getName();
 				System.out.println(computerDetails);
 			}
 			System.out.println();

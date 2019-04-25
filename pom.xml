@@ -16,6 +16,7 @@
   	<spring-boot-starter-log4j.version>1.3.8.RELEASE</spring-boot-starter-log4j.version>
   	<spring.version>5.1.5.RELEASE</spring.version>
   	<hibernate.version>5.4.1.Final</hibernate.version>
+  	<query-dsl.version>4.1.4</query-dsl.version>
   	
   </properties>
   
@@ -92,7 +93,6 @@
 	    <version>${spring.version}</version>
 	</dependency>
 	
-	
 	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 	<dependency>
 	    <groupId>org.hibernate</groupId>
@@ -100,7 +100,18 @@
 	    <version>${hibernate.version}</version>
 	</dependency>
 	
-
+	<dependency>
+		<groupId>com.querydsl</groupId>
+		<artifactId>querydsl-apt</artifactId>
+		<version>${query-dsl.version}</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.querydsl</groupId>
+		<artifactId>querydsl-jpa</artifactId>
+		<version>${query-dsl.version}</version>
+	</dependency>
+	
   </dependencies>
   
   <build>
@@ -136,6 +147,23 @@
 				<suppressionsLocation>resources/suppressions.xml</suppressionsLocation>
 			</configuration>
 		</plugin>
+		
+		<plugin>
+	        <groupId>com.mysema.maven</groupId>
+	        <artifactId>apt-maven-plugin</artifactId>
+	        <version>1.1.3</version>
+	        <executions>
+		        <execution>
+		            <goals>
+		                <goal>process</goal>
+		            </goals>
+		            <configuration>
+		                <outputDirectory>target/generated-sources</outputDirectory>
+		                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+		            </configuration>
+		        </execution>
+	        </executions>
+   		</plugin>
     </plugins>
     
     <testSourceDirectory>tests/</testSourceDirectory>

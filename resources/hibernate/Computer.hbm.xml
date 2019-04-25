@@ -15,7 +15,10 @@
       <property name = "name" column = "name" type = "string"/>
       <property name = "introducedDate" column = "introduced" type = "date"/>
       <property name = "discontinuedDate" column = "discontinued" type = "date"/>
-      <property name = "manufacturerId" column = "company_id" type = "integer"/>
+      
+      <many-to-one name = "manufacturer" class="com.emaunzpa.computerdatabase.model.Manufacturer" lazy="false" fetch="join">
+      		<column name="company_id"></column>
+      </many-to-one>
       
    </class>
 </hibernate-mapping>
