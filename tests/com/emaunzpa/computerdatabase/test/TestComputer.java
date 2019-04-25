@@ -22,6 +22,7 @@ import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedExcep
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
 import com.emaunzpa.computerdatabase.model.Computer;
+import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.util.DatesHandler;
 
 /**
@@ -45,14 +46,14 @@ public class TestComputer {
 		assertEquals("CM-5", testedComputer.getName());
 		assertEquals("1991-01-01", datesHandler.convertSqlDateToString(testedComputer.getIntroducedDate()));
 		assertNull(testedComputer.getDiscontinuedDate());
-		assertEquals(2, (int) testedComputer.getmanufacturerId());
+		assertEquals(2, (int) testedComputer.getManufacturer().getId());
 		try {
 			Computer testedComputerNull = computerDriver.getComputer(0).get();
 			assertEquals(0, testedComputerNull.getId());
 			assertNull(testedComputerNull.getName());
 			assertNull(testedComputerNull.getIntroducedDate());
 			assertNull(testedComputerNull.getDiscontinuedDate());
-			assertNull(testedComputerNull.getmanufacturerId());
+			assertNull(testedComputerNull.getManufacturer().getId());
 		} catch (Exception e) {
 			assertTrue(e.getClass().equals(NoComputerFoundException.class));
 		}
@@ -69,10 +70,10 @@ public class TestComputer {
 	public void createComputer() throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
 		
 		Computer computer1 = new Computer.ComputerBuilder().withName("Computer1").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).build();
-		Computer computer2 = new Computer.ComputerBuilder().withName("Computer2").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).withDiscontinuedDate(null).withManufacturerId(5).build();
+		Computer computer2 = new Computer.ComputerBuilder().withName("Computer2").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).withDiscontinuedDate(null).withManufacturer(new Manufacturer(5, "Tandy Corporation")).build();
 		Computer computerWithNullName = new Computer.ComputerBuilder().build();
-		Computer computerWithUnexistingCompanyId = new Computer.ComputerBuilder().withName("Computer4").withIntroducedDate(null).withDiscontinuedDate(null).withManufacturerId(1000).build();
-		Computer computerWithUncompatibleDates = new Computer.ComputerBuilder().withName("Computer5").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).withDiscontinuedDate(datesHandler.convertStringDateToSqlDate("2019-03-13")).withManufacturerId(1).build();
+		Computer computerWithUnexistingCompanyId = new Computer.ComputerBuilder().withName("Computer4").withIntroducedDate(null).withDiscontinuedDate(null).withManufacturer(new Manufacturer(1000, "Wrong ID manufacturer")).build();
+		Computer computerWithUncompatibleDates = new Computer.ComputerBuilder().withName("Computer5").withIntroducedDate(datesHandler.convertStringDateToSqlDate("2019-03-14")).withDiscontinuedDate(datesHandler.convertStringDateToSqlDate("2019-03-13")).withManufacturer(new Manufacturer(1, "Apple Inc.")).build();
 		assertTrue(computerDriver.addComputer(computer1));
 		assertTrue(computerDriver.addComputer(computer2));
 		try {
@@ -93,10 +94,10 @@ public class TestComputer {
 	@Test
 	public void updateComputer() throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
 		
-		assertTrue(computerDriver.updateComputer(1, "MacBook Pro 15.4 inch", null, null, 1));
-		assertTrue(computerDriver.updateComputer(12, "Apple III", datesHandler.convertStringDateToSqlDate("1980-05-01"), datesHandler.convertStringDateToSqlDate("1984-04-01"), 1));
+		assertTrue(computerDriver.updateComputer(1, "MacBook Pro 15.4 inch", null, null, new Manufacturer(1, "Apple Inc.")));
+		assertTrue(computerDriver.updateComputer(12, "Apple III", datesHandler.convertStringDateToSqlDate("1980-05-01"), datesHandler.convertStringDateToSqlDate("1984-04-01"), new Manufacturer(1, "Apple Inc.")));
 		try {
-			assertFalse(computerDriver.updateComputer(100000, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, 5));
+			assertFalse(computerDriver.updateComputer(100000, "Titi acer v5.0", datesHandler.convertStringDateToSqlDate("2019-03-14"), null, new Manufacturer(5, "Tandy Corporation")));
 		} catch (Exception e) {
 			assertTrue(e.getClass().equals(NoComputerFoundException.class));
 		}

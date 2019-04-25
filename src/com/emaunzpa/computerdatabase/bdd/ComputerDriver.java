@@ -13,37 +13,22 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
 import com.emaunzpa.computerdatabase.DAO.ComputerDAO;
 import com.emaunzpa.computerdatabase.exception.ComputerWithoutNameException;
 import com.emaunzpa.computerdatabase.exception.DiscontinuedBeforeIntroducedException;
 import com.emaunzpa.computerdatabase.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.computerdatabase.exception.NoComputerFoundException;
-import com.emaunzpa.computerdatabase.mapper.ComputerMapper;
-import com.emaunzpa.computerdatabase.mapper.MCMapper;
 import com.emaunzpa.computerdatabase.model.*;
 import com.emaunzpa.computerdatabase.util.ComputerFormValidator;
-import com.querydsl.jpa.hibernate.HibernateQueryFactory;
 
 public class ComputerDriver implements ComputerDAO {
 	
-	private DriverManagerDataSource dataSource;
     private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
-	private JdbcTemplate jdbcTemplate;
 	private ManufacturerDriver manufacturerDriver;
 	private SessionFactory sessionFactory;
 	private Session session;
 	private Transaction transaction = null;
-    
 	private static Logger log;
-	private static String _ADD_COMPUTER_ = "insert into computer (name, introduced, discontinued, company_id) values (?,?,?,?)";
-	private static String _GET_ALL_COMPUTERS_ = "select computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, company.name as company_name from computer left join company on computer.company_id = company.id order by computer.id";
-	private static String _GET_COMPUTER_ = "select id, name, introduced, discontinued, company_id from computer where id = ?";
-	private static String _UPDATE_COMPUTER_ = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
-	private static String _DELETE_COMPUTER_ = "delete from computer where id = ?";
 	
     /**
      * Empty creator without params
@@ -68,6 +53,7 @@ public class ComputerDriver implements ComputerDAO {
 		try {
 			transaction = session.beginTransaction();
 			computer = Optional.of(session.get(Computer.class, id));
+			transaction.commit();
 		} catch (HibernateException e) {
 			transaction.rollback();
 			log.error(e.getMessage());
@@ -75,14 +61,6 @@ public class ComputerDriver implements ComputerDAO {
 			session.close();
 		}
 		
-//		log.info( "Objet requête créé !" );
-//		String request = _GET_COMPUTER_ ;
-//		computer = (Optional<Computer>) jdbcTemplate.queryForObject(
-//				request, new Object[]{id}, new ComputerMapper());
-//		log.info( "Requête -- " + request + " -- effectuée !" );
-//		
-//		dataSource.getConnection().close();
-//		log.info("Fin de la connexion");
 		return computer;
 	}
 
@@ -111,10 +89,6 @@ public class ComputerDriver implements ComputerDAO {
 			session.close();
 	    }		
 		
-//		String request = _ADD_COMPUTER_;
-//		jdbcTemplate.update(request, new Object[]{computer.getName(), computer.getIntroducedDate(), computer.getDiscontinuedDate(), computer.getmanufacturerId()});
-//		log.info( "Requête -- " + request + " -- effectuée !" );
-		
 		return true;
 		
 	}
@@ -129,23 +103,15 @@ public class ComputerDriver implements ComputerDAO {
 			List rsComputers = session.createQuery("FROM Computer").list();
 			for (Iterator iterator = rsComputers.iterator(); iterator.hasNext();){
 	            Optional<Computer> computer = Optional.of((Computer) iterator.next());
-//	            int manufacturerId = computer.get().getmanufacturerId() != null ? computer.get().getmanufacturerId() : 0;
-//	            Manufacturer manufacturer = manufacturerDriver.getManufacturer(manufacturerId);
-//	            String manufacturerName = manufacturer != null ? manufacturer.getName() : "";
-//	            computer.get().setManufacturerName(manufacturerName);
 	            computers.add(computer);
 			}
+			transaction.commit();
 		} catch (HibernateException e) {
 			transaction.rollback();
 			log.error(e.getMessage());
 		} finally {
 			session.close();
 		}
-		
-//		String request = _GET_ALL_COMPUTERS_;
-//		ArrayList<Optional<Computer>> computers = (ArrayList<Optional<Computer>>) jdbcTemplate.query(
-//				request, new MCMapper());
-//		log.info( "Requête -- " + request + " -- effectuée !" );
 		
 		return computers;
 	}
@@ -170,10 +136,6 @@ public class ComputerDriver implements ComputerDAO {
 		} finally {
 			session.close();
 	    }
-		
-//        String request =  _DELETE_COMPUTER_ ;
-//		jdbcTemplate.update(request, new Object[]{id});
-//        log.info( "Requête -- "+ request + " -- effectuée !" );
         
 		return true;
 		
@@ -213,28 +175,8 @@ public class ComputerDriver implements ComputerDAO {
 		} finally {
 			session.close();
 	    }
-		
-//        String request = _UPDATE_COMPUTER_ ;
-//		jdbcTemplate.update(request, new Object[]{newName, newIntroduced, newDiscontinued, newManufacturerId, id});
-//        log.info( "Requête -- " + request + " -- effectuée !" );
 
 		return true;
-	}
-
-	public DriverManagerDataSource getDataSource() {
-		return dataSource;
-	}
-
-	public void setDataSource(DriverManagerDataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
-	public JdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
-
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public SessionFactory getSessionFactory() {

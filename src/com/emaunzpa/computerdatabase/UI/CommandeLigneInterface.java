@@ -95,7 +95,7 @@ public class CommandeLigneInterface {
 			computer = computerDriver.getComputer(computerId).get();
 			System.out.println();
 			System.out.println("Following are the details of the selected computer \n");
-			String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getmanufacturerId();
+			String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getManufacturer().getId();
 			System.out.println(computerDetails);
 			System.out.println();
 		}
@@ -113,8 +113,11 @@ public class CommandeLigneInterface {
 	 * Create a new computer with the parameters entered by the user
 	 * @return newComputer
 	 * @throws ParseException
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public Computer newComputerForm() throws ParseException {
+	public Computer newComputerForm() throws ParseException, FileNotFoundException, IOException, SQLException {
 		System.out.println("You just chose to create a new Computer");
 		System.out.println("Please ENTER a name for the new computer ...");
 		String computerName = scIn.nextLine();
@@ -148,16 +151,18 @@ public class CommandeLigneInterface {
 		answer = scIn.next();
 		scIn.nextLine();
 		Integer companyId = null;
+		Manufacturer manufacturer = null;
 		switch(answer) {
 		case "y" :
 			System.out.println("Please ENTER a company ID ...");
 			companyId = scIn.nextInt();
 			scIn.nextLine();
+			manufacturer = manufacturerDriver.getManufacturer(companyId);
 			break;
 		case "n" :
 			break;
 		}
-		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturerId(companyId).build();
+		Computer newComputer = new Computer.ComputerBuilder().withName(computerName).withIntroducedDate(introducedDate).withDiscontinuedDate(discontinuedDate).withManufacturer(manufacturer).build();
 		
 		return newComputer;
 	}
@@ -216,7 +221,8 @@ public class CommandeLigneInterface {
 		System.out.println("Do you want to update the company ID ? (y/n)");
 		answer = scIn.next();
 		scIn.nextLine();
-		Integer newManufacturerId = computer.getmanufacturerId();
+		Integer newManufacturerId = computer.getManufacturer().getId();
+		Manufacturer newManufacturer = manufacturerDriver.getManufacturer(newManufacturerId);
 		switch(answer) {
 			case "y" :
 				System.out.println("Please ENTER a new company ID for your computer ...");
@@ -235,7 +241,7 @@ public class CommandeLigneInterface {
 			System.out.println();
 		}
 		else {
-			computerDriver.updateComputer(computer.getId(), newName, newIntroducedDate, newDiscontinuedDate, newManufacturerId);
+			computerDriver.updateComputer(computer.getId(), newName, newIntroducedDate, newDiscontinuedDate, newManufacturer);
 			String updateDetails = "Name : " + newName + " | Introduced : " + newIntroducedDate + " | Discontinued : " + newDiscontinuedDate + " | Company_id : " + newManufacturerId;
 			System.out.println("The computer was update with the following parameters :\n " + updateDetails);
 			System.out.println();
@@ -323,7 +329,7 @@ public class CommandeLigneInterface {
 		
 		List<Optional<Computer>> computers = computerDriver.getAllComputers();
 		for (Optional<Computer> computer : computers) {
-			if (computer.get().getmanufacturerId() == id) {
+			if (computer.get().getManufacturer().getId() == id) {
 				companyComputers.add(computer);
 			}
 		}
@@ -362,7 +368,7 @@ public class CommandeLigneInterface {
 						System.out.println();
 					}
 					else {
-						String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + newComputer.getmanufacturerId();
+						String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + newComputer.getManufacturer().getId();
 						System.out.println(newComputerDetails);
 						System.out.println();
 						computerDriver.addComputer(newComputer);

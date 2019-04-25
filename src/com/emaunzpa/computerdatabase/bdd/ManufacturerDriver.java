@@ -13,6 +13,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -27,19 +28,14 @@ import com.emaunzpa.computerdatabase.util.CompanyFormValidator;
 public class ManufacturerDriver implements ManufacturerDAO{
 
 	private static Logger log;
-	private JdbcTemplate jdbcTemplate;
-    private DriverManagerDataSource dataSource;
-    private DataSourceTransactionManager txManager;
     private CompanyFormValidator companyFormValidator = new CompanyFormValidator();
     
     private SessionFactory sessionFactory;
 	private Session session;
 	private Transaction transaction = null;
 	
-    private static String _GET_COMPANY_ = "select id, name from company where id = ?";
-    private static String _GET_ALL_COMPANIES = "select id, name from company";
-    private static String _DELETE_COMPANY = "delete from company where id = ?";
-    private static String _DELETE_COMPUTERS_BY_COMPANY_ID = "delete from computer where company_id = ?";
+    private static String _DELETE_COMPANY = "delete from Manufacturer where id = :id";
+    private static String _DELETE_COMPUTERS_BY_COMPANY_ID = "delete from Computer where company_id = :cid";
     
 	public ManufacturerDriver() {
 
@@ -62,11 +58,6 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		} finally {
 			session.close();
 		}
-		
-//        String request =  _GET_COMPANY_;
-//		Manufacturer manufacturer = jdbcTemplate.queryForObject(
-//				request, new Object[]{id}, new ManufacturerMapper());
-//        log.info( "Requête -- " + request + " -- effectuée !" );
 
 		return manufacturer;
 	}
@@ -83,17 +74,13 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	            Manufacturer manufacturer = (Manufacturer) iterator.next();
 	            manufacturers.add(manufacturer);
 			}
+			transaction.commit();
 		} catch (HibernateException e) {
 			transaction.rollback();
 			log.error(e.getMessage());
 		} finally {
 			session.close();
 		}
-		
-//        String request = _GET_ALL_COMPANIES;
-//		ArrayList<Manufacturer> manufacturers = (ArrayList<Manufacturer>) jdbcTemplate.query(
-//				   request, new ManufacturerMapper());
-//        log.info( "Requête -- " + request + " -- effectuée !" );
 
 		return manufacturers;
 	}
@@ -106,28 +93,23 @@ public class ManufacturerDriver implements ManufacturerDAO{
 			log.error("Company not found !");
 			return false;
 		}
-        String request =  _DELETE_COMPUTERS_BY_COMPANY_ID;
-        jdbcTemplate.update( request, new Object[]{id} );
-        request =  _DELETE_COMPANY;
-        jdbcTemplate.update( request, new Object[]{id} );
+        
+		session = sessionFactory.openSession();
+		try {
+			transaction = session.beginTransaction();	
+			Query query = session.createQuery(_DELETE_COMPUTERS_BY_COMPANY_ID).setParameter("cid", id);
+			query.executeUpdate();
+			query = session.createQuery(_DELETE_COMPANY).setParameter("id", id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (HibernateException e) {
+			transaction.rollback();
+			log.error(e.getMessage());
+		} finally {
+			session.close();
+		}
         
 		return true;
-	}
-
-	public DriverManagerDataSource getDataSource() {
-		return dataSource;
-	}
-
-	public void setDataSource(DriverManagerDataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
-	public JdbcTemplate getJdbcTemplate() {
-		return jdbcTemplate;
-	}
-
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public SessionFactory getSessionFactory() {
