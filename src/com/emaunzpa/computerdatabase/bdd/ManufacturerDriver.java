@@ -6,22 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
 import com.emaunzpa.computerdatabase.DAO.ManufacturerDAO;
 import com.emaunzpa.computerdatabase.exception.NoManufacturerFoundException;
-import com.emaunzpa.computerdatabase.mapper.ManufacturerMapper;
-import com.emaunzpa.computerdatabase.model.Computer;
 import com.emaunzpa.computerdatabase.model.Manufacturer;
 import com.emaunzpa.computerdatabase.util.CompanyFormValidator;
 
@@ -29,7 +21,6 @@ public class ManufacturerDriver implements ManufacturerDAO{
 
 	private static Logger log;
     private CompanyFormValidator companyFormValidator = new CompanyFormValidator();
-    
     private SessionFactory sessionFactory;
 	private Session session;
 	private Transaction transaction = null;
