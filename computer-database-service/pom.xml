@@ -1,41 +1,56 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
-  <parent>
-    <groupId>computer-database</groupId>
-    <artifactId>computer-database</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  
-  <groupId>computer-database</groupId>
-  <artifactId>computer-database-service</artifactId>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>computer-database</groupId>
+		<artifactId>computer-database</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>computer-database</groupId>
+	<artifactId>computer-database-service</artifactId>
+
+	<properties>
 		<sub-module.version>0.0.1-SNAPSHOT</sub-module.version>
 		<javax-servlet.version>2.5</javax-servlet.version>
+		<spring.version>5.1.5.RELEASE</spring.version>
 	</properties>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>computer-database</groupId>
 			<artifactId>computer-database-core</artifactId>
 			<version>${sub-module.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>computer-database</groupId>
 			<artifactId>computer-database-persistence</artifactId>
 			<version>${sub-module.version}</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>servlet-api</artifactId>
-		    <version>${javax-servlet.version}</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${javax-servlet.version}</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 	</dependencies>
-	
+
 </project>
