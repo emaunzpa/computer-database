@@ -49,6 +49,16 @@
 										<spring:message code="lbl.password" var="placeholder" />
 										<input type="password" class="form-control" id="password" required="required"
 											name="password" />
+										<label id="passwordError"></label>
+									</div>
+									<div class="form-group">
+										<label>
+											<spring:message code="lbl.passwordConfirm" />
+										</label>
+										<spring:message code="lbl.passwordConfirm" var="placeholder" />
+										<input type="password" class="form-control" id="passwordConfirm" required="required"
+											name="passwordConfirm" />
+										<label id="passwordConfirmError"></label>
 									</div>
 									<div class="form-group">
 										<label>
@@ -72,6 +82,10 @@
 					</div>
 				</div>
 			</section>
+			
+			<div id="passwordLength" hidden="hidden"><spring:message code="lbl.passwordLength" /></div>
+			<div id="passwordSame" hidden="hidden"><spring:message code="lbl.passwordSame" /></div>
+			<div id="passwordContains" hidden="hidden"><spring:message code="lbl.passwordContains" /></div>
 	
 		<script src="static/js/jquery.min.js"></script>
 		<script src="static/js/jquery.validate.min.js"></script>
