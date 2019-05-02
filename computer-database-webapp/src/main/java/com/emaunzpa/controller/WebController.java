@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -25,8 +24,10 @@ import com.emaunzpa.exception.DiscontinuedBeforeIntroducedException;
 import com.emaunzpa.exception.IncoherenceBetweenDateException;
 import com.emaunzpa.exception.NoComputerFoundException;
 import com.emaunzpa.model.Manufacturer;
+import com.emaunzpa.model.User;
 import com.emaunzpa.service.ComputerService;
 import com.emaunzpa.service.ManufacturerService;
+import com.emaunzpa.service.UserService;
 import com.emaunzpa.util.ComputerSpringValidator;
 
 @Controller
@@ -43,11 +44,13 @@ public class WebController {
 	private ComputerService computerService;
 	private ManufacturerService manufacturerService;
 	private ComputerSpringValidator computerSpringValidator;
+	private UserService userService;
 	
-	public WebController(ComputerService computerService, ManufacturerService manufacturerService, ComputerSpringValidator computerSpringValidator) {
+	public WebController(ComputerService computerService, ManufacturerService manufacturerService, UserService userService, ComputerSpringValidator computerSpringValidator) {
 		this.computerService = computerService;
 		this.manufacturerService = manufacturerService;
 		this.computerSpringValidator = computerSpringValidator;		
+		this.userService = userService;
 	}
 	
 	@InitBinder
@@ -59,6 +62,11 @@ public class WebController {
 	public ComputerDTO initComputerDTO() {
 		return new ComputerDTO.ComputerDTOBuilder()
 				.build();
+	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "/login";
 	}
 	
 	@GetMapping({"/", "/listComputers"})
@@ -157,6 +165,28 @@ public class WebController {
 		return new RedirectView("listComputers");
 	}
 	
+	@GetMapping("/addUser")
+	public String addUserGet() {
+		return "addUser";
+	}
+	
+	@PostMapping("/addUser")
+	public RedirectView addUserPost(HttpServletRequest request) {
+		
+		String username = request.getParameter("userName");
+		String userPassword = request.getParameter("password");
+		String role = request.getParameter("role");
+		
+		User newUser = new User();
+		newUser.setUsername(username);
+		newUser.setPassword(userPassword);
+		newUser.setEnabled(true);
+		
+		userService.addUser(newUser, role);
+		
+		return new RedirectView("listComputers");
+	}
+	
 	@GetMapping("/editComputer")
 	public String editComputerGet(HttpServletRequest request) {
 		
@@ -229,6 +259,11 @@ public class WebController {
 	@GetMapping("/500")
 	public String get500(HttpServletRequest request) {
 		return "500";
+	}
+	
+	@GetMapping("/403")
+	public String get403(HttpServletRequest request) {
+		return "403";
 	}
 	
 }

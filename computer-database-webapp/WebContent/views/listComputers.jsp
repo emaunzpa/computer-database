@@ -40,11 +40,13 @@
 	                    </form>
 	                </div>
 	                <div class="pull-right">
-	                    <a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="lbl.add"/></a>
-	                    <div id="hiddenViewMode" hidden><spring:message code="lbl.viewMode"/></div>
-	                    <div id="hiddenEditMode" hidden><spring:message code="lbl.editMode"/></div>
-	                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();"><spring:message code="lbl.edit"/></a>
-						<a class="btn btn-primary" id="deleteComputer" onclick="displayDeleteAlert();"><i class="fas fa-trash-alt"></i></a> 
+	                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+		                    <a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="lbl.add"/></a>
+		                    <div id="hiddenViewMode" hidden><spring:message code="lbl.viewMode"/></div>
+		                    <div id="hiddenEditMode" hidden><spring:message code="lbl.editMode"/></div>
+		                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();"><spring:message code="lbl.edit"/></a>
+							<a class="btn btn-primary" id="deleteComputer" onclick="displayDeleteAlert();"><i class="fas fa-trash-alt"></i></a> 
+	                	</sec:authorize>
 	                </div>
 	            </div>
 	        </div>
@@ -109,7 +111,7 @@
 	                        	<input type="checkbox" name="cb" class="cb<c:if test="${countComputer >= pagination.startIndex && countComputer <= pagination.endIndex}"> cb-display</c:if>" value="${computer.id}"/>
 	                        </td>
 	                        <td>
-	                            <a href="editComputer?computerID=${computer.id}" id="computerName${countComputer}">${computer.name}</a>
+	                            <sec:authorize access="hasRole('ROLE_ADMIN')"><a href="editComputer?computerID=${computer.id}" id="computerName${countComputer}"></sec:authorize>${computer.name}<sec:authorize access="hasRole('ROLE_ADMIN')"></a></sec:authorize>
 	                        </td>
 	                        <td>${computer.introducedDate}</td>
 	                        <td>${computer.discontinuedDate}</td>
