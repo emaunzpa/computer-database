@@ -88,6 +88,8 @@
 	<script src="static/js/jquery.min.js"></script>
 	<script src="static/js/jquery.validate.min.js"></script>
 	<script src="static/js/computerFormValidator.js"></script>
+	<script src="static/js/dropdown.js"></script>
+	<script src="static/js/bootstrap.min.js"></script>
 
 </body>
 </html>

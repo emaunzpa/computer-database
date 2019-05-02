@@ -1,6 +1,7 @@
 package com.emaunzpa.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ public class WebController {
 	private static final String ATT_COMPUTER = "computer";
 	private static final String ATT_ERROR_MESSAGE = "errorMessage";
 	public static final String ATT_LIST_MANUFACTURERS = "manufacturers";
+	private static final String USER = "user";
 	private static Logger log = Logger.getLogger(WebController.class);
 	private ComputerService computerService;
 	private ManufacturerService manufacturerService;
@@ -70,7 +72,7 @@ public class WebController {
 	}
 	
 	@GetMapping({"/", "/listComputers"})
-	public String listComputers(HttpServletRequest request) {
+	public String listComputers(HttpServletRequest request, Principal principal) {
 		
 		List<ComputerDTO> computers = new ArrayList<ComputerDTO>();
 		try {
@@ -86,6 +88,7 @@ public class WebController {
 		
 		request.setAttribute(ATT_SEARCH, request.getParameter("search"));
 		request.setAttribute(ATT_SORTED, request.getParameter("sorted"));
+		request.setAttribute(USER, principal.getName());
 		request.setAttribute(ATT_LIST_COMPUTERS, computers);
 		request.setAttribute(ATT_PAGINATION, computerService.getPagination());
 		
@@ -114,7 +117,7 @@ public class WebController {
 	}
 	
 	@GetMapping("/addComputer")
-	public String addComputerGet(HttpServletRequest request) {
+	public String addComputerGet(HttpServletRequest request, Principal principal) {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
 		try {
@@ -127,6 +130,7 @@ public class WebController {
 		}
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
+		request.setAttribute(USER, principal.getName());
 		
 		return "addComputer";
 	}
@@ -166,7 +170,10 @@ public class WebController {
 	}
 	
 	@GetMapping("/addUser")
-	public String addUserGet() {
+	public String addUserGet(HttpServletRequest request, Principal principal) {
+		
+		request.setAttribute(USER, principal.getName());
+		
 		return "addUser";
 	}
 	
@@ -188,7 +195,7 @@ public class WebController {
 	}
 	
 	@GetMapping("/editComputer")
-	public String editComputerGet(HttpServletRequest request) {
+	public String editComputerGet(HttpServletRequest request, Principal principal) {
 		
 		int computerID = Integer.valueOf(request.getParameter("computerID"));
 
@@ -213,6 +220,7 @@ public class WebController {
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
 		request.setAttribute(ATT_COMPUTER, computer);
+		request.setAttribute(USER, principal.getName());
 		
 		return "editComputer";
 	}

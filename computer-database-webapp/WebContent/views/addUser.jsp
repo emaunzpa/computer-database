@@ -76,6 +76,8 @@
 		<script src="static/js/jquery.min.js"></script>
 		<script src="static/js/jquery.validate.min.js"></script>
 		<script src="static/js/userFormValidator.js"></script>
+		<script src="static/js/dropdown.js"></script>
+		<script src="static/js/bootstrap.min.js"></script>
 	
 	</body>
 
