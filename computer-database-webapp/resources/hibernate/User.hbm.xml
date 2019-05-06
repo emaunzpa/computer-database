@@ -1,0 +1,26 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.emaunzpa.model.User" table="users">
+
+		<meta attribute="class-description">This class contains the computer detail.</meta>
+
+		<id name="username" type="string" column="username">
+			<generator class="assigned" />
+		</id>
+
+		<property name="password" column="password" type="string" />
+		<property name="enabled" column="enabled" type="boolean" />
+
+		<set name="authorities" table="authorities" inverse="true" lazy="true" fetch="join">
+			<key>
+				<column name="username" />
+			</key>
+			<one-to-many class="com.emaunzpa.model.Authorities"/>
+		</set>
+
+	</class>
+</hibernate-mapping>

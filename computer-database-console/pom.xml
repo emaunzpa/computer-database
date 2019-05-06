@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>computer-database</groupId>
+    <artifactId>computer-database</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  <groupId>computer-database</groupId>
+  <artifactId>computer-database-console</artifactId>
+  
+  <properties>
+		<sub-module.version>0.0.1-SNAPSHOT</sub-module.version>
+		<spring.version>5.1.5.RELEASE</spring.version>
+		<mysql-connector.version>8.0.15</mysql-connector.version>
+		<hibernate.version>5.4.1.Final</hibernate.version>
+	</properties>
+
+	<dependencies>
+		
+		<dependency>
+			<groupId>computer-database</groupId>
+			<artifactId>computer-database-service</artifactId>
+			<version>${sub-module.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>computer-database</groupId>
+			<artifactId>computer-database-core</artifactId>
+			<version>${sub-module.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>computer-database</groupId>
+			<artifactId>computer-database-persistence</artifactId>
+			<version>${sub-module.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-orm</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-core</artifactId>
+		    <version>${hibernate.version}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>${mysql-connector.version}</version>
+		</dependency>
+
+	</dependencies>
+	
+</project>

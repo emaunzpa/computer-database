@@ -1,0 +1,67 @@
+body {
+    background: #f2f2f2;
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+.error {
+      color: red;
+}
+
+footer {
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#FEFEFE;
+    border-top:1px solid #CCC;
+    height:60px;
+}
+
+footer .pagination {
+    margin:10px 0px;
+}
+
+footer .btn-group {
+    margin:10px 10px;
+}
+
+input[type='checkbox'] {
+    margin: 0px;
+    padding:0px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.navbar-right img {
+
+	height: 1.5em;
+	width: 1.5em;
+	margin-right: 0.5em;
+	
+}
+
+#dropdownMenu {
+	
+	background-color: #222;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+	
+}
+
+.dropdown-item {
+	display: flex;
+	align-content: space-around;
+	justify-content: center;
+	margin-bottom: 0.5em;
+}
+
+#logoutIcon {
+	margin-top: 0.2em;
+	margin-right: 0.2em;
+}
+
+#userIcon {
+	margin-right: 0.7em;
+}
