@@ -52,6 +52,7 @@
 	        </div>
 			
 			<form id="deleteForm" action="listComputers" method="POST">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	        <div class="container" style="margin-top: 10px;">
 	            <table id="table" class="table table-striped table-bordered">
 	                <thead>
