@@ -36,9 +36,14 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	}
 	
 	@Override
-	public Manufacturer getManufacturer(int id) throws FileNotFoundException, IOException, SQLException {
+	public Manufacturer getManufacturer(int id) throws NoManufacturerFoundException {
 		
 		Manufacturer manufacturer = null;
+		
+		if (!companyFormValidator.companyFound(getAllManufacturers(), id)) {
+			log.error("Company not found !");
+			return manufacturer;
+		}
 		
 		session = sessionFactory.openSession();
 		try {
@@ -55,7 +60,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 	}
 
 	@Override
-	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException {
+	public ArrayList<Manufacturer> getAllManufacturers() {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<>();
 		session = sessionFactory.openSession();
@@ -77,7 +82,7 @@ public class ManufacturerDriver implements ManufacturerDAO{
 		return manufacturers;
 	}
 	
-	public boolean removeManufacturer(int id) throws FileNotFoundException, IOException, SQLException, NoManufacturerFoundException {
+	public boolean removeManufacturer(int id) throws NoManufacturerFoundException {
 						
 		Integer searchId = Integer.valueOf(id);
 		

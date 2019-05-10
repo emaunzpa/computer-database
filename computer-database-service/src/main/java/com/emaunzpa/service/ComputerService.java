@@ -1,16 +1,11 @@
 package com.emaunzpa.service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.emaunzpa.db.ComputerDriver;
 import com.emaunzpa.dto.ComputerDTO;
@@ -36,23 +31,22 @@ public class ComputerService {
 	 * We initiate pagination with parameters passed trough url.
 	 * If params are null, the default params are set to 0 and 10 to print the 10 first computers
 	 */
-	public void initializePagination(HttpServletRequest request, List<ComputerDTO> computers) {
+	public void initializePagination(String startIndex, String endIndex, List<ComputerDTO> computers) {
 		
-		if (request.getParameter("startIndex") != null) {
-			pagination.setStartIndex(Integer.valueOf(request.getParameter("startIndex")));
+		if (startIndex != null) {
+			pagination.setStartIndex(Integer.valueOf(startIndex));
 		}
-		if (request.getParameter("endIndex") != null) {
-			pagination.setEndIndex(Integer.valueOf(request.getParameter("endIndex")));
+		if (endIndex != null) {
+			pagination.setEndIndex(Integer.valueOf(endIndex));
 		}
 		
 		pagination.initializeIndexes(computers);
 		
-		
 	}
 	
-	public List<ComputerDTO> getAllComputers(HttpServletRequest request) throws FileNotFoundException, IOException, SQLException{
+	public List<ComputerDTO> getAllComputers(String search) {
 		ArrayList<Optional<Computer>> computers = new ArrayList<>();
-		String searchStr = request.getParameter("search");
+		String searchStr = search;
 		if (searchStr != null && !searchStr.equals("")){
 			for (Optional<Computer> computerTested : computerDriver.getAllComputers()) {
 				Pattern pattern = Pattern.compile(".*" + searchStr.toLowerCase() + ".*");
@@ -78,10 +72,10 @@ public class ComputerService {
 		return getAllDTOs(computers);
 	}
 	
-	public List<ComputerDTO> restrictedListComputers() throws FileNotFoundException, IOException, SQLException{
-		ArrayList<Optional<Computer>> computers = computerDriver.getAllComputers();
-		List<Optional<Computer>> restrictedList = pagination.showRestrictedComputerList(computers);
-		return getAllDTOs(restrictedList);
+	public List<ComputerDTO> restrictedListComputers() {
+		List<ComputerDTO> computers = getAllComputers(null);
+		List<ComputerDTO> restrictedList = pagination.showRestrictedComputerList(computers);
+		return restrictedList;
 	}
 	
 	public ComputerDTO convertComputerToDTO(Computer computer) {
@@ -100,13 +94,13 @@ public class ComputerService {
 		return computerDTO;
 	}
 	
-	public ComputerDTO getComputer(int id) throws NoComputerFoundException, FileNotFoundException, SQLException, IOException {
+	public ComputerDTO getComputer(int id) throws NoComputerFoundException {
 		return convertComputerToDTO(computerDriver.getComputer(id).get());
 	}
 	
 	public Computer convertDTOtoComputer(ComputerDTO computerDTO) {
 		
-		Manufacturer manufacturer = computerDTO.getmanufacturerId() != 0 ? new Manufacturer(computerDTO.getmanufacturerId(), computerDTO.getManufacturerName()) : null;
+		Manufacturer manufacturer = computerDTO.getManufacturerId() != 0 ? new Manufacturer(computerDTO.getManufacturerId(), computerDTO.getManufacturerName()) : null;
 		
 		Computer computer = new Computer.ComputerBuilder()
 				.withName(computerDTO.getName())
@@ -118,7 +112,7 @@ public class ComputerService {
 		return computer;
 	}
 	
-	public void addComputer(ComputerDTO computerDTO) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
+	public void addComputer(ComputerDTO computerDTO) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		Computer newComputer = convertDTOtoComputer(computerDTO);
 		computerDriver.addComputer(newComputer);
@@ -133,27 +127,26 @@ public class ComputerService {
 		return result;
 	}
 	
-	public void updateComputer(ComputerDTO computerDTO) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
+	public void updateComputer(ComputerDTO computerDTO) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		int computerId = computerDTO.getId();
 		String computerName = computerDTO.getName();
 		String introducedDateStr = computerDTO.getIntroducedDate();
 		String discontinuedDateStr = computerDTO.getDiscontinuedDate();
-		Manufacturer manufacturer = computerDTO.getmanufacturerId() != 0 ? new Manufacturer(computerDTO.getmanufacturerId(), computerDTO.getManufacturerName()) : null;
-		Integer companyId = computerDTO.getmanufacturerId();
+		Manufacturer manufacturer = computerDTO.getManufacturerId() != 0 ? new Manufacturer(computerDTO.getManufacturerId(), computerDTO.getManufacturerName()) : null;
+		Integer companyId = computerDTO.getManufacturerId();
 		
 		computerDriver.updateComputer(computerId, computerName, dh.convertStringDateToSqlDate(introducedDateStr), dh.convertStringDateToSqlDate(discontinuedDateStr), manufacturer);
 	}
 	
-	public void deleteComputer(int computerId) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {
+	public void deleteComputer(int computerId) throws NoComputerFoundException {
 		
 		computerDriver.removeComputer(computerId);
 		
 	}
 	
-	public void sortComputers(List<ComputerDTO> computers, HttpServletRequest request) {
+	public void sortComputers(List<ComputerDTO> computers, String sorted) {
 		
-		String sorted = request.getParameter("sorted");
 		if (sorted != null && !sorted.equals("")) {
 			
 			switch(generateEnumFromString(sorted)) {

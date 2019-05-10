@@ -1,11 +1,6 @@
 package com.emaunzpa.service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
-
 import com.emaunzpa.db.ManufacturerDriver;
 import com.emaunzpa.model.Manufacturer;
 
@@ -15,7 +10,7 @@ public class ManufacturerService {
 	
 	public ManufacturerService() {}
 	
-	public ArrayList<Manufacturer> getAllManufacturers() throws FileNotFoundException, IOException, SQLException{
+	public ArrayList<Manufacturer> getAllManufacturers() {
 		return manufacturerDriver.getAllManufacturers();
 	}
 

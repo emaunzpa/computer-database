@@ -31,9 +31,6 @@
 
 	<!-- Beans for model, service, util and driver components -->
 
-	<bean id="commandeLigneInterface"
-		class="com.emaunzpa.cli.CommandeLigneInterface" autowire="byName"></bean>
-
 	<bean id="computerService"
 		class="com.emaunzpa.service.ComputerService" autowire="byName"></bean>
 
@@ -135,6 +132,7 @@
 	<!-- Spring security -->
 
 	<security:http use-expressions="true">
+		<security:csrf request-matcher-ref="csrfMatcher" />
 		<security:intercept-url pattern="/login*" access="isAnonymous()" />
 		<security:intercept-url pattern="/" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
 		<security:intercept-url pattern="/listComputers*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
@@ -144,6 +142,21 @@
 		<security:form-login/>
 		<security:logout/>
 	</security:http>
+	
+	<bean id="csrfMatcher" class="org.springframework.security.web.util.matcher.OrRequestMatcher">
+        <constructor-arg>
+            <list value-type="org.springframework.security.web.util.matcher.RequestMatcher">
+                <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+                    <constructor-arg name="pattern" value="/api/**"/>
+                    <constructor-arg name="httpMethod" value="DELETE"/>
+                </bean>
+                <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+                    <constructor-arg name="pattern" value="/api/**"/>
+                    <constructor-arg name="httpMethod" value="PUT"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
 
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="userService">
