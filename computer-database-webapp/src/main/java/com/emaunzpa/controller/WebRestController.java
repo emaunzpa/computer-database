@@ -66,8 +66,8 @@ public class WebRestController {
 		return computers;
 	}
 	
-	@RequestMapping(value="/computer/add", method=RequestMethod.POST, produces="text/plain")
-	public String addComputer(@RequestBody ComputerDTO computerDTO) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+	@RequestMapping(value="/computer/add", method=RequestMethod.POST, produces="application/json")
+	public ComputerDTO addComputer(@RequestBody ComputerDTO computerDTO) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		try {
 			computerService.addComputer(computerDTO);
@@ -80,7 +80,7 @@ public class WebRestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
 		}
 		
-		return "The computer was successfully added to the database !";
+		return computerDTO;
 	}
 	
 	@RequestMapping(value="/computer/delete/{id}", produces = "text/plain")
