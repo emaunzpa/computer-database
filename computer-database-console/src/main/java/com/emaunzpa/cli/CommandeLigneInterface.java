@@ -82,11 +82,12 @@ public class CommandeLigneInterface {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void showAllComputer() {
+	public List<ComputerDTO> showAllComputer() {
 		System.out.println(actionResult + "\n");
 		List<ComputerDTO> computers = webTarget.path("computer").request().accept(MediaType.APPLICATION_JSON).get(new GenericType<List<ComputerDTO>>(){});
 		pagination.displayComputers(computers);
 		System.out.println();
+		return computers;
 	}
 	
 	/**
@@ -95,11 +96,12 @@ public class CommandeLigneInterface {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void showAllCompanies() {
+	public List<Manufacturer> showAllCompanies() {
 		System.out.println(actionResult + "\n");
 		List<Manufacturer> manufacturers = webTarget.path("manufacturer").request().accept(MediaType.APPLICATION_JSON).get(new GenericType<List<Manufacturer>>(){});
 		pagination.displayManufacturers(manufacturers);
 		System.out.println();
+		return manufacturers;
 	}
 	
 	/**
@@ -467,6 +469,14 @@ public class CommandeLigneInterface {
 
 	public void setComputerService(ComputerService computerService) {
 		this.computerService = computerService;
+	}
+
+	public Scanner getScIn() {
+		return scIn;
+	}
+
+	public void setScIn(Scanner scIn) {
+		this.scIn = scIn;
 	}
 
 }

@@ -24,6 +24,11 @@ public class Computer {
 
 		}
 		
+		public ComputerBuilder withId(int id) {
+			this.id = id;
+			return this;
+		}
+		
 		public ComputerBuilder withName(String name) {
 			this.name = name;
 			return this;

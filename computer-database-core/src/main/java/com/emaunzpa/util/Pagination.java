@@ -1,13 +1,10 @@
 package com.emaunzpa.util;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import com.emaunzpa.dto.ComputerDTO;
-import com.emaunzpa.model.Computer;
 import com.emaunzpa.model.Manufacturer;
 
 public class Pagination {
