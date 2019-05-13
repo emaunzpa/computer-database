@@ -392,19 +392,7 @@ public class CommandeLigneInterface {
 				case CREATE_COMPUTER :
 					Computer newComputer = newComputerForm();
 					ComputerDTO newComputerDTO = computerService.convertComputerToDTO(newComputer);
-					if (!computerFormValidator.newComputerHasName(newComputer)) {
-						System.out.println("The computer name is mandatory, please try again");
-						System.out.println();
-					}
-					else if (!computerFormValidator.introducedBeforeDiscontinued(newComputer)) {
-						System.out.println("Introduced date must be before discontinued date");
-						System.out.println();
-					}
-					else {
-						Integer manufacturerId = newComputer.getManufacturer() == null ? null : newComputer.getManufacturer().getId();
-						String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + manufacturerId;
-						System.out.println(newComputerDetails);
-						System.out.println();
+					if (validateNewComputer(newComputer)) {
 						webTarget.path("computer").path("add").request().accept(MediaType.APPLICATION_JSON).post(Entity.json(newComputerDTO));
 						System.out.println("The new computer was well added to the computer-database !\n");
 					}
@@ -426,6 +414,26 @@ public class CommandeLigneInterface {
 					System.out.println();
 					break;	
 			}
+		}
+	}
+	
+	public boolean validateNewComputer(Computer newComputer) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+		if (!computerFormValidator.newComputerHasName(newComputer)) {
+			System.out.println("The computer name is mandatory, please try again");
+			System.out.println();
+			return false;
+		}
+		else if (!computerFormValidator.introducedBeforeDiscontinued(newComputer)) {
+			System.out.println("Introduced date must be before discontinued date");
+			System.out.println();
+			return false;
+		}
+		else {
+			Integer manufacturerId = newComputer.getManufacturer() == null ? null : newComputer.getManufacturer().getId();
+			String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + manufacturerId;
+			System.out.println(newComputerDetails);
+			System.out.println();
+			return true;
 		}
 	}
 
