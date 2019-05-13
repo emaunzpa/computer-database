@@ -1,13 +1,10 @@
 package com.emaunzpa.util;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import com.emaunzpa.dto.ComputerDTO;
-import com.emaunzpa.model.Computer;
 import com.emaunzpa.model.Manufacturer;
 
 public class Pagination {
@@ -29,29 +26,30 @@ public class Pagination {
 		this.sorted = "";
 	}
 	
-	public List<Optional<Computer>> showRestrictedComputerList(ArrayList<Optional<Computer>> computers){
+	public List<ComputerDTO> showRestrictedComputerList(List<ComputerDTO> computers){
 		
 		return computers.subList(startIndex, endIndex);
 		
 	}
 	
-	public List<Manufacturer> showRestrictedManufacturerList(ArrayList<Manufacturer> manufacturers){
+	public List<Manufacturer> showRestrictedManufacturerList(List<Manufacturer> manufacturers){
 		
 		return manufacturers.subList(startIndex, endIndex);
 		
 	}
 	
-	public void displayComputers(ArrayList<Optional<Computer>> computers) {
-		
+	public void displayComputers(List<ComputerDTO> computers) {
+		startIndex = 0;
+		endIndex = 10;
 		String displayChoice = "";
 		while(!displayChoice.equals("q")) {
 			String actualDisplay = (startIndex + 1) + " to " + endIndex;
 			System.out.println();
 			System.out.println("                   --------- Type q to exit display ---------");
 			System.out.println();
-			for (Optional<Computer> computer : showRestrictedComputerList(computers)) {
-				String companyName = computer.get().getManufacturer() != null ? computer.get().getManufacturer().getName() : "";
-				String computerDetails = "Id : " + computer.get().getId() + " | Name : " + computer.get().getName() + " | Introduced : " + computer.get().getIntroducedDate() + " | Discontinued : " + computer.get().getDiscontinuedDate() + " | Company_name : " + companyName;
+			for (ComputerDTO computer : showRestrictedComputerList(computers)) {
+				String companyName = computer.getManufacturerName() != null ? computer.getManufacturerName() : "";
+				String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_name : " + companyName;
 				System.out.println(computerDetails);
 			}
 			System.out.println();
@@ -86,7 +84,9 @@ public class Pagination {
 		}
 	}
 	
-	public void displayManufacturers(ArrayList<Manufacturer> manufacturers) {
+	public void displayManufacturers(List<Manufacturer> manufacturers) {
+		startIndex = 0;
+		endIndex = 10;
 		String displayChoice = "";
 		while(!displayChoice.equals("q")) {
 			String actualDisplay = (startIndex + 1) + " to " + endIndex;

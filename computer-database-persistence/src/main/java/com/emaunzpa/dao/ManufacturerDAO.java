@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.emaunzpa.exception.NoManufacturerFoundException;
 import com.emaunzpa.model.Manufacturer;
 
 public interface ManufacturerDAO {
@@ -17,8 +18,9 @@ public interface ManufacturerDAO {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 * @throws SQLException 
+	 * @throws NoManufacturerFoundException 
 	 */
-	public Manufacturer getManufacturer(int id) throws FileNotFoundException, IOException, SQLException;
+	public Manufacturer getManufacturer(int id) throws FileNotFoundException, IOException, SQLException, NoManufacturerFoundException;
 	
 	/**
 	 * List all companies from the databaseeeeeeee

@@ -1,0 +1,97 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/mvc
+   http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="com.emaunzpa.controller, com.emaunzpa.model" />
+
+	<bean id="myProperties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:computer-database-dbHikariConfig.properties</value>
+				<value>classpath:hibernate/hibernate.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Beans for model, service, util and driver components -->
+	
+	<bean id="commandeLigneInterface"
+		class="com.emaunzpa.cli.CommandeLigneInterface" autowire="byName"></bean>
+
+	<bean id="computerService"
+		class="com.emaunzpa.service.ComputerService" autowire="byName"></bean>
+
+	<bean id="userService" class="com.emaunzpa.service.UserService"
+		autowire="byName"></bean>
+
+	<bean id="manufacturerService"
+		class="com.emaunzpa.service.ManufacturerService" autowire="byName"></bean>
+
+	<bean id="manufacturerDriver"
+		class="com.emaunzpa.db.ManufacturerDriver" autowire="byName"></bean>
+
+	<bean id="computerDriver" class="com.emaunzpa.db.ComputerDriver"
+		autowire="byName"></bean>
+
+	<bean id="userDriver" class="com.emaunzpa.db.UserDriver"
+		autowire="byName"></bean>
+
+	<bean id="pagination" class="com.emaunzpa.util.Pagination"></bean>
+	
+	<!-- Jdbc Template -->
+
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="url" value="${jdbcUrl}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- Hibernate -->
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+		<property name="mappingLocations">
+			<list>
+				<value>classpath:hibernate/*.hbm.xml</value>
+			</list>
+		</property>
+
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.emaunzpa.model" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.connection.url">${hibernate.connection.url}</prop>
+				<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}
+				</prop>
+				<prop key="hibernate.connection.username">${hibernate.connection.username}</prop>
+				<prop key="hibernate.connection.password">${hibernate.connection.password}</prop>
+			</props>
+		</property>
+
+	</bean>
+	
+</beans>

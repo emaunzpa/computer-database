@@ -1,8 +1,6 @@
 package com.emaunzpa.db;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +39,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public Optional<Computer> getComputer(int id) throws NoComputerFoundException, SQLException, FileNotFoundException, IOException {
+	public Optional<Computer> getComputer(int id) throws NoComputerFoundException {
 		
 		Optional<Computer> computer = Optional.empty();	
 		Integer searchId = Integer.valueOf(id);
@@ -67,7 +65,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean addComputer(Computer computer) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, SQLException, FileNotFoundException, IOException {
+	public boolean addComputer(Computer computer) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		// Impossible to add a computer without a name
 		if (!computerFormValidator.newComputerHasName(computer)) {
@@ -96,7 +94,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public ArrayList<Optional<Computer>> getAllComputers() throws FileNotFoundException, IOException, SQLException {
+	public ArrayList<Optional<Computer>> getAllComputers() {
 		
 		ArrayList<Optional<Computer>> computers = new ArrayList<>();
 		session = sessionFactory.openSession();
@@ -119,7 +117,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean removeComputer(int id) throws NoComputerFoundException, FileNotFoundException, IOException, SQLException {
+	public boolean removeComputer(int id) throws NoComputerFoundException {
 				
 		Integer searchId = Integer.valueOf(id);
 		if (!computerFormValidator.computerFound(getAllComputers(), searchId)) {
@@ -144,7 +142,7 @@ public class ComputerDriver implements ComputerDAO {
 	}
 
 	@Override
-	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Manufacturer newManufacturer) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, IOException, SQLException {
+	public boolean updateComputer(int id, String newName, java.sql.Date newIntroduced, java.sql.Date newDiscontinued, Manufacturer newManufacturer) throws NoComputerFoundException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
 		
 		Optional<Computer> computer;
 		

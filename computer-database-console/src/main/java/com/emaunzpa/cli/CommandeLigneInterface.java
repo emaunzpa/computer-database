@@ -2,16 +2,29 @@ package com.emaunzpa.cli;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+
+import org.glassfish.jersey.client.ClientConfig;
 
 import com.emaunzpa.db.ComputerDriver;
 import com.emaunzpa.db.ManufacturerDriver;
+import com.emaunzpa.dto.ComputerDTO;
 import com.emaunzpa.exception.ComputerWithoutNameException;
 import com.emaunzpa.exception.DiscontinuedBeforeIntroducedException;
 import com.emaunzpa.exception.IncoherenceBetweenDateException;
@@ -19,10 +32,11 @@ import com.emaunzpa.exception.NoComputerFoundException;
 import com.emaunzpa.exception.NoManufacturerFoundException;
 import com.emaunzpa.model.Computer;
 import com.emaunzpa.model.Manufacturer;
+import com.emaunzpa.service.ComputerService;
+import com.emaunzpa.util.CasesCLI;
 import com.emaunzpa.util.ComputerFormValidator;
 import com.emaunzpa.util.DatesHandler;
 import com.emaunzpa.util.Pagination;
-import com.emaunzpa.util.CasesCLI;
 
 public class CommandeLigneInterface {
 
@@ -37,7 +51,11 @@ public class CommandeLigneInterface {
 	private ComputerDriver computerDriver;
 	private DatesHandler datesHandler = new DatesHandler();
 	private Pagination pagination;
+	private ComputerService computerService;
 	private ComputerFormValidator computerFormValidator = new ComputerFormValidator();
+	private ClientConfig clientConfig;
+	private Client client;
+	private WebTarget webTarget;
 	
 	/**
 	 * Creator to initialize various messages print by the controller
@@ -49,7 +67,14 @@ public class CommandeLigneInterface {
 		this.goodBye = "-------- Thank you for visiting us and see you next time ! --------";
 		this.actionsHeader = "Which action would you like to realize ? (ENTER the corresponding number)\n";
 		this.availableActions = new ArrayList<String>( Arrays.asList("1) List all computers", "2) List all companies", "3) Show computer details", "4) Create a new computer", "5) Update a computer", "6) Delete a computer", "7) Delete a company and its computers", "8) Leave computer-database"));
+	    this.clientConfig = new ClientConfig();
+		this.client = ClientBuilder.newClient(clientConfig);
+	    this.webTarget = client.target(getBaseURI());
 	}
+	
+	private static URI getBaseURI() {  
+	    return UriBuilder.fromUri("http://localhost:8080/computer-database-webapp/api").build();  
+	 }
 	
 	/**
 	 * Show the list of all computers
@@ -57,11 +82,12 @@ public class CommandeLigneInterface {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void showAllComputer() throws FileNotFoundException, IOException, SQLException {
+	public List<ComputerDTO> showAllComputer() {
 		System.out.println(actionResult + "\n");
-		ArrayList<Optional<Computer>> computers = computerDriver.getAllComputers();
+		List<ComputerDTO> computers = webTarget.path("computer").request().accept(MediaType.APPLICATION_JSON).get(new GenericType<List<ComputerDTO>>(){});
 		pagination.displayComputers(computers);
 		System.out.println();
+		return computers;
 	}
 	
 	/**
@@ -70,11 +96,12 @@ public class CommandeLigneInterface {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void showAllCompanies() throws FileNotFoundException, IOException, SQLException {
+	public List<Manufacturer> showAllCompanies() {
 		System.out.println(actionResult + "\n");
-		ArrayList<Manufacturer> manufacturers = manufacturerDriver.getAllManufacturers();
+		List<Manufacturer> manufacturers = webTarget.path("manufacturer").request().accept(MediaType.APPLICATION_JSON).get(new GenericType<List<Manufacturer>>(){});
 		pagination.displayManufacturers(manufacturers);
 		System.out.println();
+		return manufacturers;
 	}
 	
 	/**
@@ -85,24 +112,23 @@ public class CommandeLigneInterface {
 	 * @throws SQLException 
 	 * @throws FileNotFoundException 
 	 */
-	public Computer showComputerDetails() throws NoComputerFoundException, FileNotFoundException, SQLException, IOException {
+	public ComputerDTO showComputerDetails() throws NoComputerFoundException {
 		System.out.println();
 		System.out.println("ENTER a computer id...");
 		int computerId = scIn.nextInt();
 		scIn.nextLine();
-		Computer computer;
-		if (computerDriver.getComputer(computerId).isPresent()) {
-			computer = computerDriver.getComputer(computerId).get();
+		ComputerDTO computer = null;
+		try {
+			computer = webTarget.path("computer").path("get").path(String.valueOf(computerId)).request().accept(MediaType.APPLICATION_JSON).get(ComputerDTO.class);
+		} catch (BadRequestException e) {
+			System.out.println(e.getMessage());
+			System.out.println("No computer found with this id " + computerId);
+		}
+		if (computer != null) {
 			System.out.println();
 			System.out.println("Following are the details of the selected computer \n");
-			String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getManufacturer().getId();
+			String computerDetails = "Id : " + computer.getId() + " | Name : " + computer.getName() + " | Introduced : " + computer.getIntroducedDate() + " | Discontinued : " + computer.getDiscontinuedDate() + " | Company_id : " + computer.getManufacturerId();
 			System.out.println(computerDetails);
-			System.out.println();
-		}
-		else {
-			computer = new Computer.ComputerBuilder().build();
-			System.out.println();
-			System.out.println("Computer not found with this id : " + computerId);
 			System.out.println();
 		}
 		
@@ -116,8 +142,9 @@ public class CommandeLigneInterface {
 	 * @throws SQLException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws NoManufacturerFoundException 
 	 */
-	public Computer newComputerForm() throws ParseException, FileNotFoundException, IOException, SQLException {
+	public Computer newComputerForm() throws ParseException, NoManufacturerFoundException {
 		System.out.println("You just chose to create a new Computer");
 		System.out.println("Please ENTER a name for the new computer ...");
 		String computerName = scIn.nextLine();
@@ -178,16 +205,17 @@ public class CommandeLigneInterface {
 	 * @throws SQLException 
 	 * @throws FileNotFoundException 
 	 */
-	public void updateComputer() throws ParseException, NoComputerFoundException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, FileNotFoundException, SQLException, IOException {
-		Computer computer = showComputerDetails();
+	public void updateComputer() throws ParseException, NoComputerFoundException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+		ComputerDTO computerDTO = showComputerDetails();
 		System.out.println("Do you want to update the computer name ? (y/n)");
 		String answer = scIn.next();
 		scIn.nextLine();
-		String newName = computer.getName();
+		String newName = computerDTO.getName();
 		switch(answer) {
 			case "y" :
 				System.out.println("Please ENTER a new name for your computer ...");
 				newName = scIn.nextLine();
+				computerDTO.setName(newName);
 				break;
 			case "n" :
 				break;
@@ -195,12 +223,13 @@ public class CommandeLigneInterface {
 		System.out.println("Do you want to update the computer introduced date ? (y/n)");
 		answer = scIn.next();
 		scIn.nextLine();
-		java.sql.Date newIntroducedDate = computer.getIntroducedDate();
+		java.sql.Date newIntroducedDate = datesHandler.convertStringDateToSqlDate(computerDTO.getIntroducedDate());
 		switch(answer) {
 			case "y" :
 				System.out.println("Please ENTER a new introduced date for your computer (format : YYYY-MM-DD)");
 				String newIntroducedDateStr = scIn.nextLine() + " 00:00:00";
             	newIntroducedDate = datesHandler.convertStringDateToSqlDate(newIntroducedDateStr);
+            	computerDTO.setIntroducedDate(newIntroducedDateStr);
 				break;
 			case "n" :
 				break;
@@ -208,12 +237,13 @@ public class CommandeLigneInterface {
 		System.out.println("Do you want to update the computer discontinued date ? (y/n)");
 		answer = scIn.next();
 		scIn.nextLine();
-		java.sql.Date newDiscontinuedDate = computer.getDiscontinuedDate();
+		java.sql.Date newDiscontinuedDate = datesHandler.convertStringDateToSqlDate(computerDTO.getDiscontinuedDate());
 		switch(answer) {
 			case "y" :
 				System.out.println("Please ENTER a new discontinued date for your computer (format : YYYY-MM-DD)");
 				String newDiscontinuedDateStr = scIn.nextLine() + " 00:00:00";
 				newDiscontinuedDate = datesHandler.convertStringDateToSqlDate(newDiscontinuedDateStr);
+				computerDTO.setDiscontinuedDate(newDiscontinuedDateStr);
 				break;
 			case "n" :
 				break;
@@ -221,17 +251,18 @@ public class CommandeLigneInterface {
 		System.out.println("Do you want to update the company ID ? (y/n)");
 		answer = scIn.next();
 		scIn.nextLine();
-		Integer newManufacturerId = computer.getManufacturer().getId();
-		Manufacturer newManufacturer = manufacturerDriver.getManufacturer(newManufacturerId);
+		Integer newManufacturerId = computerDTO.getManufacturerId();
 		switch(answer) {
 			case "y" :
 				System.out.println("Please ENTER a new company ID for your computer ...");
 				newManufacturerId = scIn.nextInt();
+				computerDTO.setManufacturerId(newManufacturerId);
 				scIn.nextLine();
 				break;
 			case "n" :
 				break;
 		}
+		Computer computer = computerService.convertDTOtoComputer(computerDTO);
 		if (!computerFormValidator.newComputerHasName(computer)) {
 			System.out.println("The computer name is mandatory, please try again");
 			System.out.println();
@@ -241,7 +272,8 @@ public class CommandeLigneInterface {
 			System.out.println();
 		}
 		else {
-			computerDriver.updateComputer(computer.getId(), newName, newIntroducedDate, newDiscontinuedDate, newManufacturer);
+			System.out.println(Entity.json(computerDTO));
+			webTarget.path("computer").path("edit").path(String.valueOf(computerDTO.getId())).request().accept(MediaType.APPLICATION_JSON).post(Entity.json(computerDTO));
 			String updateDetails = "Name : " + newName + " | Introduced : " + newIntroducedDate + " | Discontinued : " + newDiscontinuedDate + " | Company_id : " + newManufacturerId;
 			System.out.println("The computer was update with the following parameters :\n " + updateDetails);
 			System.out.println();
@@ -256,52 +288,54 @@ public class CommandeLigneInterface {
 	 * @throws SQLException 
 	 * @throws FileNotFoundException 
 	 */
-	public void removeComputer() throws NoComputerFoundException, FileNotFoundException, SQLException, IOException {
-		Computer computerToRemove = showComputerDetails();
-		if (computerToRemove.getName() != null && !computerToRemove.getName().equals("")) {
+	public void removeComputer() throws NoComputerFoundException {
+		ComputerDTO computerToRemove = showComputerDetails();
+		if (computerToRemove != null) {
 			System.out.println("You are gonna remove this computer from the database, are you sure ? (y/n)");
 			String answer = scIn.next();
 			scIn.nextLine();
 			System.out.println();
 			switch(answer) {
 				case "y" :
-						computerDriver.removeComputer(computerToRemove.getId());
+						webTarget.path("computer").path("delete").path(String.valueOf(computerToRemove.getId())).request().accept(MediaType.TEXT_PLAIN).get(String.class);
 						System.out.println("The computer was well removed from database !");
 					break;
-				case "n" :	
+				case "n" :
 					System.out.println("Remove request canceled");
 					break;
 			}
+		}
+		else {
+			System.out.println("Remove request canceled");
 		}
 		
 		System.out.println();
 	}
 	
-	public Manufacturer showCompanyDetails() throws FileNotFoundException, IOException, SQLException {
+	public Manufacturer showCompanyDetails() throws NoManufacturerFoundException {
 		System.out.println();
 		System.out.println("ENTER a company id...");
 		int companyId = scIn.nextInt();
 		scIn.nextLine();
-		Manufacturer manufacturer;
-		if (manufacturerDriver.getManufacturer(companyId) != null) {
-			manufacturer = manufacturerDriver.getManufacturer(companyId);
+		Manufacturer manufacturer = null;
+		try {
+			manufacturer = webTarget.path("manufacturer").path("get").path(String.valueOf(companyId)).request().accept(MediaType.APPLICATION_JSON).get(Manufacturer.class);
+		} catch (InternalServerErrorException e) {
+			System.out.println(e.getCause().getMessage());
+			System.out.println("No manufacturer found with this id " + companyId);
+		}
+		if (manufacturer != null) {
 			System.out.println();
 			System.out.println("Following are the details of the selected company \n");
 			String companyDetails = "Id : " + manufacturer.getId() + " | Name : " + manufacturer.getName();
 			System.out.println(companyDetails);
 			System.out.println();
 		}
-		else {
-			manufacturer = new Manufacturer();
-			System.out.println();
-			System.out.println("Company not found with this id : " + companyId);
-			System.out.println();
-		}
 		
 		return manufacturer;
 	}
 	
-	private void deleteCompany() throws FileNotFoundException, IOException, SQLException, NoComputerFoundException, NoManufacturerFoundException {
+	private void deleteCompany() throws NoComputerFoundException, NoManufacturerFoundException {
 		Manufacturer manufacturerToRemove = showCompanyDetails();
 		if (manufacturerToRemove.getName() != null && !manufacturerToRemove.getName().equals("")) {
 			System.out.println("You are gonna remove this company and its related " + getCompanyComputers(manufacturerToRemove.getId()).size() + " computers from the database, are you sure ? (y/n)");
@@ -310,7 +344,7 @@ public class CommandeLigneInterface {
 			System.out.println();
 			switch(answer) {
 				case "y" :
-						manufacturerDriver.removeManufacturer(manufacturerToRemove.getId());
+						webTarget.path("manufacturer").path("delete").path(String.valueOf(manufacturerToRemove.getId())).request().accept(MediaType.TEXT_PLAIN).get(String.class);
 						System.out.println("The company was well removed from database !");
 					break;
 				case "n" :	
@@ -319,25 +353,25 @@ public class CommandeLigneInterface {
 			}
 		}
 		
-		System.out.println();		
+		System.out.println();
 		
 	}
 	
-	private List<Optional<Computer>> getCompanyComputers(int id) throws FileNotFoundException, IOException, SQLException {
+	private List<ComputerDTO> getCompanyComputers(int id) throws NoManufacturerFoundException {
 		
-		List<Optional<Computer>> companyComputers = new ArrayList<Optional<Computer>>();
+		List<ComputerDTO> companyComputers = new ArrayList<ComputerDTO>();
 		
-		List<Optional<Computer>> computers = computerDriver.getAllComputers();
-		for (Optional<Computer> computer : computers) {
-			if (computer.get().getManufacturer().getId() == id) {
-				companyComputers.add(computer);
+		List<ComputerDTO> computers = computerService.getAllComputers(null);
+		for (ComputerDTO computerDTO : computers) {
+			if (computerDTO.getManufacturerId() == id) {
+				companyComputers.add(computerDTO);
 			}
 		}
 		
 		return companyComputers;
 	}
 
-	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException, FileNotFoundException, IOException, SQLException, NoManufacturerFoundException {
+	public void run() throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException, NoManufacturerFoundException {
 		System.out.println(welcome + "\n");
 		while(actualActionId != 8) {
 			System.out.println(actionsHeader);
@@ -359,19 +393,9 @@ public class CommandeLigneInterface {
 					break;
 				case CREATE_COMPUTER :
 					Computer newComputer = newComputerForm();
-					if (!computerFormValidator.newComputerHasName(newComputer)) {
-						System.out.println("The computer name is mandatory, please try again");
-						System.out.println();
-					}
-					else if (!computerFormValidator.introducedBeforeDiscontinued(newComputer)) {
-						System.out.println("Introduced date must be before discontinued date");
-						System.out.println();
-					}
-					else {
-						String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + newComputer.getManufacturer().getId();
-						System.out.println(newComputerDetails);
-						System.out.println();
-						computerDriver.addComputer(newComputer);
+					ComputerDTO newComputerDTO = computerService.convertComputerToDTO(newComputer);
+					if (validateNewComputer(newComputer)) {
+						webTarget.path("computer").path("add").request().accept(MediaType.APPLICATION_JSON).post(Entity.json(newComputerDTO));
 						System.out.println("The new computer was well added to the computer-database !\n");
 					}
 					break;
@@ -392,6 +416,26 @@ public class CommandeLigneInterface {
 					System.out.println();
 					break;	
 			}
+		}
+	}
+	
+	public boolean validateNewComputer(Computer newComputer) throws ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException {
+		if (!computerFormValidator.newComputerHasName(newComputer)) {
+			System.out.println("The computer name is mandatory, please try again");
+			System.out.println();
+			return false;
+		}
+		else if (!computerFormValidator.introducedBeforeDiscontinued(newComputer)) {
+			System.out.println("Introduced date must be before discontinued date");
+			System.out.println();
+			return false;
+		}
+		else {
+			Integer manufacturerId = newComputer.getManufacturer() == null ? null : newComputer.getManufacturer().getId();
+			String newComputerDetails = "A new Computer was created with following attributes : \n" + "Name : " + newComputer.getName() + " | Introduced : " + newComputer.getIntroducedDate() + " | Discontinued : " + newComputer.getDiscontinuedDate() + " | Company_id : " + manufacturerId;
+			System.out.println(newComputerDetails);
+			System.out.println();
+			return true;
 		}
 	}
 
@@ -417,6 +461,22 @@ public class CommandeLigneInterface {
 
 	public void setPagination(Pagination pagination) {
 		this.pagination = pagination;
+	}
+
+	public ComputerService getComputerService() {
+		return computerService;
+	}
+
+	public void setComputerService(ComputerService computerService) {
+		this.computerService = computerService;
+	}
+
+	public Scanner getScIn() {
+		return scIn;
+	}
+
+	public void setScIn(Scanner scIn) {
+		this.scIn = scIn;
 	}
 
 }

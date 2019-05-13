@@ -75,16 +75,9 @@ public class WebController {
 	public String listComputers(HttpServletRequest request, Principal principal) {
 		
 		List<ComputerDTO> computers = new ArrayList<ComputerDTO>();
-		try {
-			computers = computerService.getAllComputers(request);
-		} catch (SQLException | IOException e) {
-			log.error("Calling computerService method 'getAllComputers()' generated an exception : "
-					+ e.getMessage());
-			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
-			return get500(request);
-		}
-		computerService.initializePagination(request, computers);
-		computerService.sortComputers(computers, request);
+		computers = computerService.getAllComputers(request.getParameter("search"));
+		computerService.initializePagination(request.getParameter("startIndex"), request.getParameter("endIndex"), computers);
+		computerService.sortComputers(computers, request.getParameter("sorted"));
 		
 		request.setAttribute(ATT_SEARCH, request.getParameter("search"));
 		request.setAttribute(ATT_SORTED, request.getParameter("sorted"));
@@ -105,7 +98,7 @@ public class WebController {
 			Integer id = Integer.valueOf(idStr);
 			try {
 				computerService.deleteComputer(id);
-			} catch (NoComputerFoundException | SQLException | IOException e) {
+			} catch (NoComputerFoundException e) {
 				log.error("Calling computerService method 'deleteComputer()' generated an exception : "
 						+ e.getMessage());
 				request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
@@ -120,14 +113,7 @@ public class WebController {
 	public String addComputerGet(HttpServletRequest request, Principal principal) {
 		
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		try {
-			manufacturers = manufacturerService.getAllManufacturers();
-		} catch (SQLException | IOException e) {
-			log.error("Calling manufacturerService method 'getAllManufacturers()' generated an exception : "
-					+ e.getMessage());
-			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
-			return get500(request);
-		}
+		manufacturers = manufacturerService.getAllManufacturers();
 		
 		request.setAttribute(ATT_LIST_MANUFACTURERS, manufacturers);
 		request.setAttribute(USER, principal.getName());
@@ -156,11 +142,6 @@ public class WebController {
 			return new RedirectView(get500(request));
 		} catch (DiscontinuedBeforeIntroducedException e) {
 			log.error("Error while adding a computer with discontinuedDate before introducedDate : "
-					+ e.getMessage());
-			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
-			return new RedirectView(get500(request));
-		} catch (SQLException | IOException e) {
-			log.error("Calling computerService method 'addComputer()' generated an exception : "
 					+ e.getMessage());
 			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
 			return new RedirectView(get500(request));
@@ -200,18 +181,12 @@ public class WebController {
 		int computerID = Integer.valueOf(request.getParameter("computerID"));
 
 		ArrayList<Manufacturer> manufacturers = new ArrayList<Manufacturer>();
-		try {
-			manufacturers = manufacturerService.getAllManufacturers();
-		} catch (SQLException | IOException e) {
-			log.error("Calling manufacturerService method 'getAllManufacturers()' generated an exception : "
-					+ e.getMessage());
-			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
-			return get500(request);
-		}
+		manufacturers = manufacturerService.getAllManufacturers();
+
 		ComputerDTO computer = null;
 		try {
 			computer = computerService.getComputer(computerID);
-		} catch (NoComputerFoundException | SQLException | IOException e) {
+		} catch (NoComputerFoundException e) {
 			log.error("Calling computerService method 'getComputer()' generated an exception : "
 					+ e.getMessage());
 			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
@@ -246,11 +221,6 @@ public class WebController {
 			return new RedirectView(get500(request));
 		} catch (DiscontinuedBeforeIntroducedException e) {
 			log.error("Error while updating computer with discontinuedDate before introducedDate : "
-					+ e.getMessage());
-			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
-			return new RedirectView(get500(request));
-		} catch (SQLException | IOException e) {
-			log.error("Calling computerService method 'updateComputer()' generated an exception : "
 					+ e.getMessage());
 			request.setAttribute(ATT_ERROR_MESSAGE, e.getMessage());
 			return new RedirectView(get500(request));

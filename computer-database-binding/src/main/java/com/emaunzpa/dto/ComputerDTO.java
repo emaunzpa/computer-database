@@ -9,6 +9,8 @@ public class ComputerDTO {
 	private int manufacturerId;
 	private String manufacturerName;
 	
+	public ComputerDTO() {}
+	
 	public static class ComputerDTOBuilder {
 		
 		private int id;
@@ -58,7 +60,7 @@ public class ComputerDTO {
 			computerDTO.setName(this.name);
 			computerDTO.setIntroducedDate(this.introducedDate);
 			computerDTO.setDiscontinuedDate(this.discontinuedDate);
-			computerDTO.setmanufacturerId(this.manufacturerId);	
+			computerDTO.setManufacturerId(this.manufacturerId);	
 			computerDTO.setManufacturerName(this.manufacturerName);
 			return computerDTO;
 		}
@@ -79,14 +81,6 @@ public class ComputerDTO {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Integer getmanufacturerId() {
-		return manufacturerId;
-	}
-
-	public void setmanufacturerId(Integer manufacturerId) {
-		this.manufacturerId = manufacturerId;
 	}
 
 	public String getName() {
@@ -119,6 +113,14 @@ public class ComputerDTO {
 
 	public void setManufacturerName(String manufacturerName) {
 		this.manufacturerName = manufacturerName;
+	}
+
+	public int getManufacturerId() {
+		return manufacturerId;
+	}
+
+	public void setManufacturerId(int manufacturerId) {
+		this.manufacturerId = manufacturerId;
 	}
 	
 }

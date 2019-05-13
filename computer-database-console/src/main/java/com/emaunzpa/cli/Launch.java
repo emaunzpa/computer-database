@@ -16,7 +16,7 @@ import com.emaunzpa.exception.NoManufacturerFoundException;
 
 public class Launch {
 
-	private static ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+	private static ApplicationContext context = new ClassPathXmlApplicationContext("consoleContext.xml");
 
 	public static void main(String[] args) throws ParseException, ComputerWithoutNameException, IncoherenceBetweenDateException, DiscontinuedBeforeIntroducedException, NoComputerFoundException, FileNotFoundException, IOException, SQLException, NoManufacturerFoundException {
 				
